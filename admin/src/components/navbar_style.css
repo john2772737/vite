@@ -1,0 +1,82 @@
+/* navbar_style.css */
+
+.custom-navbar {
+    background-color: #f3f4e7; /* Background color */
+  }
+  
+  .search-bar {
+    background-color: #f7f9f8; /* Search bar background color */
+    color: #000; /* Text color */
+    border-radius: 100px; /* Rounded corners */
+  }
+  
+  .search-button {
+    margin-left: -2px; /* Adjust button position */
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Move user info to the right */
+    color: #000;
+  }
+  
+  .settings-button {
+    margin-left: 10px; /* Add margin between user info and settings button */
+  }
+  
+  /* Inside navbar_style.css */
+
+  .custom-navbar {
+    background-color: #f3f4e7;
+    color: #fff;
+    position: relative; /* Ensure z-index works properly */
+    z-index: 1000; /* Ensure the main navbar is above the burger navbar */
+  }
+  
+  .burger-navbar {
+    position: fixed;
+    top: 56px; /* Height of the main navbar */
+    left: -200px; /* Initially hide the burger navbar */
+    width: 200px;
+    height: calc(100% - 56px); /* Calculate remaining height */
+    background-color: #688662;
+    color: #000;
+    transition: left 0.3s ease; /* Add transition for smooth animation */
+    z-index: 999; /* Ensure the burger navbar is below the main navbar */
+  }
+  
+  .burger-navbar.open {
+    left: 0; /* Show the burger navbar when open */
+  }
+  
+  .search-bar {
+    width: 300px;
+  }
+  
+  .search-button {
+    margin-left: 10px;
+  }
+  
+  .user-info {
+    margin-left: auto;
+  }
+  
+  .burger-button {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .burger-button {
+      display: block;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1001; /* Ensure the burger button is above everything */
+    }
+  
+    .custom-navbar {
+      display: none;
+    }
+  }
+  

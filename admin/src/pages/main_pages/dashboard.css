@@ -1,0 +1,47 @@
+/* dashboard.css */
+
+/* Style for the outer container */
+.overview {
+  display: flex;
+  flex-wrap: wrap;
+  font-family: 'Bodoni Ferrara';
+}
+
+.outer-container {
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #E8E8E9;
+  width: 100vw; /* Full width of the viewport */
+  height: 100vh; /* Full height of the viewport */
+  display: flex;
+  flex-wrap: wrap; /* Allow inner containers to wrap */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Style for the inner containers */
+.inner-container {
+  height: 200px;
+  width: calc(25% - 40px); /* 25% of the outer container width minus margin */
+  background-color: #F4F4F4;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  margin: 20px;
+  padding: 10px;
+}
+
+/* Style for the box content */
+.box-container {
+  padding: 20px;
+}
+
+/* Additional styling for headings */
+h1 {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+h2 {
+  text-align: left;
+}

@@ -1,0 +1,17 @@
+/* Main.css */
+.main-container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 250px; /* Adjust width as needed */
+    height: 100vh;
+    background-color: #BFBDBC; /* Sidebar background color */
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px; /* Adjust padding as needed */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+  }
+  

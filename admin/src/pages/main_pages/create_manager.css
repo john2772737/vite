@@ -1,0 +1,9 @@
+.container-box {
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    padding: 20px;
+    background-color: #000;
+    border: 1px solid #000;
+    border-radius: 10px; /* Add corner radius */
+    margin: 20px auto; /* Center the container */
+  }

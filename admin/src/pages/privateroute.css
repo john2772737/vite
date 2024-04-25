@@ -1,0 +1,29 @@
+/* login.css */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    height: 100vh;
+  }
+  
+  .login-box {
+    height: 100px;
+    width: 400px;
+    margin-top: 50px;
+    padding: 20px; /* Add padding */
+    background-color: #545454; /* Background color */
+    border-radius: 10px; /* Add corner radius */
+
+  }
+  
+  .login-text {
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .login-box:hover {
+    transform: scale(1.1);
+  }
+  
