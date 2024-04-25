@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ResponsiveTable from "../../components/tables";
 import axios from "axios";
 import ModalCom from "../../components/modal";
@@ -18,7 +18,7 @@ function List_manager() {
     fetchData();
   }, []); // Fetch data only once when component mounts
 
-  const fetchData = async (event) => {
+  const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:4000/admin/listAdmin");
       setData(response.data);

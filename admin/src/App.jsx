@@ -1,4 +1,4 @@
-import { Route, Routes, Outlet } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Login from "./pages/login";
 import Main from "./pages/main";
 import Dashboard from './pages/main_pages/dashboard';
@@ -7,7 +7,7 @@ import ListManager from './pages/main_pages/list_manager';
 import PageNotFound from "./pages/pagenotfound";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PrivateRoute from "./pages/privateRoute";
-
+import ApprovedSeller from "./pages/main_pages/approvedSeller";
 function App() {
   return (
     <div>
@@ -19,7 +19,7 @@ function App() {
           <Route path='dashboard' element={<Dashboard />} />
           <Route path='listseller' element={<ListSeller />} />
           <Route path='manager' element={<ListManager />} />
-      
+          <Route path='approvedSeller' element={<ApprovedSeller />} />
         </Route>
         
         <Route path="*" element={<PageNotFound />} />

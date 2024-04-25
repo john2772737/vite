@@ -2,12 +2,14 @@ const express = require("express");
 const mongooese = require("mongoose");
 const cors = require("cors");
 const adminroute = require("./router/admin.router");
+const sellerroute=require('./router/seller.route')
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use("/admin", adminroute);
+app.use("/seller",sellerroute)
 
 const PORT = 4000;
 mongooese
