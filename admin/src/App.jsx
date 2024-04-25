@@ -1,5 +1,4 @@
-
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Outlet } from "react-router-dom";
 import Login from "./pages/login";
 import Main from "./pages/main";
 import Dashboard from './pages/main_pages/dashboard';
@@ -9,7 +8,7 @@ import PageNotFound from "./pages/pagenotfound";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PrivateRoute from "./pages/privateRoute";
 
-function App() { // corrected the function name to start with uppercase
+function App() {
   return (
     <div>
       <Routes>
@@ -18,8 +17,9 @@ function App() { // corrected the function name to start with uppercase
         <Route path="main" element={<PrivateRoute><Main /></PrivateRoute>}>
           <Route index element={<Dashboard />} />
           <Route path='dashboard' element={<Dashboard />} />
-          <Route path='listseller' element={<ListSeller />} /> {/* Updated route path */}
+          <Route path='listseller' element={<ListSeller />} />
           <Route path='manager' element={<ListManager />} />
+      
         </Route>
         
         <Route path="*" element={<PageNotFound />} />
@@ -28,4 +28,4 @@ function App() { // corrected the function name to start with uppercase
   );
 }
 
-export default App; // corrected the export name to start with uppercase
+export default App;
