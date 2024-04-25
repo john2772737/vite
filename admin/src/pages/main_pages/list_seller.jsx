@@ -8,7 +8,7 @@ function ListSeller() {
     <div className='listseller'>
     <h1>List Seller</h1>
     <Container className="container-box"> {/* Container box */}
-      <Table striped bordered hover>
+      <Table striped bordered hover >
         <thead>
           <tr>
             <th>#</th>

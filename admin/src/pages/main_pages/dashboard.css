@@ -1,38 +1,79 @@
 /* dashboard.css */
 
 /* Style for the outer container */
+
+body{
+  background: linear-gradient(135deg, #EEEEEE, #DDDDDD);
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+}
+
 .overview {
   display: flex;
   flex-wrap: wrap;
   font-family: 'Bodoni Ferrara';
 }
 
-.outer-container {
-  padding: 20px;
-  border-radius: 15px;
-  background-color: #E8E8E9;
-  width: 100vw; /* Full width of the viewport */
-  height: 100vh; /* Full height of the viewport */
-  display: flex;
-  flex-wrap: wrap; /* Allow inner containers to wrap */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 /* Style for the inner containers */
-.inner-container {
+.inner-container1 {
+  color: #000;
+  border-radius: 3px;
   height: 200px;
   width: calc(25% - 40px); /* 25% of the outer container width minus margin */
-  background-color: #F4F4F4;
-  border-radius: 10px;
+  background: linear-gradient(to right, #6AD4DD, #5755FE);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  margin: 20px;
+  padding: 10px;
+}
+
+.inner-container2 {
+  color: #000;
+  border-radius: 3px;
+  height: 200px;
+  width: calc(25% - 40px); /* 25% of the outer container width minus margin */
+  background: linear-gradient(to right, #8DECB4, #41B06E);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  margin: 20px;
+  padding: 10px;
+}
+
+.inner-container3 {
+  color: #000;
+  border-radius: 3px;
+  height: 200px;
+  width: calc(25% - 40px); /* 25% of the outer container width minus margin */
+  background: linear-gradient(to right, #FA7070, #D20062);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  margin: 20px;
+  padding: 10px;
+}
+
+.inner-container4 {
+  color: #000;
+  border-radius: 3px;
+  height: 200px;
+  width: calc(25% - 40px); /* 25% of the outer container width minus margin */
+  background: linear-gradient(to right, #FFC100, #FF8A08);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   margin: 20px;
   padding: 10px;
 }
 
 /* Style for the box content */
-.box-container {
+.box-container1 {
+  padding: 20px;
+}
+
+.box-container2 {
+  padding: 20px;
+}
+
+.box-container3 {
+  padding: 20px;
+}
+
+.box-container4 {
   padding: 20px;
 }
 

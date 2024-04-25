@@ -1,18 +1,21 @@
-import  { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Main from './main';
+import backgroundImage from '../images/booklot_bg.png'; // Import your background image
+import './login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     // Check if user is logged in based on sessionStorage
     const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(isLoggedIn);
-  }, []); // Empty dependency array ensures this effect runs only once after initial render
+  }, []);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -25,12 +28,11 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (username === 'admin' && password === 'admin') {
-    
       // Set logged in state to true
       setIsLoggedIn(true);
       // Store session information in sessionStorage
       sessionStorage.setItem('isLoggedIn', 'true');
-      navigate('/main' );
+      navigate('/main');
     } else {
       toast.error('Invalid username or password');
     }
@@ -45,21 +47,50 @@ function Login() {
   };
 
   return (
-    <div>
-      <Toaster />
-    
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundImage: `url(${backgroundImage})`, // Set background image
+        backgroundSize: 'cover', fontFamily: 'Montserrat'
+      }}
+    >
+      <div style={{ width: '450px', height: '450px', backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: '20px', borderRadius: '15px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        <h4 style={{ textAlign: 'left', marginBottom: '30px', marginTop: '40px', marginLeft: '40px' }}>Sign In</h4>
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="username">Username:</label>
-            <input type="text" id="username" name="username" value={username} onChange={handleUsernameChange} />
+        <div className="input-container">
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={username}
+              onChange={handleUsernameChange}
+              className="input-field"
+              placeholder=" "
+            />
+            <label htmlFor="username" className="label">Username</label>
           </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <input type="password" id="password" name="password" value={password} onChange={handlePasswordChange} />
-          </div>
-          <button type="submit">Login</button>
+          <div className="input-container">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={handlePasswordChange}
+              className="input-field"
+              placeholder=" "
+            />
+            <label htmlFor="password" className="label">Password</label>
+        </div>
+          <button type="submit" style={{ width: '80%', padding: '10px', backgroundColor: 'black', 
+          color: 'white', borderRadius: '5px', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+          marginLeft: '40px', marginTop: '30px', }}>Login</button>
         </form>
-        {loggedIn && <Main Logouts={handleLogout} />}
+        <Toaster />
+      </div>
+      {loggedIn && <Main Logouts={handleLogout} />}
     </div>
   );
 }
