@@ -1,6 +1,6 @@
 import React from 'react'
 
-function sellerLogin() {
+function notSeller() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function sellerLogin() {
   )
 }
 
-export default sellerLogin
+export default notSeller
