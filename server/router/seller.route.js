@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const {createseller, listseller}= require('../controller/seller.controller');
+const {createphone, listseller,isApproved}= require('../controller/seller.controller');
 
-router.post('/createseller',createseller)
+router.post('/createphone',createphone)
 router.get('/listseller',listseller)
+router.get('/checkSeller/:id',isApproved)
 
 module.exports = router;

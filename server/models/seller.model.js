@@ -5,41 +5,44 @@ const sellerSchema = new mongoose.Schema({
     
     firstname: {
         type: String,
-        required: true
+       
     },
     lastname: {
         type: String,
-        required: true
+   
     },
     shopname: {
         type: String,
-        required: true,
+       
         unique: true
     },
     password: {
         type: String,
-        required: true,
-        unique: true
+   
     },
     email: {
         type: String,
-        required: true,
-        unique: [true,"Email already exists"]
+        unique: true
     },
     birthday: Date,
-    phoneNumber: String,
+    phoneNumber: {
+        type:String,
+        unique:true
+        
+    },
     
     Picture: {
     type: Buffer,
-        required: true
+    
     },
 
     idPicture: {
         type: Buffer,
-        required: true
+     
     },
 
     approved: Boolean,
+    submit:Boolean
 })
 
 module.exports = mongoose.model('Seller', sellerSchema);
