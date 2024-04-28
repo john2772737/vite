@@ -1,6 +1,6 @@
 import React from 'react'
 
-function purchase() {
+const sellercentre = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function purchase() {
   )
 }
 
-export default purchase
+export default sellercentre
