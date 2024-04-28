@@ -2,10 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import UserLogin from "./pages/userLogin";
 import Users from "./pages/user";
 import Seller from "./pages/seller";
-import Cart from "./pages/user/cart";
+import Cart from "./pages/user/cart_customer";
 import Profile from "./pages/user/profile";
 import Editprofile from "./pages/user/editprofile";
-import Purchase from "./pages/user/purchase";
+import Purchase from "./pages/user/purchase_customer";
 import Dashboard from "./pages/selller/dashboard";
 import AddProduct from "./pages/selller/addProduct";
 import Editprofile_seller from "./pages/selller/editprofile_seller";
@@ -18,6 +18,13 @@ import PageNotFound from "./pages/pagenotfound";
 import NotSeller from "./pages/notSeller"
 import UserRegistration from "./pages/userRegistration";
 import SellerRegistration from "./pages/sellerRegistration";
+
+import LiveCustomer from "./pages/user/live_customer";
+import CartCustomer from "./pages/user/cart_customer";
+import PurchaseCustomer from "./pages/user/purchase_customer";
+import NotifCustomer from "./pages/user/notification_customer";
+import LoginCustomer from "./pages/user/login_customer";
+
 function App() {
   return (
     <Routes>
@@ -30,13 +37,18 @@ function App() {
 
       <Route path="user" element={<Users />}>
         <Route index element={<Home />} />
-        <Route path="home" element={<Home />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="profile" element={<Profile />}>
+        <Route path="/user" element={<Home />} />
+        <Route path="/user/live" element={<LiveCustomer />} />
+        <Route path="/user/cart" element={<CartCustomer />} />
+        <Route path="/user/purchase" element={<PurchaseCustomer />} />
+        <Route path="/user/notif" element={<NotifCustomer />} />
+        {/* <Route path="profile" element={<Profile />}>
           <Route index element={<Editprofile />} />
           <Route path="editprofile" element={<Editprofile />} />
           <Route path="purchase" element={<Purchase />} />
-        </Route>
+        </Route> */}
+        <Route path="/user/cart1" element={<CartCustomer/>}/>
+        <Route path="/user/login" element={<LoginCustomer/>}/>
       </Route>
 
       <Route path="seller" element={<Seller />}>

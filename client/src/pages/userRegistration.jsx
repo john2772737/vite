@@ -1,4 +1,6 @@
-import { useState } from "react";
+import React from "react";
+import backgroundImage from '../components/images/booklot_bg.png'; 
+
 import {
   MDBBtn,
   MDBContainer,
@@ -64,6 +66,7 @@ function App() {
     <MDBContainer
       fluid
       className="p-4 background-radial-gradient overflow-hidden"
+      style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: '100% 100%', backgroundPosition: 'center' }}
     >
       <MDBRow>
         <MDBCol md="6" className="position-relative">
@@ -225,7 +228,7 @@ function App() {
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
-        <MDBCol
+        {/* <MDBCol
           md="6"
           className="text-center text-md-start d-flex flex-column justify-content-center"
         >
@@ -245,7 +248,7 @@ function App() {
             at cupiditate quis eum maiores libero veritatis? Dicta facilis sint
             aliquid ipsum atque?
           </p>
-        </MDBCol>
+        </MDBCol> */}
       </MDBRow>
     </MDBContainer>
   );
