@@ -7,7 +7,7 @@ import {
   MDBIcon,
 } from "mdb-react-ui-kit";
 import "../css/footer.css";
-import Logo from "../images/booklot_logo.png";
+import Logo from "./images/booklot_logo.png";
 
 export default function App() {
   return (

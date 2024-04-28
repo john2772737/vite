@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import backgroundImage from '../components/images/booklot_bg.png'; 
+
 import {
   MDBBtn,
   MDBContainer,
@@ -100,9 +102,10 @@ function App() {
       <MDBContainer
         fluid
         className="p-4 background-radial-gradient overflow-hidden"
+        style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: '100% 100%', backgroundPosition: 'center' }}
       >
         <MDBRow>
-          <MDBCol
+          {/* <MDBCol
             md="6"
             className="text-center text-md-start d-flex flex-column justify-content-center"
           >
@@ -122,9 +125,9 @@ function App() {
               tempora at cupiditate quis eum maiores libero veritatis? Dicta
               facilis sint aliquid ipsum atque?
             </p>
-          </MDBCol>
+          </MDBCol> */}
 
-          <MDBCol md="6" className="position-relative">
+          <MDBCol md="6" className="position-relative" style={{ opacity: '1', fontFamily:'League Spartan'}}>
             <div
               id="radius-shape-1"
               className="position-absolute rounded-circle shadow-5-strong"
@@ -157,7 +160,7 @@ function App() {
                   <a href="/forgot-password">Forgot Password?</a>
                 </div>
 
-                <MDBBtn className="w-100 mb-4" size="md">
+                <MDBBtn className="w-100 mb-4" size="md" style={{ backgroundColor: "#ef3a29" }}>
                   sign in
                 </MDBBtn>
                 <MDBBtn

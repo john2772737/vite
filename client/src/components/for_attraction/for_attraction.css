@@ -1,0 +1,25 @@
+.attraction{
+    height: 20vh;
+    background: #fff;
+    display: flex;
+    font-family: "Bodoni Ferrara";
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.attraction img{
+    padding-left: 80px;
+}
+
+.attraction p{
+    padding-left: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-size: 20px;
+    font-weight: 400;
+}
