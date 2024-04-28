@@ -3,7 +3,7 @@ import { auth } from "../utils/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import Bg from "../images/asas.png";
+
 import "../css/sellerRegistration.css";
 import { toast, Toaster } from "react-hot-toast";
 import {

@@ -4,31 +4,22 @@ const userSchema = new mongoose.Schema({
   uid: {
     type: String,
     required: true,
-    unique: true // Ensure uid is unique
+    unique: true, // Ensure UID is unique
   },
   name: String,
-  username: {
-    type: String,
-    unique: true,
-  },
-
   email: {
     type: String,
-    unique: [true, "Email already exists"],
+    unique: true, // Ensure email is unique (optional, depending on your application logic)
   },
-
-  password: {
+  username: {
     type: String,
-    unique: true,
+    
   },
+  photo: String,
+  password: String, // Consider using a more secure method for storing passwords, like hashing
   birthday: Date,
   phoneNumber: String,
-  photo: String,
-
-
 });
-
-
 
 const User = mongoose.model("user", userSchema);
 
