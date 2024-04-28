@@ -1,0 +1,95 @@
+/* Style for the form container */
+
+.sellerReg{
+    height: 100vh;
+
+}
+
+  .sms-verification-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Style for the input field */
+  .phone-input {
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* Style for the submit button */
+  .verify-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .verify-btn:hover {
+    background-color: red;
+  }
+
+  .verification{
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .code-input{
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .code-btn{
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .code-btn:hover {
+    background-color: red;
+  }
+
+  /* Optional: Style for error message */
+  /* .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  } */
+  
+  
+  /* Confirmation message styles */
+  .wait-page{
+    .custom-container {
+      max-width: 800px; /* Adjust the maximum width as needed */
+    }
+  }
+  .wait-message {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
