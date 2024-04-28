@@ -16,6 +16,8 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   signInWithPopup,
+  
+
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
@@ -32,29 +34,40 @@ function App() {
     photo: "",
   });
 
-
-
   const signInWithFacebook = async () => {
     try {
       const provider = new FacebookAuthProvider();
-
+  
       const result = await signInWithPopup(auth, provider);
-
+  
       const user = result.user;
       setData({
-        id: user.uid,
+        uid: user.uid,
+        
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
       });
-
+  
       toast.success("Successfully Logged In");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to Logged In");
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        // You can provide the user with options to resolve the situation,
+        // such as linking their Facebook account with their existing account.
+        // For example, you can guide them to a page where they can choose
+        // to link their accounts or sign in with their existing account directly.
+        // You may also want to provide a way for users to contact support for assistance.
+        toast.error("Failed to Log In.The email of this account is already registered to this website.");
+  
+        // You may choose to redirect the user to another page for handling this situation.
+        // For example:
+        // history.push('/resolve-account-issue');
+      } else {
+        toast.error("Failed to Logged In");
+      }
     }
   };
-
+  
   const signInWithGooogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -62,13 +75,21 @@ function App() {
       const result = await signInWithPopup(auth, provider);
 
       const user = result.user;
+     
+      console.log(user)
+      console.log(user.uid)
       setData({
-        id: user.uid,
+        uid: user.uid,
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
       });
+
+      toast.success("Successfully Logged In");
+      signInWithProvider()
     } catch (error) {
+
+      
       console.log(error);
     }
   };
@@ -90,6 +111,23 @@ function App() {
       console.log(error);
     }
   };
+  console.log(Data)
+
+  const signInWithProvider = async () => {
+    try {
+      // Make a POST request to your backend endpoint
+      const response = await axios.post('http://localhost:4000/user/createUser', Data);
+      
+      // Handle the response
+      console.log('User data:', response.data.user);
+      // You can redirect the user or perform other actions based on the response
+    } catch (error) {
+      // Handle errors
+      console.error('Error signing in:', error);
+      // You can display an error message to the user or perform other actions based on the error
+    }
+  };
+
   const userRegistration=()=>{
     navigate('/userRegistration')
   }

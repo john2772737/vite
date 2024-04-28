@@ -51,13 +51,15 @@ const PhoneVerification = () => {
     e.preventDefault();
 
     try {
-      /*
+      //
   // Confirm the verification code entered by the user
-      const result = await window.confirmationResult.confirm(verificationCode);
+   //   const result = await window.confirmationResult.confirm(verificationCode);
       console.log("gppd")
+
       
       
-    */
+      
+    
       setStep("form");
       // User signed in successfully
 

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
   MDBBtn,
   MDBContainer,
@@ -12,10 +12,53 @@ import {
 } from "mdb-react-ui-kit";
 import "../css/userRegistration.css";
 import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+
+import axios from "axios";
+
 function App() {
   const navigate = useNavigate();
+
   const userLogin = () => {
     navigate("/userLogin");
+  };
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    username: "",
+    email: "",
+    password: "",
+    birthday: "",
+    phoneNumber: "",
+    voucher: "",
+  });
+
+
+  const handleinputChanges = (event) => {
+    const { name, value } = event.target;
+    // Update the form data state with the new value
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const result = await axios.post(
+        "http://localhost:4000/user/createUser",
+        formData
+      );
+      console.log("User created:", result.data);
+    } catch (error) {
+      if (error.response.status === 409) {
+        toast.error(error.response.data.message); // Display the error message from the backend
+      } else {
+        toast.error("An error occurred"); // Display a generic error message for other errors
+      }
+    }
   };
   return (
     <MDBContainer
@@ -34,6 +77,7 @@ function App() {
           ></div>
 
           <MDBCard className="my-5 bg-glass">
+            <Toaster />
             <MDBCardBody className="p-5">
               <h2>
                 Sign Up <i className="fa fa-sign-in-alt mb-5"></i>
@@ -45,6 +89,9 @@ function App() {
                     label="First name"
                     id="form1"
                     type="text"
+                    name="firstname"
+                    value={formData.firstname}
+                    onChange={handleinputChanges}
                   />
                 </MDBCol>
 
@@ -54,6 +101,9 @@ function App() {
                     label="Last name"
                     id="form2"
                     type="text"
+                    name="lastname"
+                    value={formData.lastname}
+                    onChange={handleinputChanges}
                   />
                 </MDBCol>
               </MDBRow>
@@ -62,18 +112,27 @@ function App() {
                 label="username"
                 id="form5"
                 type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleinputChanges}
               />
               <MDBInput
                 wrapperClass="mb-4"
                 label="Email"
                 id="form3"
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleinputChanges}
               />
               <MDBInput
                 wrapperClass="mb-4"
                 label="Password"
                 id="form4"
                 type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleinputChanges}
               />
 
               <div className="d-flex justify-content-center mb-4">
@@ -97,6 +156,7 @@ function App() {
                 onMouseOut={(e) => {
                   e.target.style.background = "rgba(160, 78, 71, 1)";
                 }} // Revert back to original color
+                onClick={handleSubmit}
               >
                 sign up
               </MDBBtn>
@@ -109,47 +169,58 @@ function App() {
                 <p>or sign in with:</p>
 
                 <MDBBtn
-  tag="a"
-  color="none"
-  className="mx-3"
-  style={{ 
-    color: "rgba(160, 78, 71, 1)", 
-    transition: "color 0.3s" // Adding transition for smooth color change
-  }}
-  onMouseOver={(e) => { e.target.style.color = "red" }} // Change color on hover
-  onMouseOut={(e) => { e.target.style.color = "rgba(160, 78, 71, 1)" }} // Revert back to original color
->
-  <MDBIcon fab icon="facebook-f" size="sm" />
-</MDBBtn>
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{
+                    color: "rgba(160, 78, 71, 1)",
+                    transition: "color 0.3s", // Adding transition for smooth color change
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = "red";
+                  }} // Change color on hover
+                  onMouseOut={(e) => {
+                    e.target.style.color = "rgba(160, 78, 71, 1)";
+                  }} // Revert back to original color
+                >
+                  <MDBIcon fab icon="facebook-f" size="sm" />
+                </MDBBtn>
 
-<MDBBtn
-  tag="a"
-  color="none"
-  className="mx-3"
-  style={{ 
-    color: "rgba(160, 78, 71, 1)", 
-    transition: "color 0.3s" // Adding transition for smooth color change
-  }}
-  onMouseOver={(e) => { e.target.style.color = "red" }} // Change color on hover
-  onMouseOut={(e) => { e.target.style.color = "rgba(160, 78, 71, 1)" }} // Revert back to original color
->
-  <MDBIcon fab icon="google" size="sm" />
-</MDBBtn>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{
+                    color: "rgba(160, 78, 71, 1)",
+                    transition: "color 0.3s", // Adding transition for smooth color change
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = "red";
+                  }} // Change color on hover
+                  onMouseOut={(e) => {
+                    e.target.style.color = "rgba(160, 78, 71, 1)";
+                  }} // Revert back to original color
+                >
+                  <MDBIcon fab icon="google" size="sm" />
+                </MDBBtn>
 
-<MDBBtn
-  tag="a"
-  color="none"
-  className="mx-3"
-  style={{ 
-    color: "rgba(160, 78, 71, 1)", 
-    transition: "color 0.3s" // Adding transition for smooth color change
-  }}
-  onMouseOver={(e) => { e.target.style.color = "red" }} // Change color on hover
-  onMouseOut={(e) => { e.target.style.color = "rgba(160, 78, 71, 1)" }} // Revert back to original color
->
-  <MDBIcon fab icon="github" size="sm" />
-</MDBBtn>
-
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{
+                    color: "rgba(160, 78, 71, 1)",
+                    transition: "color 0.3s", // Adding transition for smooth color change
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = "red";
+                  }} // Change color on hover
+                  onMouseOut={(e) => {
+                    e.target.style.color = "rgba(160, 78, 71, 1)";
+                  }} // Revert back to original color
+                >
+                  <MDBIcon fab icon="github" size="sm" />
+                </MDBBtn>
               </div>
             </MDBCardBody>
           </MDBCard>
