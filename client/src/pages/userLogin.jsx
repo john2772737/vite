@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import backgroundImage from "../components/images/booklot_bg.png";
-
+import '../css/userLogin.css'
 import {
   MDBBtn,
   MDBContainer,
@@ -12,7 +12,7 @@ import {
   MDBCheckbox,
   MDBIcon,
 } from "mdb-react-ui-kit";
-import "../css/userRegistration.css";
+
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
@@ -220,16 +220,43 @@ function App() {
  const handleLogin=async(event)=>{
   event.preventDefault();
 
-  const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.email}`);
-  console.log(email.data.exists)
-  if (email.data.exists===false){
-    toast.error(email.data.message)  
-    return;
+ if (login.email === "" || login.password === "") {
+  toast.error("Fill up all Fields");
+  return;
+}
+const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.email}`);
+  
+
+  try {
+   
+    console.log(email.data.exists);
+    
+    if (!email.data.exists) {
+      toast.error(email.data.message);
+      return;
+    } 
+
+    const dbpass=email.data.user.password
+
+    if (login.password !== dbpass){
+      toast.error("Wrong Password");
+      return;
+
+
+    }
+  } catch (error) {
+    console.error('Error checking email:', error);
+
   }
+  
 
-  toast.success(email.data.message)
-  navigate('/user')
+  toast.success(email.data.message);
 
+ 
+  setTimeout(() => {
+    navigate('/user');
+  }, 1500);
+  
 
  }
 
@@ -293,10 +320,11 @@ function App() {
                     <MDBInput
                       wrapperClass="mb-4"
                       label="Email"
-                      id="form3"
+                      id="emailLogin"
                       type="email"
                       name ="email"
                       onChange={handleLoginChanges}
+                    
                     />
                     <MDBInput
                       wrapperClass="mb-4"
