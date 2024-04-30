@@ -3,7 +3,7 @@ import React from 'react'
 function Inventory() {
   return (
     <div>
-      
+      <h1>dsajdonasjodnajsnjdasnd</h1>
     </div>
   )
 }
