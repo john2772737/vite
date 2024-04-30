@@ -146,6 +146,7 @@ function App() {
         uid:user.uid,
         name: user.displayName,
         photo: user.photoURL,
+        email: user.email,
       
         // Assuming 'displayName' is the property containing the display name
       };
