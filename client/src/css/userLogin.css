@@ -1,6 +1,7 @@
 .App {
   font-family: sans-serif;
   text-align: center;
+  justify-content: center;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");

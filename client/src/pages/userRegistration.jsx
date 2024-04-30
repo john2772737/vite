@@ -23,7 +23,7 @@ function App() {
     <MDBContainer
       fluid
       className="p-4 background-radial-gradient overflow-hidden"
-      style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: '100% 100%', backgroundPosition: 'center' }}
+      style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
       <MDBRow>
         <MDBCol md="6" className="position-relative">
