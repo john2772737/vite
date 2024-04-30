@@ -48,8 +48,27 @@ const isuid = async (req, res) => {
   }
 };
 
+const getEmail =async(req,res)=>{
+  const {email} = req.params;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (user) {
+      res.status(200).json({message:"Login Successful",exists:true,user});
+    
+    } else {
+      res.status(200).json({ message: "Email is not yet Registered", exists:false})
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({message:"Login Succesful"});
+  }
+}
+
 module.exports = {
   createUser,
   isuid,
   createUserProvider,
+  getEmail
 };

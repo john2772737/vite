@@ -33,7 +33,6 @@ function App() {
     confirmPassword: "",
   });
 
-  console.log(Password);
   const [Data, setData] = useState({
     uid: "",
     name: "",
@@ -201,8 +200,38 @@ function App() {
       modifiedUser
     );
     toast.success("Successfully Logged In");
+    navigate('/user')
 
   };
+
+
+  const [login,setLogin]=useState({
+    email:'',
+    password:''
+  })
+  const handleLoginChanges=(event)=>{
+    const {name,value}=event.target
+    setLogin({
+     ...login,
+      [name]:value
+    })
+  }
+
+ const handleLogin=async(event)=>{
+  event.preventDefault();
+
+  const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.email}`);
+  console.log(email.data.exists)
+  if (email.data.exists===false){
+    toast.error(email.data.message)  
+    return;
+  }
+
+  toast.success(email.data.message)
+  navigate('/user')
+
+
+ }
 
   return (
     <div>
@@ -266,12 +295,16 @@ function App() {
                       label="Email"
                       id="form3"
                       type="email"
+                      name ="email"
+                      onChange={handleLoginChanges}
                     />
                     <MDBInput
                       wrapperClass="mb-4"
                       label="Password"
                       id="form4"
                       type="password"
+                      name ="password"
+                      onChange={handleLoginChanges}
                     />
 
                     <div className="d-flex justify-content-center mb-4">
@@ -282,6 +315,7 @@ function App() {
                       className="w-100 mb-4"
                       size="md"
                       style={{ backgroundColor: "#ef3a29" }}
+                      onClick={handleLogin}
                     >
                       sign in
                     </MDBBtn>
