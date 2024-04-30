@@ -21,6 +21,7 @@ function App() {
   }, []);
 
   return (
+    // Side bar responsive
     <div id="app" style={{ height: "100vh", display: "flex", fontFamily: 'League Spartan', background: 'linear-gradient(to bottom, #1679AB, #074173)', fontSize: '18px' }}>
       <Sidebar collapsed={sidebarCollapsed}>
         <Menu>
