@@ -488,7 +488,7 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
                       onMouseOut={(e) => {
                         e.target.style.background = "rgba(160, 78, 71, 1)";
                       }} // Revert back to original color
-                      onClick={setpassword}
+             
                     >
                       sign up
                     </MDBBtn>
