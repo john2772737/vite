@@ -1,18 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import UserLogin from "./pages/userLogin";
 import Users from "./pages/user";
-import Seller from "./pages/seller";
 import Cart from "./pages/user/cart_customer";
 import Profile from "./pages/user/profile";
 import Editprofile from "./pages/user/editprofile";
 import Purchase from "./pages/user/purchase_customer";
-import Dashboard from "./pages/selller/dashboard";
-import AddProduct from "./pages/selller/addProduct";
-import Editprofile_seller from "./pages/selller/editprofile_seller";
-import Inventory from "./pages/selller/Inventory";
-import Live from "./pages/selller/Live";
-import Order from "./pages/selller/order";
-import Voucher from "./pages/selller/voucher";
+import Dashboard from "./pages/seller/sellerdashboard";
+import Editprofile_seller from "./pages/seller/editprofile_seller";
+import Order from "./pages/seller/order";
+import Voucher from "./pages/seller/voucher";
 import Home from "./pages/user/home";
 import PageNotFound from "./pages/pagenotfound";
 import NotSeller from "./pages/notSeller"
@@ -24,6 +20,14 @@ import CartCustomer from "./pages/user/cart_customer";
 import PurchaseCustomer from "./pages/user/purchase_customer";
 import NotifCustomer from "./pages/user/notification_customer";
 import LoginCustomer from "./pages/user/login_customer";
+
+import Seller from "./pages/seller/seller";
+import SellerDashboard from "./pages/seller/sellerdashboard";
+import GoLive from "./pages/seller/golive";
+import Inventory from "./pages/seller/inventory";
+import AddProduct from "./pages/seller/addproduct";
+import MyVoucher from "./pages/seller/voucher";
+import NotifSeller from "./pages/seller/sellernotif";
 
 function App() {
   return (
@@ -52,13 +56,12 @@ function App() {
 
       <Route path="seller" element={<Seller />}>
         <Route index element={<Dashboard />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="editprofile" element={<Editprofile_seller />} />
-        <Route path="orders" element={<Order />} />
-        <Route path="addproduct" element={<AddProduct />} />
-        <Route path="vouchers" element={<Voucher />} />
-        <Route path="inventory" element={<Inventory />} />
-        <Route path="live" element={<Live />} />
+        <Route path="/seller/dashboard" element={<SellerDashboard />} />
+        <Route path="/seller/golive" element={<GoLive />} />
+        <Route path="/seller/inventory" element={<Inventory />} />
+        <Route path="/seller/addproduct" element={<AddProduct />} />
+        <Route path="/seller/voucher" element={<MyVoucher />} />
+        <Route path="/seller/sellernotif" element={<NotifSeller />} />
       </Route>
     </Routes>
   );

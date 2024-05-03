@@ -1,6 +1,6 @@
 import React from 'react'
 
-function addProduct() {
+const sellernotif = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function addProduct() {
   )
 }
 
-export default addProduct
+export default sellernotif
