@@ -32,6 +32,7 @@ function App() {
     password: "",
     confirmPassword: "",
   });
+  const [code,setcode]=useState('')
 
   const [Data, setData] = useState({
     uid: "",
@@ -42,6 +43,7 @@ function App() {
   });
 
   const [formData, setFormData] = useState({
+    uid:"djasodna",
     firstname: "",
     lastname: "",
     username: "",
@@ -49,7 +51,7 @@ function App() {
     password: "",
     birthday: "",
     phoneNumber: "",
-    voucher: "",
+
   });
 
   const handlepasswordChanges = (event) => {
@@ -68,22 +70,35 @@ function App() {
       [name]: value,
     });
   };
+  console.log(formData)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const modifiedsUser = {
+      uid: formData.uid,
+      name: formData.name,
+      email: formData.email,
+      username: formData.username,
+      password: formData.password
+
+      // Assuming 'displayName' is the property containing the display name
+    };
+    console.log(typeof(modifiedsUser))
     try {
-      const result = await axios.post(
-        "http://localhost:4000/user/createUser",
-        formData
-      );
-      console.log("User created:", result.data);
+    
+  
+      
+       const response = await axios.post(
+      "http://localhost:4000/user/createUser",
+      formData
+    );
+    
     } catch (error) {
+      console.log(error.response.status)
       if (error.response.status === 409) {
         toast.error(error.response.data.message); // Display the error message from the backend
-      } else {
-        toast.error("An error occurred"); // Display a generic error message for other errors
-      }
+      } 
     }
   };
 
@@ -260,6 +275,18 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
 
  }
 
+ const handleVerify=()=>{
+  setStep('verifyEmail')
+ }
+
+ const handleCode = (e) => {
+  const inputValue = e.target.value;
+  // Regular expression to allow only numbers
+  const onlyNumbers = /^[0-9]*$/;
+  if (onlyNumbers.test(inputValue) || inputValue === '') {
+    setcode(inputValue);
+  }
+};
   return (
     <div>
       {step === "login" && (
@@ -488,10 +515,13 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
                       onMouseOut={(e) => {
                         e.target.style.background = "rgba(160, 78, 71, 1)";
                       }} // Revert back to original color
-             
+                      onClick={handleVerify}
                     >
                       sign up
                     </MDBBtn>
+
+           
+
 
                     <MDBBtn
                       className="w-100 mb-4"
@@ -657,6 +687,102 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
             </MDBRow>
           </MDBContainer>
         </div>
+      )}
+
+      {step === "verifyEmail" && (
+        <div>
+        <Toaster />
+        <MDBContainer
+          fluid
+          className="p-4 background-radial-gradient overflow-hidden"
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: "100% 100%",
+            backgroundPosition: "center",
+          }}
+        >
+          <MDBRow>
+            {/* <MDBCol
+    md="6"
+    className="text-center text-md-start d-flex flex-column justify-content-center"
+  >
+    <h1
+      className="my-5 display-3 fw-bold ls-tight px-3"
+      style={{ color: "hsl(218, 81%, 95%)" }}
+    >
+      The best offer <br />
+      <span style={{ color: "hsl(218, 81%, 75%)" }}>
+        for your business
+      </span>
+    </h1>
+
+    <p className="px-3" style={{ color: "hsl(218, 81%, 85%)" }}>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet,
+      itaque accusantium odio, soluta, corrupti aliquam quibusdam
+      tempora at cupiditate quis eum maiores libero veritatis? Dicta
+      facilis sint aliquid ipsum atque?
+    </p>
+  </MDBCol> */}
+
+            <MDBCol
+              md="6"
+              className="position-relative"
+              style={{ opacity: "1", fontFamily: "League Spartan" }}
+            >
+              <div
+                id="radius-shape-1"
+                className="position-absolute rounded-circle shadow-5-strong"
+              ></div>
+              <div
+                id="radius-shape-2"
+                className="position-absolute shadow-5-strong"
+              ></div>
+
+              <MDBCard className="my-5 bg-glass">
+                <MDBCardBody className="p-5">
+                  <h2>
+                    Verify Email<i className="fa fa-sign-in-alt mb-5"></i>
+                  </h2>
+
+                  <MDBInput
+                    wrapperClass="mb-4"
+                    label="Email"
+                    id="form3"
+                    type="email"
+                    
+                    value= {formData.email}
+                    name="email"
+                  />
+                    <MDBBtn
+                    className="w-100 mb-4"
+                    size="md"
+                    onClick={''}
+                  >
+                    get code
+                  </MDBBtn>
+                  
+                  <MDBInput
+                    wrapperClass="mb-4"
+                    label="Enter the Code: "
+                    id="form4"
+                    type=""
+                    onChange={handleCode}
+                    value={code}
+                    name="code"
+                  />
+                  <MDBBtn
+                    className="w-100 mb-4"
+                    size="md"
+                    onClick={''}
+                  >
+                    sign up
+                  </MDBBtn>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      </div>
       )}
     </div>
   );

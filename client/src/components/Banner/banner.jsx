@@ -6,7 +6,7 @@ const Banner = () => {
 
   return (
     <section className="mb-40">
-      <div className="bg-neutral-50 px-6 py-12 text-left dark:bg-neutral-900 md:px-12 lg:text-left">
+      <div className="bg-neutral-50 px-6 py-12 text-left light:bg-neutral-900 md:px-12 lg:text-left">
         <div className="w-full mx-auto sm:max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-5xl">
           <div className="grid gap-12 lg:grid-cols-2">
             <div className="mt-15 lg:mt-0 text-left lg:text-left">

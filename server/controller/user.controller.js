@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-
+const transporter =require('../utils/node.mailer')
 const createUser = async (req, res) => {
   try {
     // Proceed with creating the user if the fields are not empty
@@ -65,6 +65,34 @@ const getEmail =async(req,res)=>{
     res.status(500).json({message:"Login Succesful"});
   }
 }
+
+
+function generateVerificationCode() {
+  // Generate a random number between 1000 and 9999 (inclusive)
+  return Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+}
+
+app.post('/sendVerificationCode', (req, res) => {
+  const { email } = req.body;
+  const verificationCode = generateVerificationCode(); // Implement your function to generate code
+
+  const mailOptions = {
+    from: 'booklot12@gmail.com',
+    to: email,
+    subject: 'Email Verification Code',
+    text: `Your verification code is: ${verificationCode}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+      res.status(500).send('Error sending verification code');
+    } else {
+      console.log('Email sent:', info.response);
+      res.status(200).send('Verification code sent successfully');
+    }
+  });
+});
 
 module.exports = {
   createUser,
