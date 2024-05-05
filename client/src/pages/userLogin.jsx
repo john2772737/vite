@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import backgroundImage from "../components/images/booklot_bg.png";
-import '../css/userLogin.css'
+import "../css/userLogin.css";
 import {
   MDBBtn,
   MDBContainer,
@@ -32,18 +32,17 @@ function App() {
     password: "",
     confirmPassword: "",
   });
-  const [code,setcode]=useState('')
+  const [code, setcode] = useState("");
 
   const [Data, setData] = useState({
     uid: "",
     name: "",
     email: "",
     photo: "",
-
   });
 
   const [formData, setFormData] = useState({
-    uid:"djasodna",
+    uid: "djasodna",
     firstname: "",
     lastname: "",
     username: "",
@@ -51,7 +50,6 @@ function App() {
     password: "",
     birthday: "",
     phoneNumber: "",
-
   });
 
   const handlepasswordChanges = (event) => {
@@ -70,7 +68,7 @@ function App() {
       [name]: value,
     });
   };
-  console.log(formData)
+  console.log(formData);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -80,25 +78,21 @@ function App() {
       name: formData.name,
       email: formData.email,
       username: formData.username,
-      password: formData.password
+      password: formData.password,
 
       // Assuming 'displayName' is the property containing the display name
     };
-    console.log(typeof(modifiedsUser))
+    console.log(typeof modifiedsUser);
     try {
-    
-  
-      
-       const response = await axios.post(
-      "http://localhost:4000/user/createUser",
-      formData
-    );
-    
+      const response = await axios.post(
+        "http://localhost:4000/user/createUser",
+        formData
+      );
     } catch (error) {
-      console.log(error.response.status)
+      console.log(error.response.status);
       if (error.response.status === 409) {
         toast.error(error.response.data.message); // Display the error message from the backend
-      } 
+      }
     }
   };
 
@@ -145,7 +139,6 @@ function App() {
       const user = result.user;
 
       console.log(user.uid);
-
 
       signInWithProvider(user);
     } catch (error) {
@@ -198,13 +191,13 @@ function App() {
       toast.error("Passwords do not match");
       return;
     }
-    console.log(Data.photo)
+    console.log(Data.photo);
     const modifiedUser = {
       uid: Data.uid,
       name: Data.name,
       photo: Data.photo,
       email: Data.email,
-      password: Password.password
+      password: Password.password,
 
       // Assuming 'displayName' is the property containing the display name
     };
@@ -215,78 +208,69 @@ function App() {
       modifiedUser
     );
     toast.success("Successfully Logged In");
-    navigate('/user')
-
+    navigate("/user");
   };
 
-
-  const [login,setLogin]=useState({
-    email:'',
-    password:''
-  })
-  const handleLoginChanges=(event)=>{
-    const {name,value}=event.target
+  const [login, setLogin] = useState({
+    email: "",
+    password: "",
+  });
+  const handleLoginChanges = (event) => {
+    const { name, value } = event.target;
     setLogin({
-     ...login,
-      [name]:value
-    })
-  }
+      ...login,
+      [name]: value,
+    });
+  };
 
- const handleLogin=async(event)=>{
-  event.preventDefault();
+  const handleLogin = async (event) => {
+    event.preventDefault();
 
- if (login.email === "" || login.password === "") {
-  toast.error("Fill up all Fields");
-  return;
-}
-const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.email}`);
-  
-
-  try {
-   
-    console.log(email.data.exists);
-    
-    if (!email.data.exists) {
-      toast.error(email.data.message);
+    if (login.email === "" || login.password === "") {
+      toast.error("Fill up all Fields");
       return;
-    } 
-
-    const dbpass=email.data.user.password
-
-    if (login.password !== dbpass){
-      toast.error("Wrong Password");
-      return;
-
-
     }
-  } catch (error) {
-    console.error('Error checking email:', error);
+    const email = await axios.get(
+      `http://localhost:4000/user/checkEmail/${login.email}`
+    );
 
-  }
-  
+    try {
+      console.log(email.data.exists);
 
-  toast.success(email.data.message);
+      if (!email.data.exists) {
+        toast.error(email.data.message);
+        return;
+      }
 
- 
-  setTimeout(() => {
-    navigate('/user');
-  }, 1500);
-  
+      const dbpass = email.data.user.password;
 
- }
+      if (login.password !== dbpass) {
+        toast.error("Wrong Password");
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking email:", error);
+    }
 
- const handleVerify=()=>{
-  setStep('verifyEmail')
- }
+    toast.success(email.data.message);
 
- const handleCode = (e) => {
-  const inputValue = e.target.value;
-  // Regular expression to allow only numbers
-  const onlyNumbers = /^[0-9]*$/;
-  if (onlyNumbers.test(inputValue) || inputValue === '') {
-    setcode(inputValue);
-  }
-};
+    setTimeout(() => {
+      navigate("/user");
+    }, 1500);
+  };
+
+  const handleVerify = () => {
+    setStep("verifyEmail");
+  };
+
+  const handleCode = (e) => {
+    const inputValue = e.target.value;
+    // Regular expression to allow only numbers
+    const onlyNumbers = /^[0-9]*$/;
+    if (onlyNumbers.test(inputValue) || inputValue === "") {
+      setcode(inputValue);
+    }
+  };
   return (
     <div>
       {step === "login" && (
@@ -349,16 +333,15 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
                       label="Email"
                       id="emailLogin"
                       type="email"
-                      name ="email"
+                      name="email"
                       onChange={handleLoginChanges}
-                    
                     />
                     <MDBInput
                       wrapperClass="mb-4"
                       label="Password"
                       id="form4"
                       type="password"
-                      name ="password"
+                      name="password"
                       onChange={handleLoginChanges}
                     />
 
@@ -520,15 +503,16 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
                       sign up
                     </MDBBtn>
 
-           
-
-
                     <MDBBtn
                       className="w-100 mb-4"
                       size="md"
                       onClick={userLogin}
                     >
                       sign in
+                    </MDBBtn>
+
+                    <MDBBtn className="w-50 mb-4" onClick={userLogin}>
+                      CANCEL
                     </MDBBtn>
 
                     <div className="text-center">
@@ -691,18 +675,18 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
 
       {step === "verifyEmail" && (
         <div>
-        <Toaster />
-        <MDBContainer
-          fluid
-          className="p-4 background-radial-gradient overflow-hidden"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "100% 100%",
-            backgroundPosition: "center",
-          }}
-        >
-          <MDBRow>
-            {/* <MDBCol
+          <Toaster />
+          <MDBContainer
+            fluid
+            className="p-4 background-radial-gradient overflow-hidden"
+            style={{
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: "100% 100%",
+              backgroundPosition: "center",
+            }}
+          >
+            <MDBRow>
+              {/* <MDBCol
     md="6"
     className="text-center text-md-start d-flex flex-column justify-content-center"
   >
@@ -724,65 +708,60 @@ const email = await axios.get(`http://localhost:4000/user/checkEmail/${login.ema
     </p>
   </MDBCol> */}
 
-            <MDBCol
-              md="6"
-              className="position-relative"
-              style={{ opacity: "1", fontFamily: "League Spartan" }}
-            >
-              <div
-                id="radius-shape-1"
-                className="position-absolute rounded-circle shadow-5-strong"
-              ></div>
-              <div
-                id="radius-shape-2"
-                className="position-absolute shadow-5-strong"
-              ></div>
+              <MDBCol
+                md="6"
+                className="position-relative"
+                style={{ opacity: "1", fontFamily: "League Spartan" }}
+              >
+                <div
+                  id="radius-shape-1"
+                  className="position-absolute rounded-circle shadow-5-strong"
+                ></div>
+                <div
+                  id="radius-shape-2"
+                  className="position-absolute shadow-5-strong"
+                ></div>
 
-              <MDBCard className="my-5 bg-glass">
-                <MDBCardBody className="p-5">
-                  <h2>
-                    Verify Email<i className="fa fa-sign-in-alt mb-5"></i>
-                  </h2>
+                <MDBCard className="my-5 bg-glass">
+                  <MDBCardBody className="p-5">
+                    <h2>
+                      Verify Email<i className="fa fa-sign-in-alt mb-5"></i>
+                    </h2>
 
-                  <MDBInput
-                    wrapperClass="mb-4"
-                    label="Email"
-                    id="form3"
-                    type="email"
-                    
-                    value= {formData.email}
-                    name="email"
-                  />
-                    <MDBBtn
-                    className="w-100 mb-4"
-                    size="md"
-                    onClick={''}
-                  >
-                    get code
-                  </MDBBtn>
-                  
-                  <MDBInput
-                    wrapperClass="mb-4"
-                    label="Enter the Code: "
-                    id="form4"
-                    type=""
-                    onChange={handleCode}
-                    value={code}
-                    name="code"
-                  />
-                  <MDBBtn
-                    className="w-100 mb-4"
-                    size="md"
-                    onClick={''}
-                  >
-                    sign up
-                  </MDBBtn>
-                </MDBCardBody>
-              </MDBCard>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-      </div>
+                    <MDBInput
+                      wrapperClass="mb-4"
+                      label="Email"
+                      id="form3"
+                      type="email"
+                      value={formData.email}
+                      name="email"
+                    />
+                    <MDBBtn className="w-100 mb-4" size="md" onClick={""}>
+                      get code
+                    </MDBBtn>
+
+                    <MDBInput
+                      wrapperClass="mb-4"
+                      label="Enter the Code: "
+                      id="form4"
+                      type=""
+                      onChange={handleCode}
+                      value={code}
+                      name="code"
+                    />
+                    <MDBBtn className="w-100 mb-4" size="md" onClick={""}>
+                      sign up
+                    </MDBBtn>
+
+                    <MDBBtn className="w-50 mb-4" onClick={userRegistration}>
+                      CANCEL
+                    </MDBBtn>
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+        </div>
       )}
     </div>
   );
