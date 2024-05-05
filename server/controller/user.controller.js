@@ -65,6 +65,23 @@ const getEmail =async(req,res)=>{
     res.status(500).json({message:"Login Succesful"});
   }
 }
+async function generateUID() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let uid = '';
+  for (let i = 0; i < 20; i++) {
+    uid += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  
+  // Check if UID already exists in the database
+  const existingUser = await User.findOne({ uid });
+  if (existingUser) {
+    // If UID exists, generate a new one recursively
+    return generateUID();
+  }
+  
+  // If UID doesn't exist, return the generated UID
+  return uid;
+}
 
 
 function generateVerificationCode() {
@@ -75,15 +92,7 @@ function generateVerificationCode() {
 const sendVerification = async(req, res) => {
   const { email } = req.params;
   const verificationCode = generateVerificationCode();
-  
-  const user = await User.findOne({ email });
-
-  if (user) {
-    res.status(200).json({ message: "Email was already registered" });
-    return;
-  }
-  console.log(email)
-  
+  const uid = await generateUID();
 
   const mailOptions = {
     from: 'johnregulacion5555@gmail.com',
@@ -94,11 +103,9 @@ const sendVerification = async(req, res) => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error('Error sending email:', error);
-      res.status(500).send('Error sending verification code');
+      res.status(500).json({message:'Error sending verification code'});
     } else {
-      console.log('Email sent:', info.response);
-      res.status(200).json({message:'Verification code sent successfully',verificationCode});
+      res.status(200).json({message:'Verification code sent successfully',verificationCode,uid});
     }
   });
 };
