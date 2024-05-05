@@ -72,12 +72,21 @@ function generateVerificationCode() {
   return Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
 }
 
-app.post('/sendVerificationCode', (req, res) => {
-  const { email } = req.body;
-  const verificationCode = generateVerificationCode(); // Implement your function to generate code
+const sendVerification = async(req, res) => {
+  const { email } = req.params;
+  const verificationCode = generateVerificationCode();
+  
+  const user = await User.findOne({ email });
+
+  if (user) {
+    res.status(200).json({ message: "Email was already registered" });
+    return;
+  }
+  console.log(email)
+  
 
   const mailOptions = {
-    from: 'booklot12@gmail.com',
+    from: 'johnregulacion5555@gmail.com',
     to: email,
     subject: 'Email Verification Code',
     text: `Your verification code is: ${verificationCode}`,
@@ -89,14 +98,16 @@ app.post('/sendVerificationCode', (req, res) => {
       res.status(500).send('Error sending verification code');
     } else {
       console.log('Email sent:', info.response);
-      res.status(200).send('Verification code sent successfully');
+      res.status(200).json({message:'Verification code sent successfully',verificationCode});
     }
   });
-});
+};
 
 module.exports = {
   createUser,
   isuid,
   createUserProvider,
-  getEmail
+  getEmail,
+  sendVerification
+
 };
