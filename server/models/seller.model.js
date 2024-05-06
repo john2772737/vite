@@ -25,15 +25,19 @@ const sellerSchema = new mongoose.Schema({
         unique: true
     },
     picture: {
-        type: Buffer,
+        type: String,
     },
     idPicture: {
-        type: Buffer,
+        type: String,
     },
-    approved: Boolean,
-    submit: Boolean,
-
-    
+    approved: {
+        type: Boolean,
+        default: false // Default value set to false
+    },
+    submit: {
+        type: Boolean,
+        default: false // Default value set to false
+    },
     products: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'

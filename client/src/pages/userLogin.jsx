@@ -156,7 +156,10 @@ const [formData, setFormData] = useState(initialFormData);
         uid: user.uid,
         fullname: user.displayName,
         email: user.email,
+        username:"",
         photo: user.photoURL,
+        birthday:"",
+        phoneNumber:""
       });
       // You can redirect the user or perform other actions based on the response
     } catch (error) {
@@ -186,7 +189,7 @@ const [formData, setFormData] = useState(initialFormData);
 
     const modifiedUser = {
       uid: formData.uid,
-      name: formData.fullname,
+      fullname: formData.fullname,
       photo: formData.photo,
       email: formData.email,
       password: formData.password,
@@ -197,7 +200,7 @@ const [formData, setFormData] = useState(initialFormData);
     // Make a POST request to your backend endpoint
     const response = await axios.post(
       "http://localhost:4000/user/createUserProvider",
-      modifiedUser
+      formData
     );
     toast.success("Successfully Logged In");
     navigate("/user");

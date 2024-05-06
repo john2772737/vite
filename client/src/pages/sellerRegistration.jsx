@@ -30,24 +30,26 @@ const PhoneVerification = () => {
   console.log(verificationCode);
 
   const handlePhoneSubmit = async (e) => {
+    const newPhoneNumber = "+" + phoneNumber;
+    e.preventDefault();  
+
     try {
-      /*  e.preventDefault();
-      const appVerifier = new RecaptchaVerifier(auth, "appVerifier", {});
-      const newPhoneNumber = "+" + phoneNumber;
-  
-      // Sign in with phone number and await confirmation result
-      const confirmationResult = await signInWithPhoneNumber(auth, newPhoneNumber, appVerifier);
-      
-      // Store the confirmationResult for later use (optional)
+
+      const appVerifier = new RecaptchaVerifier(auth, "appVerifier", {
+        size: "invisible",
+      });
+
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        newPhoneNumber,
+        appVerifier
+      );
       window.confirmationResult = confirmationResult;
 
-      */
       setStep("verification");
-      // Proceed with any other logic here
     } catch (error) {
-      // Handle any errors that occur during the sign-in process
       console.error("Error signing in with phone number:", error);
-      // Optionally, display an error message to the user
+  
     }
   };
 
@@ -55,23 +57,13 @@ const PhoneVerification = () => {
     e.preventDefault();
 
     try {
-      //
-  // Confirm the verification code entered by the user
-   //   const result = await window.confirmationResult.confirm(verificationCode);
-      console.log("gppd")
+      const result = await window.confirmationResult.confirm(verificationCode);
+      console.log("gppd");
 
-      
-      
-      
-    
       setStep("form");
-      // User signed in successfully
-
-      // Proceed with any other logic here
     } catch (error) {
-      // User couldn't sign in (bad verification code or other error)
       console.error("Error confirming verification code:", error);
-      // Optionally, display an error message to the user
+    
     }
   };
 
@@ -89,17 +81,18 @@ const PhoneVerification = () => {
 
   return (
     <div>
-      <div className="sellerReg">
+      <div className="sellerReg ">
         <Navbar />
         {step === "phone" && (
-          <MDBContainer fluid className="HEY" size="sm">
+          <MDBContainer fluid className="HEY ">
             <MDBRow className="d-flex justify-content-center align-items-center ">
               <MDBCol>
                 <MDBCard className="my-4">
                   <MDBRow className="g-0">
                     <MDBCol md="6">
                       <MDBCardImage
-                        src=""
+                        style={{ height: "80vh" }}
+                        src="https://i0.wp.com/www.adobomagazine.com/wp-content/uploads/2021/09/Lazada-launches-Start-It-Up-Laz-It-Up-program-for-more-accessible-business-registration-on-the-platform-HERO.jpg?w=1440&ssl=1"
                         alt="Sample photo"
                         className="rounded"
                         fluid
@@ -107,18 +100,17 @@ const PhoneVerification = () => {
                     </MDBCol>
 
                     <MDBCol md="6">
-                      <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                        <MDBCardTitle className="mb-2 text-uppercase fw-bold">
+                      <MDBCardBody className="text-black d-flex flex-column justify-content-center ">
+                        <MDBCardTitle className="mb-4 text-uppercase fw-bold">
                           Create your Booklot Store Now!{" "}
                         </MDBCardTitle>
-                        <MDBCardText>
+                        <MDBCardText className="mb-4 ">
                           Enter your Mobile Number to Start Selling.
                         </MDBCardText>
                         <MDBRow>
                           <MDBCardText>
-                            Verify your Phone Number:
                             <PhoneInput
-                              className="phone-input"
+                              className="phone-input mb-7 "
                               country={"ph"}
                               onlyCountries={["ph"]}
                               value={phoneNumber}
@@ -126,6 +118,7 @@ const PhoneVerification = () => {
                             />
                           </MDBCardText>
                         </MDBRow>
+                        <div id="recaptcha-container"></div>
                         <div>
                           <button
                             type="submit"
@@ -140,7 +133,6 @@ const PhoneVerification = () => {
                   </MDBRow>
                 </MDBCard>
 
-                <div id="appVerifier"></div>
                 <Toaster />
               </MDBCol>
             </MDBRow>
@@ -268,6 +260,22 @@ const PhoneVerification = () => {
                           type="text"
                         />
 
+                        <MDBInput
+                          wrapperClass="mb-4"
+                          label="Password"
+                          size="lg"
+                          id="form5"
+                          type="password"
+                        />
+
+                        <MDBInput
+                          wrapperClass="mb-4"
+                          label="Confirm Password"
+                          size="lg"
+                          id="form5"
+                          type="password"
+                        />
+
                         <div className="d-flex justify-content-end pt-3">
                           <MDBBtn color="light" size="lg">
                             Reset all
@@ -358,72 +366,6 @@ const PhoneVerification = () => {
           </div>
         )}
 
-        {step == "Password" && (
-          <div>
-            <MDBContainer fluid className="HEY" size="sm">
-              <MDBRow className="d-flex justify-content-center align-items-center ">
-                <MDBCol>
-                  <MDBCard className="my-4">
-                    <MDBRow>
-                      <MDBCol md="">
-                        <MDBCardImage
-                          position="left"
-                          src="{Bg}"
-                          alt="Sample photo"
-                          className="rounded"
-                          fluid
-                        />
-                      </MDBCol>
-
-                      <MDBCol md="6">
-                        <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                          <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                            SELLER REGISTRATION
-                          </MDBCardTitle>
-                          <MDBCardText>
-                            Please fill out all the required fields to complete
-                            the registration process.
-                          </MDBCardText>
-
-                          <MDBInput
-                            wrapperClass="mb-4"
-                            label="New Password"
-                            size="lg"
-                            id="form3"
-                            type="password"
-                          />
-
-                          <MDBInput
-                            wrapperClass="mb-4"
-                            label="Confirm Password"
-                            size="lg"
-                            id="form4"
-                            type="password"
-                          />
-
-                          <div className="d-flex justify-content-end pt-3">
-                            <MDBBtn color="light" size="lg">
-                              Reset all
-                            </MDBBtn>
-                            <MDBBtn
-                              className="ms-2"
-                              color="danger"
-                              size="lg"
-                              onClick={handledataSubmit}
-                            >
-                              Proceed
-                            </MDBBtn>
-                          </div>
-                        </MDBCardBody>
-                      </MDBCol>
-                    </MDBRow>
-                  </MDBCard>
-                </MDBCol>
-              </MDBRow>
-            </MDBContainer>
-          </div>
-        )}
-
         {step === "wait" && (
           <MDBContainer fluid className="wait-page" my="4">
             <MDBRow
@@ -440,11 +382,10 @@ const PhoneVerification = () => {
             <button type="submit">OK</button>
           </MDBContainer>
         )}
-      <div>
+        <div>
           <Footer />
         </div>
       </div>
-
     </div>
   );
 };
