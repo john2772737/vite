@@ -3,3 +3,16 @@
     height: 2px;
     background-color: red;
 }
+
+.notification-tab > .active{
+    --tw-border-opacity: 1;
+    border-bottom-color: rgb(59 130 246 / var(--tw-border-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(59 130 246 / var(--tw-text-opacity));
+  }
+  
+  .notification-tab > .active:hover{
+    --tw-text-opacity: 1;
+    color: rgb(59 130 246 / var(--tw-text-opacity));
+  }
+  
