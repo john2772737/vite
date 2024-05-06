@@ -12,7 +12,7 @@ import Voucher from "./pages/seller/voucher";
 import Home from "./pages/user/home";
 import PageNotFound from "./pages/pagenotfound";
 import NotSeller from "./pages/notSeller"
-
+import ForgotPassword from "./pages/forgotPassword";
 import SellerRegistration from "./pages/sellerRegistration";
 
 import LiveCustomer from "./pages/user/live_customer";
@@ -34,6 +34,7 @@ function App() {
     <Routes>
       <Route path="/" element={<UserLogin />} />
       <Route path="/userLogin" element={<UserLogin />} /> {/* Corrected route path */}
+      <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/sellerLogin" element={<NotSeller />} /> {/* Added sellerLogin route */}
       <Route path="/sellerRegistration" element={<SellerRegistration />}/>
       <Route path="*" element={<PageNotFound />} /> {/* Catch-all route for page not found */}

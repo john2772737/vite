@@ -22,16 +22,22 @@ import {
 import { auth } from "../utils/firebase";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 
 function App() {
   const navigate = useNavigate();
   const [step, setStep] = useState("login");
+  const [isFocused, setIsFocused] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   const [Password, setPassword] = useState({
     password: "",
     confirmPassword: "",
   });
+   // Assuming you have a state variable to track whether the password is incorrect
+   const [incorrectPassword, setIncorrectPassword] = useState(false);
+
   const [code, setcode] = useState("");
 
   const [Data, setData] = useState({
@@ -213,21 +219,27 @@ const [formData, setFormData] = useState(initialFormData);
       ...login,
       [name]: value,
     });
+    console.log(login);
   };
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    setIsClicked(true);
 
     if (login.email === "" || login.password === "") {
-      toast.error("Fill up all Fields");
+      document.querySelectorAll(".input").forEach((input) => {
+        input.classList.add("error");
+      });
       return;
     }
+
     const email = await axios.get(
       `http://localhost:4000/user/checkEmail/${login.email}`
     );
 
     try {
-     
+      console.log(email.data.exists);
+
       if (!email.data.exists) {
         toast.error(email.data.message);
         return;
@@ -236,7 +248,13 @@ const [formData, setFormData] = useState(initialFormData);
       const dbpass = email.data.user.password;
 
       if (login.password !== dbpass) {
+        document.querySelector(".password-input").classList.add("error");
+
         toast.error("Wrong Password");
+        setIncorrectPassword(true); // Set state to indicate incorrect password
+
+        setIsClicked(false);
+
         return;
       }
     } catch (error) {
@@ -419,25 +437,39 @@ const [formData, setFormData] = useState(initialFormData);
                       Sign In <i className="fa fa-sign-in-alt mb-5"></i>
                     </h2>
 
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="Email"
-                      id="emailLogin"
-                      type="email"
-                      name="email"
+                    <div className="error-message">
+                      {isClicked && login.email === "" && "Email is required."}
+                    </div>
+
+                    <input
+                      className={`input ${isFocused ? "focus" : ""} `}
+                      type="text"
+                      placeholder="Email"
+                      name="email" // Make sure the name attribute corresponds to the state key
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
                       onChange={handleLoginChanges}
                     />
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="Password"
-                      id="form4"
+                    <div className="error-message">
+                      {isClicked &&
+                        login.password === "" &&
+                        "Password is required."}
+                      {incorrectPassword && "Incorrect password."}
+                    </div>
+                    <input
+                      className={`input password-input ${
+                        isFocused ? "focus" : ""
+                      } ${login.password !== "" && "wrong-password"}`}
                       type="password"
+                      placeholder="Password"
                       name="password"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
                       onChange={handleLoginChanges}
                     />
 
                     <div className="d-flex justify-content-center mb-4">
-                      <a href="/forgot-password">Forgot Password?</a>
+                      <Link to="/forgotPassword">Forgot Password?</Link>
                     </div>
 
                     <MDBBtn
@@ -499,7 +531,7 @@ const [formData, setFormData] = useState(initialFormData);
             }}
           >
             <MDBRow>
-              <MDBCol md="6" className="position-relative">
+              <MDBCol md="6" className="position-relative" style={{ opacity: "1", fontFamily: "League Spartan" }}>
                 <div
                   id="radius-shape-1"
                   className="position-absolute rounded-circle shadow-5-strong"
@@ -563,7 +595,7 @@ const [formData, setFormData] = useState(initialFormData);
                         name="flexCheck"
                         value=""
                         id="flexCheckDefault"
-                        label="Subscribe to our newsletter"
+                        label="CAPTCHA"
                       />
                     </div>
                     <MDBBtn

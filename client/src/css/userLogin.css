@@ -1,27 +1,22 @@
-.form-outline .form-control:focus~.form-notch .form-notch-leading {
-  border-top: .200rem solid #ffaabb!important;
-  border-bottom: .125rem solid #ffaabb!important;
-  border-left: .125rem solid #ffaabb!important;
-} 
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid transparent; 
+  border-radius: 7px;
+  transition: border-color 0.3s; /* Add transition for smooth effect */
+  margin-bottom: 10px;
+}
 
-.form-outline .form-control:focus~.form-notch .form-notch-trailing {
-  border-top: .125rem solid #ffaabb !important;
-  border-right: .125rem solid #ffaabb!important;
-  border-bottom: .125rem solid #ffaabb!important;
-} 
+.input:focus {
+  border-color: green; /* Border color when input is focused */
+}
 
-.form-outline .form-control:focus~.form-notch .form-notch-middle {
-  border-top: 0;
-  border-bottom: .125rem solid #ffaabb !important;
-} 
-.form-outline .form-control~.form-notch .form-notch-leading {
-  border-radius: 10px 0 0 10px;
-} 
+.input.error {
+  border-color: red; /* Border color when input has error */
+}
 
-.form-outline .form-control~.form-notch .form-notch-trailing {
- border-radius: 0 10px 10px 0;
-} 
-
-.form-label {
-color: red !important;
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-bottom: 5px;
 }
