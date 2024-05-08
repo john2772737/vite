@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { auth } from "../utils/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-
+import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
 import "../css/sellerRegistration.css";
 import { toast, Toaster } from "react-hot-toast";
+import { useNavigate } from 'react-router-dom';
 import {
   MDBBtn,
   MDBContainer,
@@ -20,50 +20,120 @@ import {
 } from "mdb-react-ui-kit";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import axios from "axios";
 
 const PhoneVerification = () => {
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
   const [user, setUser] = useState(""); // Initialize user state as null
 
-  console.log(verificationCode);
+  const navigate= useNavigate();
+
+  const [Data, setData] = useState({
+    firstname: "",
+    lastname: "",
+    shopname: "",
+    password: "",
+    email: "",
+    birthday: "",
+    phoneNumber: "",
+    picture: "",
+    idPicture: "",
+  });
 
   const handlePhoneSubmit = async (e) => {
-    const newPhoneNumber = "+" + phoneNumber;
-    e.preventDefault();  
+    e.preventDefault();
+
+    console.log(phoneNumber);
+    if (!isValidPhoneNumber(phoneNumber)) {
+      toast.error("Invalid phone number");
+      return;
+    }
 
     try {
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+          }
+        );
+      }
 
-      const appVerifier = new RecaptchaVerifier(auth, "appVerifier", {
-        size: "invisible",
-      });
+      window.recaptchaVerifier.render();
 
       const confirmationResult = await signInWithPhoneNumber(
         auth,
-        newPhoneNumber,
-        appVerifier
+        phoneNumber,
+        window.recaptchaVerifier
       );
+
       window.confirmationResult = confirmationResult;
 
       setStep("verification");
     } catch (error) {
       console.error("Error signing in with phone number:", error);
-  
+      if (error.code === "auth/too-many-requests") {
+        toast.error("Too many Request, Try again later.");
+      }
     }
   };
 
+  const handlePhoneChange = (value) => {
+    setPhoneNumber(value);
+    setData((prevData) => ({
+      ...prevData,
+      phoneNumber: value,
+    }));
+  };
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await window.confirmationResult.confirm(verificationCode);
-      console.log("gppd");
+      await window.confirmationResult.confirm(verificationCode);
 
-      setStep("form");
+      const exists = await axios.get(
+        `http://localhost:4000/seller/findPhoneNumber/${phoneNumber}`
+      );
+
+      const seller = exists.data.seller;
+
+      if (exists.data.found === false) {
+        const result = await axios.post(
+          "http://localhost:4000/seller/createphone",
+          Data
+        );
+
+        toast.success(result.data.message);
+        setStep("form");
+        return;
+      }
+
+      if (seller.submit === false) {
+        // The 'submit' field is set to true
+        console.log("Seller has not been submitted");
+        setStep("form");
+        return;
+      } else {
+        if (seller.approved === false) {
+          // The'submitted' field is set to true
+          console.log("Seller is not approved");
+          setStep("wait");
+          return;
+        }
+        navigate('/seller')
+        
+      }
     } catch (error) {
       console.error("Error confirming verification code:", error);
-    
+
+      if (error.code === "auth/invalid-verification-code") {
+        toast.error("Invalid Verification Code");
+      } else {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -74,13 +144,25 @@ const PhoneVerification = () => {
   const newPassword = () => {
     setStep("Password");
   };
-
-  const handledataSubmit = () => {
-    setStep("wait");
+  console.log(Data);
+  const handleFormChanges = (event) => {
+    const { name, value } = event.target;
+  
+    setData({
+      ...Data,
+      [name]: value,
+    });
+ 
   };
 
+  const [confirmPass, setConfirmpass] = useState("");
+
+  const handleConfirmPassChange = (e) => {
+    setConfirmpass(e.target.value);
+  };
   return (
     <div>
+      <Toaster />
       <div className="sellerReg ">
         <Navbar />
         {step === "phone" && (
@@ -109,12 +191,13 @@ const PhoneVerification = () => {
                         </MDBCardText>
                         <MDBRow>
                           <MDBCardText>
-                            <PhoneInput
-                              className="phone-input mb-7 "
-                              country={"ph"}
-                              onlyCountries={["ph"]}
+                            <Input
+                              country="PH"
+                              international
+                              withCountryCallingCode
                               value={phoneNumber}
-                              onChange={setPhoneNumber}
+                              onChange={handlePhoneChange}
+                              maxLength={16}
                             />
                           </MDBCardText>
                         </MDBRow>
@@ -132,8 +215,6 @@ const PhoneVerification = () => {
                     </MDBCol>
                   </MDBRow>
                 </MDBCard>
-
-                <Toaster />
               </MDBCol>
             </MDBRow>
           </MDBContainer>
@@ -223,6 +304,9 @@ const PhoneVerification = () => {
                               size="lg"
                               id="form1"
                               type="text"
+                              value={Data.firstname}
+                              onChange={handleFormChanges}
+                              name="firstname"
                             />
                           </MDBCol>
 
@@ -233,6 +317,9 @@ const PhoneVerification = () => {
                               size="lg"
                               id="form2"
                               type="text"
+                              value={Data.lastname}
+                              onChange={handleFormChanges}
+                              name="lastname"
                             />
                           </MDBCol>
                         </MDBRow>
@@ -243,6 +330,9 @@ const PhoneVerification = () => {
                           size="lg"
                           id="form3"
                           type="date"
+                          value={Data.birthday}
+                          onChange={handleFormChanges}
+                          name="birthday"
                         />
 
                         <MDBInput
@@ -251,29 +341,40 @@ const PhoneVerification = () => {
                           size="lg"
                           id="form4"
                           type="text"
+                          value={Data.shopname}
+                          onChange={handleFormChanges}
+                          name="shopname"
                         />
                         <MDBInput
                           wrapperClass="mb-4"
                           label="Email"
                           size="lg"
                           id="form5"
-                          type="text"
+                          type="email"
+                          value={Data.email}
+                          onChange={handleFormChanges}
+                          name="email"
                         />
 
                         <MDBInput
                           wrapperClass="mb-4"
                           label="Password"
                           size="lg"
-                          id="form5"
+                          id="form7"
                           type="password"
+                          value={Data.password}
+                          onChange={handleFormChanges}
+                          name="password"
                         />
 
                         <MDBInput
                           wrapperClass="mb-4"
                           label="Confirm Password"
                           size="lg"
-                          id="form5"
+                          id="form6"
                           type="password"
+                          value={confirmPass}
+                          onChange={handleConfirmPassChange}
                         />
 
                         <div className="d-flex justify-content-end pt-3">

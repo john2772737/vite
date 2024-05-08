@@ -2,12 +2,36 @@ const Seller = require("../models/seller.model");
 
 const createphone = async (req, res) => {
   try {
-    const seller = await Seller.create(req.body);
+    const phoneNumber = req.body.phoneNumber;
+    const seller = await Seller.create({phoneNumber});
     res.status(200).json(seller);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.log(error)
+  }
+
+};
+const findPhoneNumber = async (req, res) => {
+  const { phoneNumber } = req.params;
+  console.log(phoneNumber);
+  try {
+    const seller = await Seller.findOne({ phoneNumber });
+
+
+    if (seller) {
+   
+      // Send both the boolean value and the seller object
+      res.status(200).json({ found: true, seller });
+    } else {
+      // Send only the boolean value
+      res.status(200).json({ found: false });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 const listseller = async (req, res) => {
   try {
@@ -45,4 +69,13 @@ const isApproved= async (req,res)=>{
   }
 }
 
-module.exports = { createphone, listseller, isApproved};
+const updateSeller = async (req,res) =>{
+  try{
+    const {id}= req.params;
+    const seller = await Seller.findById(id);
+  
+  } catch (error) {
+    console.log(error);
+  }
+}
+module.exports = { createphone, listseller, isApproved, findPhoneNumber,};
