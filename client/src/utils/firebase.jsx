@@ -1,9 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage"; // Import necessary storage functions
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// Import necessary storage functions
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,8 +13,13 @@ const firebaseConfig = {
   messagingSenderId: "389343469622",
   appId: "1:389343469622:web:7ce35d8394ee0e65253897"
 };
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
-export { auth, app as default };
-// Initialize Firebase
+// Initialize Firebase app
+const app = initializeApp(firebaseConfig);
+
+// Get the auth instance
+const auth = getAuth(app);
+const imageDb= getStorage(app)
+
+// Export the `auth` object and the `uploadImage` function
+export { auth, imageDb, app as default };

@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { auth } from "../utils/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
 import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
 import "../css/sellerRegistration.css";
 import { toast, Toaster } from "react-hot-toast";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import {
   MDBBtn,
   MDBContainer,
@@ -22,13 +22,16 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import axios from "axios";
 
+import { imageDb } from "../utils/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
 const PhoneVerification = () => {
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
   const [user, setUser] = useState(""); // Initialize user state as null
 
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   const [Data, setData] = useState({
     firstname: "",
@@ -38,7 +41,7 @@ const PhoneVerification = () => {
     email: "",
     birthday: "",
     phoneNumber: "",
-    picture: "",
+    picture: null,
     idPicture: "",
   });
 
@@ -88,6 +91,8 @@ const PhoneVerification = () => {
       phoneNumber: value,
     }));
   };
+
+  const [uid,setuid]= useState("")
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,11 +110,13 @@ const PhoneVerification = () => {
           "http://localhost:4000/seller/createphone",
           Data
         );
-
+        
         toast.success(result.data.message);
         setStep("form");
         return;
       }
+
+      setuid(seller._id)
 
       if (seller.submit === false) {
         // The 'submit' field is set to true
@@ -123,8 +130,7 @@ const PhoneVerification = () => {
           setStep("wait");
           return;
         }
-        navigate('/seller')
-        
+        navigate("/seller");
       }
     } catch (error) {
       console.error("Error confirming verification code:", error);
@@ -138,21 +144,73 @@ const PhoneVerification = () => {
   };
 
   const uploadPhoto = () => {
+    if (Data.password !== confirmPass) {
+      toast.error("Password do not Match");
+      return;
+    }
     setStep("Photo");
   };
+ 
+  const saveUser = (event) => {
+    event.preventDefault()
+    // Assuming idPicture is set in your data state
+    const profilePictureFile =picture;
+    const idPictureFile = idp;
+  
+    if (!profilePictureFile || !idPictureFile) {
+      console.error("Both profile picture and ID picture are required");
+      return;
+    }
+  
+    const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
+    const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
+  
+    // Upload the profile picture
+    uploadBytes(profilePictureRef, profilePictureFile)
+      .then((profileSnapshot) => {
+        console.log("Profile picture uploaded successfully:", profileSnapshot);
+        // Retrieve the download URL of the profile picture
+        getDownloadURL(profilePictureRef)
+          .then((profileUrl) => {
+            console.log("Profile picture download URL:", profileUrl);
+            // Upload the ID picture
+            uploadBytes(idPictureRef, idPictureFile)
+              .then((idSnapshot) => {
+                console.log("ID picture uploaded successfully:", idSnapshot);
+                // Retrieve the download URL of the ID picture
+                getDownloadURL(idPictureRef)
+                  .then((idUrl) => {
+                    console.log("ID picture download URL:", idUrl);
+                    // Once both pictures are uploaded and URLs are obtained, you can proceed with saving the user data or any other actions
+                  })
+                  .catch((error) => {
+                    console.error("Error getting ID picture download URL:", error);
+                  });
+              })
+              .catch((error) => {
+                console.error("Error uploading ID picture:", error);
+              });
+          })
+          .catch((error) => {
+            console.error("Error getting profile picture download URL:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error uploading profile picture:", error);
+      });
 
-  const newPassword = () => {
-    setStep("Password");
+      axios.post('')      
   };
+  
+
   console.log(Data);
   const handleFormChanges = (event) => {
     const { name, value } = event.target;
-  
+
     setData({
       ...Data,
       [name]: value,
     });
- 
   };
 
   const [confirmPass, setConfirmpass] = useState("");
@@ -160,6 +218,22 @@ const PhoneVerification = () => {
   const handleConfirmPassChange = (e) => {
     setConfirmpass(e.target.value);
   };
+  const [idp,setId]= useState("")
+console.log(idp)
+  const handleId= (event)=>{
+    const file = event.target.files[0];
+
+    setId(file)
+  }  
+
+  const [picture,setPicture]= useState("")
+
+    const handlePicture= (event)=>{
+      const file = event.target.files[0];
+  
+      setPicture(file)
+    }  
+
   return (
     <div>
       <Toaster />
@@ -419,11 +493,13 @@ const PhoneVerification = () => {
                       <MDBCol md="6">
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                            SELLER REGISTRATION
+                            SELLER REGISTRATION 
+                          
                           </MDBCardTitle>
                           <MDBCardText>
                             Please fill out all the required fields to complete
                             the registration process.
+                         
                           </MDBCardText>
 
                           <MDBCardText>
@@ -434,6 +510,11 @@ const PhoneVerification = () => {
                             size="lg"
                             id="form3"
                             type="file"
+                            accept="image/*"
+                            capture="filesystem"
+                            name="picture"
+                            
+                            onChange={handlePicture}
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
@@ -442,6 +523,11 @@ const PhoneVerification = () => {
                             size="lg"
                             id="form4"
                             type="file"
+                            accept="image/*"
+                            capture="filesystem"
+                            name="idPicture"
+                           
+                            onChange={handleId}
                           />
 
                           <div className="d-flex justify-content-end pt-3">
@@ -452,7 +538,7 @@ const PhoneVerification = () => {
                               className="ms-2"
                               color="danger"
                               size="lg"
-                              onClick={newPassword}
+                              onClick={saveUser}
                             >
                               Proceed
                             </MDBBtn>

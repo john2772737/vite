@@ -69,13 +69,18 @@ const isApproved= async (req,res)=>{
   }
 }
 
-const updateSeller = async (req,res) =>{
-  try{
-    const {id}= req.params;
-    const seller = await Seller.findById(id);
-  
+const updateSeller = async (req,res) => {
+  try {
+    const { id } = req.params;
+    const seller = await Seller.findByIdAndUpdate(id, req.body);
+    if (!seller) {
+    res.status(404).json({ message: "Product not found" });
+    }
+   res.status(200).json({ message: "Product found" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: error.message });
   }
-}
-module.exports = { createphone, listseller, isApproved, findPhoneNumber,};
+};
+
+module.exports = { createphone, listseller, isApproved, findPhoneNumber,updateSeller};

@@ -22,4 +22,7 @@ const uploadImage = async (file) => {
   }
 };
 
-export default uploadImage;
+
+
+export { uploadImage };
+// Initialize Firebase
