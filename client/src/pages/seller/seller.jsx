@@ -1,16 +1,19 @@
 import React from "react";
 import { Outlet } from 'react-router-dom'; 
-import Seller_navbar from "../../components/seller_navbar";
-import Footer from "../../components/footer"
-function user() {
+import SellerNavbar from "../../components/seller_navbar";
+import Footer from "../../components/footer";
+import "../../css/seller.css"
+
+function Seller() {
   return (
-    <div className="user">
-      <Seller_navbar />
-      <Outlet />
+    <div className="seller-container">
+      <SellerNavbar />
+      <div className="content-container">
+        <Outlet />
+      </div>
       <Footer />
     </div>
-    
   );
 }
 
-export default user;
+export default Seller;
