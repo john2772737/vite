@@ -92,7 +92,7 @@ const PhoneVerification = () => {
     }));
   };
 
-  const [uid,setuid]= useState("")
+  const [uid, setuid] = useState("");
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
 
@@ -110,13 +110,13 @@ const PhoneVerification = () => {
           "http://localhost:4000/seller/createphone",
           Data
         );
-        
+
         toast.success(result.data.message);
         setStep("form");
         return;
       }
 
-      setuid(seller._id)
+      setuid(seller._id);
 
       if (seller.submit === false) {
         // The 'submit' field is set to true
@@ -143,28 +143,56 @@ const PhoneVerification = () => {
     }
   };
 
-  const uploadPhoto = () => {
-    if (Data.password !== confirmPass) {
-      toast.error("Password do not Match");
-      return;
-    }
-    setStep("Photo");
-  };
- 
-  const saveUser = (event) => {
-    event.preventDefault()
-    // Assuming idPicture is set in your data state
-    const profilePictureFile =picture;
-    const idPictureFile = idp;
+  const uploadPhoto = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/seller/checkEmail/${Data.email}`
+      );
+      console.log(response.data.found);
+      if (response.data.found === true) {
+        toast.error(response.data.message);
+        return;
+      }
   
+      const shopResponse = await axios.get(
+        `http://localhost:4000/seller/checkShopname/${Data.shopname}`
+      );
+  
+      if (shopResponse.data.found === true) {
+        toast.error(shopResponse.data.message);
+        return;
+      }
+  
+      if (Data.password !== confirmPass) {
+        toast.error("Password do not Match");
+        return;
+      }
+      
+      setStep("Photo");
+    } catch (error) {
+      console.error("Error occurred:", error);
+      // Handle error, show toast message or log it
+    }
+  };
+  
+
+  const saveUser = (event) => {
+    event.preventDefault();
+    // Assuming idPicture is set in your data state
+    const profilePictureFile = picture;
+    const idPictureFile = idp;
+
     if (!profilePictureFile || !idPictureFile) {
       console.error("Both profile picture and ID picture are required");
       return;
     }
-  
-    const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
+
+    const profilePictureRef = ref(
+      imageDb,
+      "profiles/" + profilePictureFile.name
+    );
     const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-  
+
     // Upload the profile picture
     uploadBytes(profilePictureRef, profilePictureFile)
       .then((profileSnapshot) => {
@@ -184,7 +212,10 @@ const PhoneVerification = () => {
                     // Once both pictures are uploaded and URLs are obtained, you can proceed with saving the user data or any other actions
                   })
                   .catch((error) => {
-                    console.error("Error getting ID picture download URL:", error);
+                    console.error(
+                      "Error getting ID picture download URL:",
+                      error
+                    );
                   });
               })
               .catch((error) => {
@@ -199,9 +230,8 @@ const PhoneVerification = () => {
         console.error("Error uploading profile picture:", error);
       });
 
-      axios.post('')      
+    axios.post("");
   };
-  
 
   console.log(Data);
   const handleFormChanges = (event) => {
@@ -218,21 +248,21 @@ const PhoneVerification = () => {
   const handleConfirmPassChange = (e) => {
     setConfirmpass(e.target.value);
   };
-  const [idp,setId]= useState("")
-console.log(idp)
-  const handleId= (event)=>{
+  const [idp, setId] = useState("");
+  console.log(idp);
+  const handleId = (event) => {
     const file = event.target.files[0];
 
-    setId(file)
-  }  
+    setId(file);
+  };
 
-  const [picture,setPicture]= useState("")
+  const [picture, setPicture] = useState("");
 
-    const handlePicture= (event)=>{
-      const file = event.target.files[0];
-  
-      setPicture(file)
-    }  
+  const handlePicture = (event) => {
+    const file = event.target.files[0];
+
+    setPicture(file);
+  };
 
   return (
     <div>
@@ -493,13 +523,11 @@ console.log(idp)
                       <MDBCol md="6">
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                            SELLER REGISTRATION 
-                          
+                            SELLER REGISTRATION
                           </MDBCardTitle>
                           <MDBCardText>
                             Please fill out all the required fields to complete
                             the registration process.
-                         
                           </MDBCardText>
 
                           <MDBCardText>
@@ -513,7 +541,6 @@ console.log(idp)
                             accept="image/*"
                             capture="filesystem"
                             name="picture"
-                            
                             onChange={handlePicture}
                           />
 
@@ -526,7 +553,6 @@ console.log(idp)
                             accept="image/*"
                             capture="filesystem"
                             name="idPicture"
-                           
                             onChange={handleId}
                           />
 
