@@ -29,13 +29,23 @@ const findPhoneNumber = async (req, res) => {
 };
 
 const listseller = async (req, res) => {
+  const { approved } = req.query; // Get the 'approved' query parameter
+  
+  let query = {};
+  if (approved === 'true') {
+    query.approved = "true";
+  } else if (approved === 'false') {
+    query.approved = "false";
+  }
+  
   try {
-    const seller = await Seller.find({ approved: false });
-    res.status(200).json(seller);
+    const sellers = await Seller.find(query);
+    res.status(200).json(sellers);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const deleteseller = async (req, res) => {
   try {

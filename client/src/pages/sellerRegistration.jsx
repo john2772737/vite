@@ -126,20 +126,26 @@ const PhoneVerification = () => {
     
       setuid(seller._id)
      
-      if (seller.submit === false) {
+      if (seller.submit === "false") {
         // The 'submit' field is set to true
         console.log("Seller has not been submitted");
         setStep("form");
         return;
-      } else {
-        if (seller.approved === false) {
+      }  
+      if (seller.approved === "false") {
           // The'submitted' field is set to true
           console.log("Seller is not approved");
           setStep("wait");
           return;
-        }
-        navigate("/seller");
       }
+
+      if (seller.approved === "unapproved") {
+        setStep("unapproved");
+        return;
+    }
+
+        navigate("/seller");
+      
     } catch (error) {
       console.error("Error confirming verification code:", error);
 
@@ -187,7 +193,7 @@ const PhoneVerification = () => {
         ...Data, // Include existing data
         picture: profilePictureURL,
         idPicture: idPictureURL,
-        submit: true // Set the 'submit' field to true
+        submit: "true" // Set the 'submit' field to true
       };
   
       console.log(uid);
@@ -235,6 +241,53 @@ console.log(idp)
   
       setPicture(file)
     }  
+
+
+    const update_photo = async (event) => {
+      event.preventDefault();
+      try {
+        // Assuming idPicture is set in your data state
+        const profilePictureFile = picture;
+        const idPictureFile = idp;
+    
+        if (!profilePictureFile || !idPictureFile) {
+          toast.error("Both profile picture and ID picture are required");
+        }
+    
+        const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
+        const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
+    
+        // Upload the profile picture
+        await uploadBytes(profilePictureRef, profilePictureFile);
+        // Retrieve the download URL of the profile picture
+        const profilePictureURL = await getDownloadURL(profilePictureRef);
+    
+        // Upload the ID picture
+        await uploadBytes(idPictureRef, idPictureFile);
+        // Retrieve the download URL of the ID picture
+        const idPictureURL = await getDownloadURL(idPictureRef);
+    
+        const updatedData = {
+          approved:"false",
+          picture: profilePictureURL,
+          idPicture: idPictureURL,
+         
+        };
+    
+        console.log(uid);
+        const response = await axios.put(`http://localhost:4000/seller/updateSeller/${uid}`, updatedData);
+        // Handle successful response
+  
+        toast.success("Uploaded succesfully please wait for Approval");
+        setStep('phone');
+      } catch (error) {
+        console.error("Error:", error.message);
+        // Handle error, show it to the user, or do any necessary cleanup
+        // For example, you can show an error toast
+        toast.error("Failed to save user data. Please try again later.");
+      }
+    };
+    
 
   return (
     <div>
@@ -570,6 +623,85 @@ console.log(idp)
 
             <button type="submit">OK</button>
           </MDBContainer>
+        )}
+
+        {step == "unapproved" && (
+          <div>
+            <MDBContainer fluid className="HEY" size="sm">
+              <MDBRow className="d-flex justify-content-center align-items-center ">
+                <MDBCol>
+                  <MDBCard className="my-4">
+                    <MDBRow>
+                      <MDBCol md="">
+                        <MDBCardImage
+                          position="left"
+                          src="{Bg}"
+                          alt="Sample photo"
+                          className="rounded"
+                          fluid
+                        />
+                      </MDBCol>
+
+                      <MDBCol md="6">
+                        <MDBCardBody className="text-black d-flex flex-column justify-content-center">
+                          <MDBCardTitle className="mb-4 text-uppercase fw-bold">
+                           Upload Photo
+                          
+                          </MDBCardTitle>
+                          <MDBCardText>
+                            Please upload another photo becaouse your id and photo you provide is invalid.
+                         
+                          </MDBCardText>
+
+                          <MDBCardText>
+                            Upload your  Picture here:{" "}
+                          </MDBCardText>
+                          <MDBInput
+                            wrapperClass="mb-4"
+                            size="lg"
+                            id="form3"
+                            type="file"
+                            accept="image/*"
+                            capture="filesystem"
+                            name="picture"
+                            
+                            onChange={handlePicture}
+                          />
+
+                          <MDBCardText>Upload your Valid ID here: </MDBCardText>
+                          <MDBInput
+                            wrapperClass="mb-4"
+                            size="lg"
+                            id="form4"
+                            type="file"
+                            accept="image/*"
+                            capture="filesystem"
+                            name="idPicture"
+                           
+                            onChange={handleId}
+                          />
+
+                          <div className="d-flex justify-content-end pt-3">
+                            <MDBBtn color="light" size="lg">
+                              Reset all
+                            </MDBBtn>
+                            <MDBBtn
+                              className="ms-2"
+                              color="danger"
+                              size="lg"
+                              onClick={update_photo}
+                            >
+                              Proceed
+                            </MDBBtn>
+                          </div>
+                        </MDBCardBody>
+                      </MDBCol>
+                    </MDBRow>
+                  </MDBCard>
+                </MDBCol>
+              </MDBRow>
+            </MDBContainer>
+          </div>
         )}
         <div>
           <Footer />

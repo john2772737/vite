@@ -10,14 +10,14 @@ const sellerSchema = new mongoose.Schema({
     },
     shopname: {
         type: String,
-        unique: true
+    
     },
     password: {
         type: String,
     },
     email: {
         type: String,
-        unique: true
+     
     },
     birthday: Date,
     phoneNumber: {
@@ -31,9 +31,11 @@ const sellerSchema = new mongoose.Schema({
         type: String,
     },
     approved: {
-        type: Boolean,
-        default: false // Default value set to false
+        type: String,
+        enum: ['true', 'false', 'unapproved'],
+        default: 'false'
     },
+    
     submit: {
         type: Boolean,
         default: false // Default value set to false

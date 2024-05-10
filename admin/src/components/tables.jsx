@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types';
 import Table from "react-bootstrap/Table";
 
-function ResponsiveTable({ heading, dataa, action, onActionClick ,approvalAction}) {
+function ResponsiveTable({ heading, dataa, action, handleDelete,handleApprove ,approvalAction,removeseller}) {
   ResponsiveTable.propTypes = {
     heading: PropTypes.arrayOf(PropTypes.string).isRequired,
     dataa: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.any)).isRequired,
     action: PropTypes.bool,
     onActionClick: PropTypes.func.isRequired,
     approvalAction: PropTypes.bool,
+    handleDelete: PropTypes.func.isRequired,
+    handleApprove: PropTypes.func.isRequired,
+    removeseller:PropTypes.bool
   };
 
   return (
@@ -34,21 +37,28 @@ function ResponsiveTable({ heading, dataa, action, onActionClick ,approvalAction
         {dataa.map((rowData, rowIndex) => (
           <tr key={rowIndex}>
             <td>{rowIndex + 1}</td>
+            
             {rowData.map((data, colIndex) => (
               <td key={colIndex}>{data}</td>
             ))}
-            {action && (
-              <td>
-                <button onClick={() => onActionClick(rowData[0])}>DELETE</button>
-              </td>
-            )}
+           
 
            {approvalAction &&(
             <td>
-                <button onClick={() => onActionClick(rowData[0])}>EKIS</button>
-                <button onClick={() => onActionClick(rowData[0])}>APPROVE</button>
+                <button onClick={() => handleDelete(rowData[0])}>EKIS</button>
+                <button onClick={() => handleApprove(rowData[0])}>APPROVE</button>
               </td>
            )}
+
+           
+           {removeseller &&(
+            <td>
+                <button onClick={() => handleDelete(rowData[0])}>remove</button>
+               
+              </td>
+           )}
+
+
          
           </tr>
         ))}
