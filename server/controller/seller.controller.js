@@ -67,17 +67,10 @@ const updateSeller = async (req, res) => {
   try {
     const { id } = req.params;
     const seller = await Seller.findByIdAndUpdate(id, req.body);
-<<<<<<< HEAD
     if (seller) {
     return res.status(200).json({ message: "Registration Successful. Please Log In " });
     }
     return res.status(200).json({ message: "Registration Failed" });
-=======
-    if (!seller) {
-      res.status(404).json({ message: "Product not found" });
-    }
-    res.status(200).json({ message: "Product found" });
->>>>>>> 1d550d7fa52ec72333e6e414621a6343696959f0
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

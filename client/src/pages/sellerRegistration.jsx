@@ -92,13 +92,9 @@ const PhoneVerification = () => {
     }));
   };
 
-<<<<<<< HEAD
   const [uid,setuid]= useState("")
 
   
-=======
-  const [uid, setuid] = useState("");
->>>>>>> 1d550d7fa52ec72333e6e414621a6343696959f0
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
 
@@ -127,12 +123,12 @@ const PhoneVerification = () => {
         return;
       }
 
-<<<<<<< HEAD
     
       setuid(seller._id)
-=======
-      setuid(seller._id);
-
+     
+      if (seller.submit === false) {
+        // The 'submit' field is set to true
+        console.log("Seller has not been submitted");
         setStep("form");
         return;
       } else {
@@ -155,7 +151,6 @@ const PhoneVerification = () => {
     }
   };
 
-<<<<<<< HEAD
   const uploadPhoto = () => {
     if (Data.password !== confirmPass) {
       toast.error("Password do not Match");
@@ -207,97 +202,8 @@ const PhoneVerification = () => {
       // For example, you can show an error toast
       toast.error("Failed to save user data. Please try again later.");
     }
-=======
-  const uploadPhoto = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/seller/checkEmail/${Data.email}`
-      );
-      console.log(response.data.found);
-      if (response.data.found === true) {
-        toast.error(response.data.message);
-        return;
-      }
-  
-      const shopResponse = await axios.get(
-        `http://localhost:4000/seller/checkShopname/${Data.shopname}`
-      );
-  
-      if (shopResponse.data.found === true) {
-        toast.error(shopResponse.data.message);
-        return;
-      }
-  
-      if (Data.password !== confirmPass) {
-        toast.error("Password do not Match");
-        return;
-      }
-      
-      setStep("Photo");
-    } catch (error) {
-      console.error("Error occurred:", error);
-      // Handle error, show toast message or log it
-    }
   };
   
-
-  const saveUser = (event) => {
-    event.preventDefault();
-    // Assuming idPicture is set in your data state
-    const profilePictureFile = picture;
-    const idPictureFile = idp;
-
-    if (!profilePictureFile || !idPictureFile) {
-      console.error("Both profile picture and ID picture are required");
-      return;
-    }
-
-    const profilePictureRef = ref(
-      imageDb,
-      "profiles/" + profilePictureFile.name
-    );
-    const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-
-    // Upload the profile picture
-    uploadBytes(profilePictureRef, profilePictureFile)
-      .then((profileSnapshot) => {
-        console.log("Profile picture uploaded successfully:", profileSnapshot);
-        // Retrieve the download URL of the profile picture
-        getDownloadURL(profilePictureRef)
-          .then((profileUrl) => {
-            console.log("Profile picture download URL:", profileUrl);
-            // Upload the ID picture
-            uploadBytes(idPictureRef, idPictureFile)
-              .then((idSnapshot) => {
-                console.log("ID picture uploaded successfully:", idSnapshot);
-                // Retrieve the download URL of the ID picture
-                getDownloadURL(idPictureRef)
-                  .then((idUrl) => {
-                    console.log("ID picture download URL:", idUrl);
-                    // Once both pictures are uploaded and URLs are obtained, you can proceed with saving the user data or any other actions
-                  })
-                  .catch((error) => {
-                    console.error(
-                      "Error getting ID picture download URL:",
-                      error
-                    );
-                  });
-              })
-              .catch((error) => {
-                console.error("Error uploading ID picture:", error);
-              });
-          })
-          .catch((error) => {
-            console.error("Error getting profile picture download URL:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error uploading profile picture:", error);
-      });
-
-    axios.post("");
->>>>>>> 1d550d7fa52ec72333e6e414621a6343696959f0
-  };
 
   console.log(Data);
   const handleFormChanges = (event) => {
@@ -314,21 +220,21 @@ const PhoneVerification = () => {
   const handleConfirmPassChange = (e) => {
     setConfirmpass(e.target.value);
   };
-  const [idp, setId] = useState("");
-  console.log(idp);
-  const handleId = (event) => {
+  const [idp,setId]= useState("")
+console.log(idp)
+  const handleId= (event)=>{
     const file = event.target.files[0];
 
-    setId(file);
-  };
+    setId(file)
+  }  
 
-  const [picture, setPicture] = useState("");
+  const [picture,setPicture]= useState("")
 
-  const handlePicture = (event) => {
-    const file = event.target.files[0];
-
-    setPicture(file);
-  };
+    const handlePicture= (event)=>{
+      const file = event.target.files[0];
+  
+      setPicture(file)
+    }  
 
   return (
     <div>
@@ -589,11 +495,13 @@ const PhoneVerification = () => {
                       <MDBCol md="6">
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                            SELLER REGISTRATION
+                            SELLER REGISTRATION 
+                          
                           </MDBCardTitle>
                           <MDBCardText>
                             Please fill out all the required fields to complete
                             the registration process.
+                         
                           </MDBCardText>
 
                           <MDBCardText>
@@ -607,6 +515,7 @@ const PhoneVerification = () => {
                             accept="image/*"
                             capture="filesystem"
                             name="picture"
+                            
                             onChange={handlePicture}
                           />
 
@@ -619,6 +528,7 @@ const PhoneVerification = () => {
                             accept="image/*"
                             capture="filesystem"
                             name="idPicture"
+                           
                             onChange={handleId}
                           />
 
