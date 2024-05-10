@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { auth } from "../utils/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
@@ -29,7 +29,7 @@ const PhoneVerification = () => {
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
-  const [user, setUser] = useState(""); // Initialize user state as null
+
 
   const navigate = useNavigate();
 
@@ -561,7 +561,7 @@ console.log(idp)
               id="wait-content"
               className="d-flex justify-content-center align-items-center "
             >
-              <h1>We're evaluating your profile.</h1>
+              <h1>We`re evaluating your profile.</h1>
               <p>
                 In order to maintain our community standards, each profile is
                 carefully reviewed before approval.
