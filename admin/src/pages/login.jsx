@@ -2,6 +2,8 @@ import  { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate  } from 'react-router-dom';
 import Main from './main';
+import backgroundImage from '../../../client/src/components/images/booklot_bg.png'; 
+import './login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -45,21 +47,50 @@ function Login() {
   };
 
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      backgroundImage: `url(${backgroundImage})`, // Set background image
+      backgroundSize: 'cover', fontFamily: 'Montserrat'
+    }}
+  >
       <Toaster />
-    
+      <div style={{ width: '450px', height: '450px', backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: '20px', borderRadius: '15px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        <h4 style={{ textAlign: 'center', marginBottom: '30px', marginTop: '40px' }}>Sign In</h4>
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="username">Username:</label>
-            <input type="text" id="username" name="username" value={username} onChange={handleUsernameChange} />
+        <div className="input-container">
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={username}
+              onChange={handleUsernameChange}
+              className="input-field"
+              placeholder=" "
+            />
+            <label htmlFor="username" className="label">Username</label>
           </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <input type="password" id="password" name="password" value={password} onChange={handlePasswordChange} />
-          </div>
-          <button type="submit">Login</button>
+          <div className="input-container">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={handlePasswordChange}
+              className="input-field"
+              placeholder=" "
+            />
+            <label htmlFor="password" className="label">Password</label>
+        </div>
+          <button type="submit" style={{ width: '80%', padding: '10px', backgroundColor: 'black', 
+          color: 'white', borderRadius: '5px', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+          marginLeft: '40px', marginTop: '30px', }}>Login</button>
         </form>
-        {loggedIn && <Main Logouts={handleLogout} />}
+        <Toaster />
+      </div>
+      {loggedIn && <Main Logouts={handleLogout} />}
     </div>
   );
 }
