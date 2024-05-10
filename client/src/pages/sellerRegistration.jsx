@@ -41,7 +41,7 @@ const PhoneVerification = () => {
     email: "",
     birthday: "",
     phoneNumber: "",
-    picture: null,
+    picture: "",
     idPicture: "",
   });
 
@@ -93,6 +93,8 @@ const PhoneVerification = () => {
   };
 
   const [uid,setuid]= useState("")
+
+  
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
 
@@ -104,20 +106,26 @@ const PhoneVerification = () => {
       );
 
       const seller = exists.data.seller;
-
+    
       if (exists.data.found === false) {
         const result = await axios.post(
           "http://localhost:4000/seller/createphone",
           Data
         );
+
+       const uid= result.data._id
+        console.log(uid)
+
+        setuid(uid)
         
         toast.success(result.data.message);
         setStep("form");
         return;
       }
 
+    
       setuid(seller._id)
-
+     
       if (seller.submit === false) {
         // The 'submit' field is set to true
         console.log("Seller has not been submitted");
@@ -151,55 +159,49 @@ const PhoneVerification = () => {
     setStep("Photo");
   };
  
-  const saveUser = (event) => {
-    event.preventDefault()
-    // Assuming idPicture is set in your data state
-    const profilePictureFile =picture;
-    const idPictureFile = idp;
+  const saveUser = async (event) => {
+    event.preventDefault();
+    try {
+      // Assuming idPicture is set in your data state
+      const profilePictureFile = picture;
+      const idPictureFile = idp;
   
-    if (!profilePictureFile || !idPictureFile) {
-      console.error("Both profile picture and ID picture are required");
-      return;
+      if (!profilePictureFile || !idPictureFile) {
+        toast.error("Both profile picture and ID picture are required");
+      }
+  
+      const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
+      const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
+  
+      // Upload the profile picture
+      await uploadBytes(profilePictureRef, profilePictureFile);
+      // Retrieve the download URL of the profile picture
+      const profilePictureURL = await getDownloadURL(profilePictureRef);
+  
+      // Upload the ID picture
+      await uploadBytes(idPictureRef, idPictureFile);
+      // Retrieve the download URL of the ID picture
+      const idPictureURL = await getDownloadURL(idPictureRef);
+  
+      const updatedData = {
+        ...Data, // Include existing data
+        picture: profilePictureURL,
+        idPicture: idPictureURL,
+        submit: true // Set the 'submit' field to true
+      };
+  
+      console.log(uid);
+      const response = await axios.put(`http://localhost:4000/seller/updateSeller/${uid}`, updatedData);
+      // Handle successful response
+      console.log("Response:", response.data);
+      toast.success(response.data.message);
+      setStep('phone');
+    } catch (error) {
+      console.error("Error:", error.message);
+      // Handle error, show it to the user, or do any necessary cleanup
+      // For example, you can show an error toast
+      toast.error("Failed to save user data. Please try again later.");
     }
-  
-    const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
-    const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-  
-    // Upload the profile picture
-    uploadBytes(profilePictureRef, profilePictureFile)
-      .then((profileSnapshot) => {
-        console.log("Profile picture uploaded successfully:", profileSnapshot);
-        // Retrieve the download URL of the profile picture
-        getDownloadURL(profilePictureRef)
-          .then((profileUrl) => {
-            console.log("Profile picture download URL:", profileUrl);
-            // Upload the ID picture
-            uploadBytes(idPictureRef, idPictureFile)
-              .then((idSnapshot) => {
-                console.log("ID picture uploaded successfully:", idSnapshot);
-                // Retrieve the download URL of the ID picture
-                getDownloadURL(idPictureRef)
-                  .then((idUrl) => {
-                    console.log("ID picture download URL:", idUrl);
-                    // Once both pictures are uploaded and URLs are obtained, you can proceed with saving the user data or any other actions
-                  })
-                  .catch((error) => {
-                    console.error("Error getting ID picture download URL:", error);
-                  });
-              })
-              .catch((error) => {
-                console.error("Error uploading ID picture:", error);
-              });
-          })
-          .catch((error) => {
-            console.error("Error getting profile picture download URL:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error uploading profile picture:", error);
-      });
-
-      axios.post('')      
   };
   
 

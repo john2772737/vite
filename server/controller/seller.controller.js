@@ -21,10 +21,10 @@ const findPhoneNumber = async (req, res) => {
     if (seller) {
    
       // Send both the boolean value and the seller object
-      res.status(200).json({ found: true, seller });
+      return res.status(200).json({ found: true, seller });
     } else {
       // Send only the boolean value
-      res.status(200).json({ found: false });
+      return res.status(200).json({ found: false });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -73,10 +73,10 @@ const updateSeller = async (req,res) => {
   try {
     const { id } = req.params;
     const seller = await Seller.findByIdAndUpdate(id, req.body);
-    if (!seller) {
-    res.status(404).json({ message: "Product not found" });
+    if (seller) {
+    return res.status(200).json({ message: "Registration Successful. Please Log In " });
     }
-   res.status(200).json({ message: "Product found" });
+    return res.status(200).json({ message: "Registration Failed" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
