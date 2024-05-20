@@ -1,0 +1,8 @@
+.table-custom {
+    width: 100%;
+  }
+  
+  .table-custom th {
+    width: 10%; /* Adjust as needed */
+  }
+  

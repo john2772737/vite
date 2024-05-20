@@ -43,12 +43,7 @@ const seller_navbar = () => {
                   {menu === "sellernotif" ? <hr className="hr-red" /> : <></>}
               </li>
               </ul> 
-              <form class="mt-0 mx-auto max-w-[250px] max-h-[40px] py-2 px-6 rounded-full bg-gray-50 border flex focus-within:border-gray-300">
-                <input type="text" placeholder="Search for Books" class="font-bodoni-ferrara bg-transparent w-full focus:outline-none pr-4 font-semibold border-0 focus:ring-0 px-0 py-0" name="topic"></input>
-                    <button class="mt-0 font-bodoni-ferrara flex flex-row items-center justify-center min-w-[70px] px-4 rounded-full font-medium tracking-wide border disabled:cursor-not-allowed disabled:opacity-50 transition ease-in-out duration-150 text-base bg-black text-white font-medium tracking-wide border-transparent py-1 h-[27px] -mr-5" >
-                        Search
-                    </button>
-                </form>
+           
               {/* <!-- Header Icons --> */}
               <div class="hidden xl:flex items-center space-x-5 items-center">
                 <a class="hover:text-red-500" href="#">

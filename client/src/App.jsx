@@ -29,6 +29,7 @@ import AddProduct from "./pages/seller/addproduct";
 import MyVoucher from "./pages/seller/voucher";
 import NotifSeller from "./pages/seller/sellernotif";
 import { FirebaseProvider } from "./utils/context";
+import PrivateRoute from "./utils/privateroute";
 function App() {
   return (
     <Routes>
@@ -56,14 +57,18 @@ function App() {
       </Route>
 
 
-      <Route path="seller" element={<FirebaseProvider> <Seller />    </FirebaseProvider>}>
-      <Route path="/seller/sellerRegistration" element={<SellerRegistration />}/>
-        <Route index element={<Dashboard />} />
-        <Route path="/seller/dashboard" element={<SellerDashboard />} />
-        <Route path="/seller/golive" element={<GoLive />} />
-        <Route path="/seller/inventory" element={<Inventory />} />
-        <Route path="/seller/addproduct" element={<AddProduct />} />
-        <Route path="/seller/voucher" element={<MyVoucher />} />
+      <Route path="seller" element={
+        <FirebaseProvider>
+          <Seller />
+        </FirebaseProvider>
+      }>
+        <Route path="/seller/sellerRegistration" element={<SellerRegistration />} />
+        <Route index element={< SellerDashboard />} />
+        <Route path="/seller/dashboard" element={< PrivateRoute element={SellerDashboard} />} />
+        <Route path="/seller/golive" element={<PrivateRoute element={GoLive} />} /> 
+        <Route path="/seller/inventory" element={<PrivateRoute element={Inventory} />} />
+        <Route path="/seller/addproduct" element={<PrivateRoute element={AddProduct} />} />
+        <Route path="/seller/voucher" element={<PrivateRoute element={MyVoucher} />} />
         <Route path="/seller/sellernotif" element={<NotifSeller />} />
       </Route>
   
