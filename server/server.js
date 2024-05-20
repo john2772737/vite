@@ -4,11 +4,23 @@ const cors = require("cors");
 const adminroute = require("./router/admin.router");
 const sellerroute=require('./router/seller.route');
 const userRoute= require('./router/user.route');
+const session = require('express-session');
+
+
+
+
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(session({
+  secret: 'your-secret-keywederjehiwghjiwhgw',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set cookie options
+}));
 app.use("/admin", adminroute);
 app.use("/seller",sellerroute);
 app.use("/user",userRoute);

@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const Product = require('./product.model');
 
 const sellerSchema = new mongoose.Schema({
+    firebaseuid:{
+        type:String,
+    },
     firstname: {
         type: String,
     },

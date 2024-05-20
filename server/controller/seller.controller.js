@@ -34,8 +34,10 @@ const listseller = async (req, res) => {
   let query = {};
   if (approved === 'true') {
     query.approved = "true";
-  } else if (approved === 'false') {
+  } else {
     query.approved = "false";
+    query.submit= true
+    
   }
   
   try {
@@ -119,6 +121,31 @@ const checkShopname = async (req, res) => {
   }
 };
 
+const verified = async (req, res) => {
+  try {
+    const { phoneNumber } = req.params;
+    const seller = await Seller.findOne({ phoneNumber });
+
+    if (!seller) {
+      return res.status(404).json({ message: 'Seller not found' });
+    }
+
+    if (seller.approved === 'true') {
+     
+      req.session.phoneNumber = seller.phoneNumber;
+      req.session.save();
+      console.log(req.session)
+      return res.json({ message: 'Seller approved and logged in' });
+    } else {
+      return res.status(401).json({ message: 'Seller not approved' });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 module.exports = {
   createphone,
   listseller,
@@ -127,4 +154,5 @@ module.exports = {
   updateSeller,
   checkEmail,
   checkShopname,
+  verified,
 };

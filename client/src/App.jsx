@@ -28,7 +28,7 @@ import Inventory from "./pages/seller/inventory";
 import AddProduct from "./pages/seller/addproduct";
 import MyVoucher from "./pages/seller/voucher";
 import NotifSeller from "./pages/seller/sellernotif";
-
+import { FirebaseProvider } from "./utils/context";
 function App() {
   return (
     <Routes>
@@ -36,7 +36,7 @@ function App() {
       <Route path="/userLogin" element={<UserLogin />} /> {/* Corrected route path */}
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/sellerLogin" element={<NotSeller />} /> {/* Added sellerLogin route */}
-      <Route path="/sellerRegistration" element={<SellerRegistration />}/>
+     
       <Route path="*" element={<PageNotFound />} /> {/* Catch-all route for page not found */}
 
       <Route path="user" element={<Users />}>
@@ -55,7 +55,9 @@ function App() {
         <Route path="/user/login" element={<LoginCustomer/>}/>
       </Route>
 
-      <Route path="seller" element={<Seller />}>
+
+      <Route path="seller" element={<FirebaseProvider> <Seller />    </FirebaseProvider>}>
+      <Route path="/seller/sellerRegistration" element={<SellerRegistration />}/>
         <Route index element={<Dashboard />} />
         <Route path="/seller/dashboard" element={<SellerDashboard />} />
         <Route path="/seller/golive" element={<GoLive />} />
@@ -64,7 +66,10 @@ function App() {
         <Route path="/seller/voucher" element={<MyVoucher />} />
         <Route path="/seller/sellernotif" element={<NotifSeller />} />
       </Route>
+  
+
     </Routes>
+
   );
 }
 

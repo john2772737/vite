@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { auth } from "../utils/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, signInWithPhoneNumber ,setPersistence,browserLocalPersistence ,onAuthStateChanged,signOut} from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
 import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
 import "../css/sellerRegistration.css";
@@ -22,18 +22,24 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import axios from "axios";
 
+
+
 import { imageDb } from "../utils/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-
+import {useFirebase } from '../utils/context';
 const PhoneVerification = () => {
+ 
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
 
 
   const navigate = useNavigate();
+  const { currentUser } = useFirebase();
+
 
   const [Data, setData] = useState({
+    firebaseuid:"",
     firstname: "",
     lastname: "",
     shopname: "",
@@ -48,7 +54,7 @@ const PhoneVerification = () => {
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(phoneNumber);
+   
     if (!isValidPhoneNumber(phoneNumber)) {
       toast.error("Invalid phone number");
       return;
@@ -75,6 +81,7 @@ const PhoneVerification = () => {
 
       window.confirmationResult = confirmationResult;
 
+
       setStep("verification");
     } catch (error) {
       console.error("Error signing in with phone number:", error);
@@ -92,60 +99,67 @@ const PhoneVerification = () => {
     }));
   };
 
-  const [uid,setuid]= useState("")
+  const [uid, setuid] = useState("");
 
-  
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
 
     try {
       await window.confirmationResult.confirm(verificationCode);
+      await setPersistence(auth, browserLocalPersistence);
+
 
       const exists = await axios.get(
         `http://localhost:4000/seller/findPhoneNumber/${phoneNumber}`
       );
 
       const seller = exists.data.seller;
-    
+
       if (exists.data.found === false) {
+
+        signOut(auth);
+
+        setData({
+          firebaseuid: auth.currentUser.uid, 
+        })
         const result = await axios.post(
           "http://localhost:4000/seller/createphone",
           Data
         );
 
-       const uid= result.data._id
-        console.log(uid)
+        const uid = result.data._id;
+      
+        setuid(uid);
 
-        setuid(uid)
-        
         toast.success(result.data.message);
         setStep("form");
         return;
       }
 
-    
-      setuid(seller._id)
-     
+      setuid(seller._id);
+
       if (seller.submit === "false") {
-        // The 'submit' field is set to true
-        console.log("Seller has not been submitted");
+        signOut(auth);
         setStep("form");
         return;
-      }  
+      }
       if (seller.approved === "false") {
-          // The'submitted' field is set to true
-          console.log("Seller is not approved");
-          setStep("wait");
-          return;
+        signOut(auth);
+
+        setStep("wait");
+        
+        return;
       }
 
       if (seller.approved === "unapproved") {
+        signOut(auth);
+
         setStep("unapproved");
         return;
-    }
-
+      }
+     
         navigate("/seller");
-      
+
     } catch (error) {
       console.error("Error confirming verification code:", error);
 
@@ -164,44 +178,49 @@ const PhoneVerification = () => {
     }
     setStep("Photo");
   };
- 
+
   const saveUser = async (event) => {
     event.preventDefault();
     try {
       // Assuming idPicture is set in your data state
       const profilePictureFile = picture;
       const idPictureFile = idp;
-  
+
       if (!profilePictureFile || !idPictureFile) {
         toast.error("Both profile picture and ID picture are required");
       }
-  
-      const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
+
+      const profilePictureRef = ref(
+        imageDb,
+        "profiles/" + profilePictureFile.name
+      );
       const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-  
+
       // Upload the profile picture
       await uploadBytes(profilePictureRef, profilePictureFile);
       // Retrieve the download URL of the profile picture
       const profilePictureURL = await getDownloadURL(profilePictureRef);
-  
+
       // Upload the ID picture
       await uploadBytes(idPictureRef, idPictureFile);
       // Retrieve the download URL of the ID picture
       const idPictureURL = await getDownloadURL(idPictureRef);
-  
+
       const updatedData = {
         ...Data, // Include existing data
         picture: profilePictureURL,
         idPicture: idPictureURL,
-        submit: "true" // Set the 'submit' field to true
+        submit: "true", // Set the 'submit' field to true
       };
-  
-      console.log(uid);
-      const response = await axios.put(`http://localhost:4000/seller/updateSeller/${uid}`, updatedData);
-      // Handle successful response
-      console.log("Response:", response.data);
+
+
+      const response = await axios.put(
+        `http://localhost:4000/seller/updateSeller/${uid}`,
+        updatedData
+      );
+
       toast.success(response.data.message);
-      setStep('phone');
+      setStep("phone");
     } catch (error) {
       console.error("Error:", error.message);
       // Handle error, show it to the user, or do any necessary cleanup
@@ -209,9 +228,8 @@ const PhoneVerification = () => {
       toast.error("Failed to save user data. Please try again later.");
     }
   };
-  
 
-  console.log(Data);
+ 
   const handleFormChanges = (event) => {
     const { name, value } = event.target;
 
@@ -226,74 +244,78 @@ const PhoneVerification = () => {
   const handleConfirmPassChange = (e) => {
     setConfirmpass(e.target.value);
   };
-  const [idp,setId]= useState("")
-console.log(idp)
-  const handleId= (event)=>{
+  const [idp, setId] = useState("");
+
+  const handleId = (event) => {
     const file = event.target.files[0];
 
-    setId(file)
-  }  
+    setId(file);
+  };
 
-  const [picture,setPicture]= useState("")
+  const [picture, setPicture] = useState("");
 
-    const handlePicture= (event)=>{
-      const file = event.target.files[0];
-  
-      setPicture(file)
-    }  
+  const handlePicture = (event) => {
+    const file = event.target.files[0];
 
+    setPicture(file);
+  };
 
-    const update_photo = async (event) => {
-      event.preventDefault();
-      try {
-        // Assuming idPicture is set in your data state
-        const profilePictureFile = picture;
-        const idPictureFile = idp;
-    
-        if (!profilePictureFile || !idPictureFile) {
-          toast.error("Both profile picture and ID picture are required");
-        }
-    
-        const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
-        const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-    
-        // Upload the profile picture
-        await uploadBytes(profilePictureRef, profilePictureFile);
-        // Retrieve the download URL of the profile picture
-        const profilePictureURL = await getDownloadURL(profilePictureRef);
-    
-        // Upload the ID picture
-        await uploadBytes(idPictureRef, idPictureFile);
-        // Retrieve the download URL of the ID picture
-        const idPictureURL = await getDownloadURL(idPictureRef);
-    
-        const updatedData = {
-          approved:"false",
-          picture: profilePictureURL,
-          idPicture: idPictureURL,
-         
-        };
-    
-        console.log(uid);
-        const response = await axios.put(`http://localhost:4000/seller/updateSeller/${uid}`, updatedData);
-        // Handle successful response
-  
-        toast.success("Uploaded succesfully please wait for Approval");
-        setStep('phone');
-      } catch (error) {
-        console.error("Error:", error.message);
-        // Handle error, show it to the user, or do any necessary cleanup
-        // For example, you can show an error toast
-        toast.error("Failed to save user data. Please try again later.");
+  const update_photo = async (event) => {
+    event.preventDefault();
+    try {
+      // Assuming idPicture is set in your data state
+      const profilePictureFile = picture;
+      const idPictureFile = idp;
+
+      if (!profilePictureFile || !idPictureFile) {
+        toast.error("Both profile picture and ID picture are required");
       }
-    };
-    
+
+      const profilePictureRef = ref(
+        imageDb,
+        "profiles/" + profilePictureFile.name
+      );
+      const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
+
+      // Upload the profile picture
+      await uploadBytes(profilePictureRef, profilePictureFile);
+      // Retrieve the download URL of the profile picture
+      const profilePictureURL = await getDownloadURL(profilePictureRef);
+
+      // Upload the ID picture
+      await uploadBytes(idPictureRef, idPictureFile);
+      // Retrieve the download URL of the ID picture
+      const idPictureURL = await getDownloadURL(idPictureRef);
+
+      const updatedData = {
+        
+        approved: "false",
+        picture: profilePictureURL,
+        idPicture: idPictureURL,
+      };
+
+      const response = await axios.put(
+        `http://localhost:4000/seller/updateSeller/${uid}`,
+        updatedData
+      );
+      // Handle successful response
+
+      toast.success("Uploaded succesfully please wait for Approval");
+      setStep("phone");
+    } catch (error) {
+      console.error("Error:", error.message);
+      // Handle error, show it to the user, or do any necessary cleanup
+      // For example, you can show an error toast
+      toast.error("Failed to save user data. Please try again later.");
+    }
+  };
 
   return (
+  
     <div>
       <Toaster />
       <div className="sellerReg ">
-        <Navbar />
+
         {step === "phone" && (
           <MDBContainer fluid className="HEY ">
             <MDBRow className="d-flex justify-content-center align-items-center ">
@@ -365,6 +387,7 @@ console.log(idp)
 
                     <MDBCol md="6">
                       <MDBCardBody className="text-black d-flex flex-column justify-content-center">
+                     
                         <MDBCardTitle className="mb-2 text-uppercase fw-bold">
                           Create your Booklot Store Now!{" "}
                         </MDBCardTitle>
@@ -391,6 +414,7 @@ console.log(idp)
                             Verify
                           </button>
                         </div>
+            
                       </MDBCardBody>
                     </MDBCol>
                   </MDBRow>
@@ -548,13 +572,11 @@ console.log(idp)
                       <MDBCol md="6">
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                            SELLER REGISTRATION 
-                          
+                            SELLER REGISTRATION
                           </MDBCardTitle>
                           <MDBCardText>
                             Please fill out all the required fields to complete
                             the registration process.
-                         
                           </MDBCardText>
 
                           <MDBCardText>
@@ -568,7 +590,6 @@ console.log(idp)
                             accept="image/*"
                             capture="filesystem"
                             name="picture"
-                            
                             onChange={handlePicture}
                           />
 
@@ -581,7 +602,6 @@ console.log(idp)
                             accept="image/*"
                             capture="filesystem"
                             name="idPicture"
-                           
                             onChange={handleId}
                           />
 
@@ -645,17 +665,14 @@ console.log(idp)
                       <MDBCol md="6">
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                           Upload Photo
-                          
+                            Upload Photo
                           </MDBCardTitle>
                           <MDBCardText>
-                            Please upload another photo becaouse your id and photo you provide is invalid.
-                         
+                            Please upload another photo becaouse your id and
+                            photo you provide is invalid.
                           </MDBCardText>
 
-                          <MDBCardText>
-                            Upload your  Picture here:{" "}
-                          </MDBCardText>
+                          <MDBCardText>Upload your Picture here: </MDBCardText>
                           <MDBInput
                             wrapperClass="mb-4"
                             size="lg"
@@ -664,7 +681,6 @@ console.log(idp)
                             accept="image/*"
                             capture="filesystem"
                             name="picture"
-                            
                             onChange={handlePicture}
                           />
 
@@ -677,7 +693,6 @@ console.log(idp)
                             accept="image/*"
                             capture="filesystem"
                             name="idPicture"
-                           
                             onChange={handleId}
                           />
 
@@ -704,11 +719,12 @@ console.log(idp)
           </div>
         )}
         <div>
-          <Footer />
+        
         </div>
       </div>
     </div>
-  );
+
+    );
 };
 
 export default PhoneVerification;

@@ -43,7 +43,8 @@ console.log(data)
   const fetchlist = () => {
     axios.get('http://localhost:4000/seller/listseller',{
       params: {
-        approved: false
+        approved: "false",
+  
       }
     })
       .then(response => {
