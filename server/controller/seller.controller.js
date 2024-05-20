@@ -1,4 +1,5 @@
 const Seller = require("../models/seller.model");
+const Product = require("../models/product.model");
 
 const createphone = async (req, res) => {
   try {
@@ -145,6 +146,39 @@ const verified = async (req, res) => {
   }
 };
 
+const createProduct = async (req, res) => {
+  try {
+    // Create the product
+    const product = new Product(req.body);
+    const savedProduct = await product.save();
+
+    // Associate the product with the seller
+    const sellerId = req.body.sellerId;
+    const seller = await Seller.findById(sellerId);
+    if (!seller) {
+      return res.status(404).json({ message: 'Seller not found' });
+    }
+
+    seller.products.push(savedProduct._id);
+    await seller.save();
+
+    res.status(200).json(savedProduct);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+const getProduct= async(req,res)=>{
+  const {firebaseuid}= req.params
+  try{
+   const seller = await Seller.findOne({firebaseuid:firebaseuid}).populate('products');
+ 
+   res.json(seller.products)
+  }catch(error){
+    console.log(error)
+  }
+}
+
 
 module.exports = {
   createphone,
@@ -155,4 +189,6 @@ module.exports = {
   checkEmail,
   checkShopname,
   verified,
+  createProduct,
+  getProduct,
 };

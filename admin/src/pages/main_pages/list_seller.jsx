@@ -60,8 +60,7 @@ console.log(data)
   useEffect(() => {
     fetchlist();
   }, []); // Empty dependency array to ensure fetchlist is only called once when the component mounts
-  
-  console.log(setlist)
+
  
 const handleDelete = async(_id) =>{
   console.log(_id)

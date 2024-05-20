@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { auth } from "../utils/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber ,setPersistence,browserLocalPersistence ,onAuthStateChanged,signOut} from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
@@ -28,6 +28,8 @@ import { imageDb } from "../utils/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {useFirebase } from '../utils/context';
 const PhoneVerification = () => {
+
+
  
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
@@ -36,6 +38,12 @@ const PhoneVerification = () => {
 
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/seller/dashboard');
+    }
+  }, [currentUser, navigate]);
 
 
   const [Data, setData] = useState({
