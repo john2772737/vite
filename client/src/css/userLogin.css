@@ -7,9 +7,6 @@
   margin-bottom: 10px;
 }
 
-.input:focus {
-  border-color: green; /* Border color when input is focused */
-}
 
 .input.error {
   border-color: red; /* Border color when input has error */
@@ -17,6 +14,94 @@
 
 .error-message {
   color: red;
-  font-size: 12px;
+  font-size: 15px;
   margin-bottom: 5px;
+}
+
+.button{
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  width: 75%;
+  margin-left: 10%;
+  font-size: 18px;
+  font-weight: bold;
+  height: 40px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover{
+  background-color: red;
+}
+
+.button1{
+  background-color: rgb(158, 158, 158);
+  color: white;
+  border-radius: 5px;
+  width: 75%;
+  margin-left: 10%;
+  font-size: 18px;
+  font-weight: bold;
+  height: 40px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button1:hover{
+  background-color: red;
+}
+
+.button2{
+  background-color: rgb(158, 158, 158);
+  color: white;
+  border-radius: 5px;
+  width: 25%;
+  margin-left: 75%;
+  font-size: 18px;
+  font-weight: bold;
+  height: 40px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button2:hover{
+  background-color: red;
+}
+
+.button3{
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  width: 25%;
+  font-size: 18px;
+  font-weight: bold;
+  height: 40px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button3:hover{
+  background-color: red;
+}
+.or-container {
+  display: flex;
+  align-items: center;
+}
+
+.or-divider {
+  flex-grow: 1;
+  margin: 0;
+}
+
+.or-divider:first-child {
+  margin-right: 10px; 
+}
+
+.or-divider:last-child {
+  margin-left: 10px; 
 }
