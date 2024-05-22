@@ -1,7 +1,7 @@
 /* Style for the form container */
 
-.sellerReg{
-    height: 100vh;
+.HEY{
+    height: 800px;
 
 }
 
@@ -14,7 +14,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 
-  /* Style for the input field */
+  /* Style for the phone input field */
   .phone-input {
     width: 100%;
     margin-bottom: 20px;
@@ -73,23 +73,95 @@
     background-color: red;
   }
 
-  /* Optional: Style for error message */
-  /* .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 5px;
-  } */
   
-  
-  /* Confirmation message styles */
-  .wait-page{
-    .custom-container {
-      max-width: 800px; /* Adjust the maximum width as needed */
-    }
+  .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid transparent; 
+    border-radius: 7px;
+    transition: border-color 0.3s; 
+    margin-bottom: 10px;
   }
-  .wait-message {
-    font-size: 24px;
-    text-align: center;
+  
+  .input.error {
+    border-color: red; /* Border color when input has error */
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+  .error {
+    border: 1px solid red;
+  }
+  .abutton{
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    margin-left: 5%;
+    width: 25%;
+    font-size: 18px;
+    font-weight: bold;
+    height: 40px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .abutton:hover{
+    background-color: red;
+  }
+
+  /* WAIT APPROVAL */
+  .wait-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f9fa;
+  }
+  
+  #wait-content {
+    background: white;
+    padding: 60px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 80%;
+    max-width: 750px;
+  }
+  
+  .icon {
+    color: #ffc107; 
+    font-size: 4em;
+  }
+  
+  .h {
+    margin-top: 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  
+  p {
     margin-top: 20px;
+    font-size: 1.2em;
+    color: #555;
+  }
+  
+  .ok-button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    font-size: 1.2em;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+  }
+  
+  .ok-button:hover {
+    background-color: #ff0000;
   }
   

@@ -35,8 +35,8 @@ function App() {
     password: "",
     confirmPassword: "",
   });
-   // Assuming you have a state variable to track whether the password is incorrect
-   const [incorrectPassword, setIncorrectPassword] = useState(false);
+  // Assuming you have a state variable to track whether the password is incorrect
+  const [incorrectPassword, setIncorrectPassword] = useState(false);
 
   const [code, setcode] = useState("");
 
@@ -49,16 +49,16 @@ function App() {
 
   const initialFormData = {
     uid: "",
-    fullname:"",
+    fullname: "",
     username: "",
     email: "",
     password: "",
     birthday: "",
     phoneNumber: "",
     photo: "",
-};
+  };
 
-const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(initialFormData);
 
   const handlepasswordChanges = (event) => {
     const { name, value } = event.target;
@@ -77,10 +77,7 @@ const [formData, setFormData] = useState(initialFormData);
     });
   };
 
-
   const handleSubmit = async () => {
-
-
     try {
       const response = await axios.post(
         "http://localhost:4000/user/createUser",
@@ -136,8 +133,6 @@ const [formData, setFormData] = useState(initialFormData);
 
       const user = result.user;
 
-
-
       signInWithProvider(user);
     } catch (error) {
       console.log(error);
@@ -149,7 +144,6 @@ const [formData, setFormData] = useState(initialFormData);
       const checkUID = await axios.get(
         `http://localhost:4000/user/checkUid/${user.uid}`
       );
-   
 
       if (checkUID.data == true) {
         navigate("/user");
@@ -162,10 +156,10 @@ const [formData, setFormData] = useState(initialFormData);
         uid: user.uid,
         fullname: user.displayName,
         email: user.email,
-        username:"",
+        username: "",
         photo: user.photoURL,
-        birthday:"",
-        phoneNumber:""
+        birthday: "",
+        phoneNumber: "",
       });
       // You can redirect the user or perform other actions based on the response
     } catch (error) {
@@ -180,16 +174,19 @@ const [formData, setFormData] = useState(initialFormData);
   };
 
   const saveDatabase = async () => {
+    setIsClicked(true);
+
     if (Password.password === "") {
-      toast.error("Please input a password");
       return;
     }
     if (Password.confirmPassword === "") {
-      toast.error("Please input in confirm password");
       return;
     }
+    if (Password.password.length < 8) {
+      return;
+    }
+
     if (Password.password !== Password.confirmPassword) {
-      toast.error("Passwords do not match");
       return;
     }
 
@@ -273,18 +270,73 @@ const [formData, setFormData] = useState(initialFormData);
 
   const handleVerify = async (event) => {
     event.preventDefault();
+    setIsClicked(true);
 
     try {
-      // Validation for email input
-      const response = await axios.get(
-        `http://localhost:4000/user/checkEmail/${formData.email}`
-      );
-
-      if (response.data.exists) {
-        toast.error("Email already registered");
+      // Validation for full name field
+      if (!formData.fullname) {
+        return;
+      }
+      const lettersOnly = /^[a-zA-Z\s]+$/;
+      if (!lettersOnly.test(formData.fullname)) {
+        toast.error("Full name must contain only letters.");
         return;
       }
 
+      // Validation for username field
+      if (!formData.username) {
+        toast.error("Username is required");
+        return;
+      }
+
+      // Validation for email field
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email) {
+        toast.error("Email address is required.");
+        return;
+      }
+      if (
+        !emailRegex.test(formData.email.toLowerCase()) ||
+        !formData.email.toLowerCase().endsWith("gmail.com")
+      ) {
+        toast.error("Please enter a valid email address.");
+        return;
+      }
+
+      // Validation for password field
+      if (!formData.password) {
+        toast.error("Password is required.");
+        return;
+      }
+      if (formData.password.length < 8) {
+        toast.error("Password must be at least 8 characters long.");
+        return;
+      }
+
+      // // Check if username is registered or similar to existing usernames
+      // const usernameResponse = await axios.get(
+      //   `http://localhost:4000/user/checkUsername/${formData.username}`
+      // );
+      // if (usernameResponse.data.exists) {
+      //   // Username is already taken
+      //   toast.error("Username is already taken");
+      //   return;
+      // }
+      // // Username is available
+      // // You may also want to implement logic to check for similarity with existing usernames
+
+      // Check if email is already registered
+
+      const emailResponse = await axios.get(
+        `http://localhost:4000/user/checkEmail/${formData.email}`
+      );
+      if (emailResponse.data.exists) {
+        // Email is already registered
+        toast.error("Email already registered.");
+        return;
+      }
+
+      // If all validations pass, proceed to the next step
       setStep("verifyEmail");
     } catch (error) {
       console.log("error", error);
@@ -293,16 +345,16 @@ const [formData, setFormData] = useState(initialFormData);
 
   const handleCode = (e) => {
     const inputValue = e.target.value;
-    // Regular expression to allow only numbers
+    // Regular expression to allow only numbers and limit to 4 digits
     const onlyNumbers = /^[0-9]*$/;
-    if (onlyNumbers.test(inputValue) || inputValue === "") {
+    if (onlyNumbers.test(inputValue) && inputValue.length <= 4) {
       setcode(parseInt(inputValue));
     }
   };
   const [verificationCode, setVerificationCode] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [remainingTime, setRemainingTime] = useState(60);
-  const [uid,setuid]= useState("")
+  const [uid, setuid] = useState("");
 
   const getCode = async (e) => {
     e.preventDefault();
@@ -316,8 +368,8 @@ const [formData, setFormData] = useState(initialFormData);
           success: (response) => {
             const verificationCode = response.data.verificationCode;
             setVerificationCode(verificationCode);
-            const uid= response.data.uid;
-            setuid(uid)
+            const uid = response.data.uid;
+            setuid(uid);
             setButtonDisabled(true);
             startTimer();
 
@@ -351,37 +403,32 @@ const [formData, setFormData] = useState(initialFormData);
 
     return () => clearInterval(timer);
   }, []); // Empty dependency array ensures that effect runs only once on component mount
-  
 
   const handleVerificationCode = (e) => {
-      e.preventDefault()
-      console.log(verificationCode)
+    e.preventDefault();
+    setIsClicked(true);
 
-      if (verificationCode === "") {
-        toast.error("Please input a verification code");
-        return;
-      }
-      if (verificationCode!== code) {
-        toast.error("Wrong Verification Code");
-        return;
-      }
-      toast.success("Successfully Registered, Please Log In");
+    console.log(verificationCode);
 
-      formData.uid= uid
+    if (verificationCode === "") {
+      toast.error("Please input a verification code");
+      return;
+    }
+    if (verificationCode !== code) {
+      toast.error("Wrong Verification Code");
+      return;
+    }
+    toast.success("Successfully Registered, Please Log In");
 
-      handleSubmit()
+    formData.uid = uid;
 
-    
+    handleSubmit();
 
-      setTimeout(() => {
-        setStep("login")
-        setFormData(initialFormData);
-
-      }, 1500);
-   
-
-  }
-
+    setTimeout(() => {
+      setStep("login");
+      setFormData(initialFormData);
+    }, 1500);
+  };
 
   return (
     <div>
@@ -390,7 +437,7 @@ const [formData, setFormData] = useState(initialFormData);
           <Toaster />
           <MDBContainer
             fluid
-            className="p-4 background-radial-gradient overflow-hidden"
+            className="p-4 background-radial-gradient overflow-hidden vh-100"
             style={{
               backgroundImage: `url(${backgroundImage})`,
               backgroundSize: "100% 100%",
@@ -399,26 +446,36 @@ const [formData, setFormData] = useState(initialFormData);
           >
             <MDBRow>
               {/* <MDBCol
-            md="6"
-            className="text-center text-md-start d-flex flex-column justify-content-center"
-          >
-            <h1
-              className="my-5 display-3 fw-bold ls-tight px-3"
-              style={{ color: "hsl(218, 81%, 95%)" }}
-            >
-              The best offer <br />
-              <span style={{ color: "hsl(218, 81%, 75%)" }}>
-                for your business
-              </span>
-            </h1>
+                md="6"
+                className="text-center text-md-start d-flex flex-column justify-content-center"
+              >
+                <h1
+                  className="my-5 display-3 fw-bold ls-tight px-3"
+                  style={{
+                    color: "Black",
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)"
+                  }}
+                >
+                  BOOKLOT <br />
+                  <span style={{ color: "red" }}>
+                    From Cart to Couch, your Book awaits...
+                  </span>
+                </h1>
 
-            <p className="px-3" style={{ color: "hsl(218, 81%, 85%)" }}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet,
-              itaque accusantium odio, soluta, corrupti aliquam quibusdam
-              tempora at cupiditate quis eum maiores libero veritatis? Dicta
-              facilis sint aliquid ipsum atque?
-            </p>
-          </MDBCol> */}
+                <p
+                  className="px-3"
+                  style={{
+                    color: "black",
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                  }}
+                >
+                  Welcome back to BookLot! Dive into our vast collection of
+                  books and find your next literary adventure. Whether you're
+                  into thrillers, romance, fantasy, or non-fiction, we have
+                  something for everyone. Start exploring now and let your
+                  imagination soar!
+                </p>
+              </MDBCol> */}
 
               <MDBCol
                 md="6"
@@ -471,34 +528,41 @@ const [formData, setFormData] = useState(initialFormData);
                       onChange={handleLoginChanges}
                     />
 
-                    <div className="d-flex justify-content-center mb-4">
+                    <button className="button  mb-3" onClick={handleLogin}>
+                      SIGN IN
+                    </button>
+
+                    <div className="d-flex justify-content-center mb-2">
                       <Link to="/forgotPassword">Forgot Password?</Link>
                     </div>
 
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
-                      style={{ backgroundColor: "#ef3a29" }}
-                      onClick={handleLogin}
-                    >
-                      sign in
-                    </MDBBtn>
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
-                      onClick={userRegistration}
-                    >
-                      sign up
-                    </MDBBtn>
+                    <div className="or-container mb-3">
+                      <hr className="or-divider"></hr>
+                      <h1>OR</h1>
+                      <hr className="or-divider"></hr>
+                    </div>
+
+                    <button className="button1 mb-3" onClick={userRegistration}>
+                      CREATE AN ACCOUNT
+                    </button>
 
                     <div className="text-center">
-                      <p>or sign in with:</p>
+                      <p>SIGN IN WITH</p>
 
                       <MDBBtn
                         tag="a"
                         color="none"
                         className="mx-3"
-                        style={{ color: "#1266f1" }}
+                        style={{
+                          color: "black",
+                          transition: "color 0.3s", // Adding transition for smooth color change
+                        }}
+                        onMouseOver={(e) => {
+                          e.target.style.color = "red";
+                        }} // Change color on hover
+                        onMouseOut={(e) => {
+                          e.target.style.color = "black";
+                        }} // Revert back to original color
                         onClick={signInWithFacebook}
                       >
                         <MDBIcon fab icon="facebook-f" size="sm" />
@@ -508,7 +572,16 @@ const [formData, setFormData] = useState(initialFormData);
                         tag="a"
                         color="none"
                         className="mx-3"
-                        style={{ color: "#1266f1" }}
+                        style={{
+                          color: "black",
+                          transition: "color 0.3s", // Adding transition for smooth color change
+                        }}
+                        onMouseOver={(e) => {
+                          e.target.style.color = "red";
+                        }} // Change color on hover
+                        onMouseOut={(e) => {
+                          e.target.style.color = "black";
+                        }} // Revert back to original color
                         onClick={signInWithGooogle}
                       >
                         <MDBIcon fab icon="google" size="sm" />
@@ -534,7 +607,11 @@ const [formData, setFormData] = useState(initialFormData);
             }}
           >
             <MDBRow>
-              <MDBCol md="6" className="position-relative" style={{ opacity: "1", fontFamily: "League Spartan" }}>
+              <MDBCol
+                md="6"
+                className="position-relative"
+                style={{ opacity: "1", fontFamily: "League Spartan" }}
+              >
                 <div
                   id="radius-shape-1"
                   className="position-absolute rounded-circle shadow-5-strong"
@@ -550,46 +627,78 @@ const [formData, setFormData] = useState(initialFormData);
                     <h2>
                       Sign Up <i className="fa fa-sign-in-alt mb-5"></i>
                     </h2>
-                    <MDBRow>
-                      <MDBCol col="6">
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Full Name"
-                          id="form1"
-                          type="text"
-                          name="fullname"
-                          value={formData.fullname}
-                          onChange={handleinputChanges}
-                        />
-                      </MDBCol>
-
-                      
-                    </MDBRow>
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="username"
-                      id="form5"
+                    {/* Error messages for each input field */}
+                    <div className="error-message">
+                      {isClicked &&
+                        formData.fullname === "" &&
+                        "Full name is required."}
+                    </div>
+                    <input
+                      className={`input ${isFocused ? "focus" : ""} ${
+                        isClicked && formData.fullname === "" ? "error" : ""
+                      }`}
                       type="text"
-                      name="username"
+                      value={formData.fullname}
+                      placeholder="Full Name"
+                      name="fullname"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      onChange={handleinputChanges}
+                    />
+
+                    <div className="error-message">
+                      {isClicked &&
+                        formData.username === "" &&
+                        "Username is required."}
+                    </div>
+                    <input
+                      className={`input ${isFocused ? "focus" : ""} ${
+                        isClicked && formData.username === "" ? "error" : ""
+                      }`}
+                      type="text"
                       value={formData.username}
+                      placeholder="Username"
+                      name="username"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
                       onChange={handleinputChanges}
                     />
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="Email"
-                      id="form3"
+
+                    <div className="error-message">
+                      {isClicked &&
+                        formData.email === "" &&
+                        "Email address is required."}
+                    </div>
+                    <input
+                      className={`input ${isFocused ? "focus" : ""} ${
+                        isClicked && formData.email === "" ? "error" : ""
+                      }`}
                       type="email"
-                      name="email"
                       value={formData.email}
+                      placeholder="Email"
+                      name="email"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
                       onChange={handleinputChanges}
                     />
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="Password"
-                      id="form4"
+
+                    <div className="error-message">
+                      {isClicked &&
+                        formData.password === "" &&
+                        "Password is required."}
+                    </div>
+                    <input
+                      className={`input password-input ${
+                        isFocused ? "focus" : ""
+                      } ${
+                        isClicked && formData.password === "" ? "error" : ""
+                      }`}
                       type="password"
-                      name="password"
                       value={formData.password}
+                      placeholder="Password"
+                      name="password"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
                       onChange={handleinputChanges}
                     />
 
@@ -601,48 +710,37 @@ const [formData, setFormData] = useState(initialFormData);
                         label="CAPTCHA"
                       />
                     </div>
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
-                      style={{
-                        background: "rgba(160, 78, 71, 1)",
-                        transition: "background-color 0.3s", // Adding transition for smooth color change
-                      }}
-                      onMouseOver={(e) => {
-                        e.target.style.background = "red";
-                      }} // Change background color on hover
-                      onMouseOut={(e) => {
-                        e.target.style.background = "rgba(160, 78, 71, 1)";
-                      }} // Revert back to original color
-                      onClick={handleVerify}
-                    >
-                      sign up
-                    </MDBBtn>
 
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
-                      onClick={userLogin}
-                    >
-                      sign in
-                    </MDBBtn>
+                    <button className="button  mb-3" onClick={handleVerify}>
+                      SIGN UP
+                    </button>
+
+                    <div className="or-container mb-3">
+                      <hr className="or-divider"></hr>
+                      <h1>Already have an account?</h1>
+                      <hr className="or-divider"></hr>
+                    </div>
+
+                    <button className="button1 mb-3" onClick={userLogin}>
+                      SIGN IN
+                    </button>
 
                     <div className="text-center">
-                      <p>or sign in with:</p>
+                      <p>SIGN UP WITH</p>
 
                       <MDBBtn
                         tag="a"
                         color="none"
                         className="mx-3"
                         style={{
-                          color: "rgba(160, 78, 71, 1)",
+                          color: "black",
                           transition: "color 0.3s", // Adding transition for smooth color change
                         }}
                         onMouseOver={(e) => {
                           e.target.style.color = "red";
                         }} // Change color on hover
                         onMouseOut={(e) => {
-                          e.target.style.color = "rgba(160, 78, 71, 1)";
+                          e.target.style.color = "black";
                         }} // Revert back to original color
                         onClick={signInWithFacebook}
                       >
@@ -654,14 +752,14 @@ const [formData, setFormData] = useState(initialFormData);
                         color="none"
                         className="mx-3"
                         style={{
-                          color: "rgba(160, 78, 71, 1)",
+                          color: "black",
                           transition: "color 0.3s", // Adding transition for smooth color change
                         }}
                         onMouseOver={(e) => {
                           e.target.style.color = "red";
                         }} // Change color on hover
                         onMouseOut={(e) => {
-                          e.target.style.color = "rgba(160, 78, 71, 1)";
+                          e.target.style.color = "black";
                         }} // Revert back to original color
                         onClick={signInWithGooogle}
                       >
@@ -752,31 +850,69 @@ const [formData, setFormData] = useState(initialFormData);
                       Set Password<i className="fa fa-sign-in-alt mb-5"></i>
                     </h2>
 
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="New Password"
-                      id="form3"
+                    <div className="error-message">
+                      {isClicked &&
+                        Password.password === "" &&
+                        "Password is required."}
+                    </div>
+
+                    <div className="error-message">
+                      {isClicked &&
+                        Password.password.length > 0 &&
+                        Password.password.length < 8 &&
+                        "Password must be at least 8 characters long."}
+                    </div>
+
+                    <div className="error-message">
+                      {isClicked &&
+                        Password.password !== "" &&
+                        Password.confirmPassword !== "" &&
+                        Password.password !== Password.confirmPassword &&
+                        "Passwords do not match."}
+                    </div>
+
+                    <input
+                      className={`input ${isFocused ? "focus" : ""} ${
+                        (isClicked && Password.password === "") ||
+                        (isClicked &&
+                          Password.password.length > 0 &&
+                          Password.password.length < 8)
+                          ? "error"
+                          : ""
+                      }`}
                       type="password"
+                      placeholder="New Password"
+                      name="password"
+                      id="form3"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
                       onChange={handlepasswordChanges}
                       value={Password.password}
-                      name="password"
                     />
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="Confirm Password"
-                      id="form4"
+                    <div className="error-message">
+                      {isClicked &&
+                        Password.confirmPassword === "" &&
+                        "You must confirm the password."}
+                    </div>
+                    <input
+                      className={`input ${isFocused ? "focus" : ""} ${
+                        isClicked && Password.confirmPassword === ""
+                          ? "error"
+                          : ""
+                      }`}
                       type="password"
+                      placeholder="Confirm Password"
+                      name="confirmPassword"
+                      id="form4"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
                       onChange={handlepasswordChanges}
                       value={Password.confirmPassword}
-                      name="confirmPassword"
                     />
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
-                      onClick={saveDatabase}
-                    >
-                      sign up
-                    </MDBBtn>
+
+                    <button className="button  mb-3" onClick={saveDatabase}>
+                      SIGN UP
+                    </button>
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>
@@ -849,40 +985,56 @@ const [formData, setFormData] = useState(initialFormData);
                       value={formData.email}
                       name="email"
                     />
-
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
+                    <button
+                      className="button3 mb-3"
                       onClick={getCode}
                       disabled={buttonDisabled}
                     >
                       {buttonDisabled
                         ? `Wait for ${remainingTime} seconds`
-                        : "get code"}
-                    </MDBBtn>
+                        : "GET CODE"}
+                    </button>
+                    <div className="error-message">
+                      {isClicked &&
+                        verificationCode === "" &&
+                        "Please input a verification code"}
+                      {isClicked &&
+                        verificationCode !== "" &&
+                        verificationCode !== code &&
+                        "Wrong Verification Code"}
+                    </div> 
+                    <input
+                      className={`input ${isFocused ? "focus" : ""} ${
+                        (isClicked && verificationCode === "") ||
+                        (verificationCode !== "" && verificationCode !== code)
+                          ? "error"
+                          : ""
+                      }`}
+                      type="number"
+                      placeholder={code ? "" : "Enter the Code:****"}
+                      value={code}
+                      pattern="[0-9]*" // Enforce numeric input
+                      name="code"
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      onChange={handleCode}
+                    />
 
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
+                    <button
+                      className="button3 mb-3"
+                      onClick={handleVerificationCode}
+                    >
+                      VERIFY
+                    </button>
+
+                    <button
+                      className="button2 mb-3"
                       onClick={() => {
                         setStep("signup");
                       }}
                     >
                       Back
-                    </MDBBtn>
-
-                    <MDBInput
-                      wrapperClass="mb-4"
-                      label="Enter the Code: "
-                      id="form4"
-                      type="number"
-                      onChange={handleCode}
-                      value={code}
-                      name="code"
-                    />
-                    <MDBBtn className="w-100 mb-4" size="md" onClick={handleVerificationCode}>
-                      Verify
-                    </MDBBtn>
+                    </button>
                   </MDBCardBody>
                 </MDBCard>
               </MDBCol>

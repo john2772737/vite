@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import backgroundImage from "../components/images/booklot_bg.png";
 import {
@@ -12,17 +12,17 @@ import {
 } from "mdb-react-ui-kit";
 
 function ForgotPassword() {
-  const [email, setEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleResetPassword = (e) => {
     e.preventDefault();
     // Add your reset password logic here
-    if (email.trim() === '') {
-      setErrorMessage('Email is required.');
+    if (email.trim() === "") {
+      setErrorMessage("Email is required.");
     } else {
       // Call your reset password API or perform the necessary action
-      console.log('Reset password for email:', email);
+      console.log("Reset password for email:", email);
     }
   };
 
@@ -38,7 +38,11 @@ function ForgotPassword() {
         }}
       >
         <MDBRow>
-          <MDBCol md="6" className="position-relative" style={{ opacity: "1", fontFamily: "League Spartan" }}>
+          <MDBCol
+            md="6"
+            className="position-relative"
+            style={{ opacity: "1", fontFamily: "League Spartan" }}
+          >
             <div
               id="radius-shape-1"
               className="position-absolute rounded-circle shadow-5-strong"
@@ -55,6 +59,10 @@ function ForgotPassword() {
                 </h2>
 
                 <form onSubmit={handleResetPassword}>
+                  {errorMessage && (
+                    <p className="text-red-500">{errorMessage}</p>
+                  )}
+
                   <input
                     type="email"
                     placeholder="Email"
@@ -62,20 +70,22 @@ function ForgotPassword() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
                   />
-                  {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-                  <MDBBtn
-                    type="submit"
-                    className="w-100 mt-4"
-                    size="md"
-                    style={{ backgroundColor: "#ef3a29" }}
-                  >
-                    Reset Password
-                  </MDBBtn>
+                  <button className="button  mt-3">
+                    RESET PASSWORD
+                  </button>
                 </form>
 
                 <div className="text-center mt-3">
-                  <p>Remembered your password? <Link to="/userLogin" className="text-indigo-600 font-medium">Sign In</Link></p>
+                  <p>
+                    Remembered your password?{" "}
+                    <Link
+                      to="/userLogin"
+                      className="text-indigo-600 font-medium"
+                    >
+                      Sign In
+                    </Link>
+                  </p>
                 </div>
               </MDBCardBody>
             </MDBCard>

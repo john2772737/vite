@@ -1,6 +1,13 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../utils/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber ,setPersistence,browserLocalPersistence ,onAuthStateChanged,signOut} from "firebase/auth";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
 import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
 import "../css/sellerRegistration.css";
@@ -18,36 +25,37 @@ import {
   MDBCardTitle,
   MDBCardText,
 } from "mdb-react-ui-kit";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+
 import axios from "axios";
-
-
 
 import { imageDb } from "../utils/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import {useFirebase } from '../utils/context';
+import { useFirebase } from "../utils/context";
+import Bg from "../components/images/Register.png";
+
 const PhoneVerification = () => {
-
-
- 
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
 
+  const [isFocused, setIsFocused] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
 
   useEffect(() => {
     if (currentUser) {
-      navigate('/seller/dashboard');
+      navigate("/seller/dashboard");
     }
   }, [currentUser, navigate]);
 
+  const sample = () => {
+    setStep("unapproved");
+  };
 
   const [Data, setData] = useState({
-    firebaseuid:"",
+    firebaseuid: "",
     firstname: "",
     lastname: "",
     shopname: "",
@@ -61,8 +69,9 @@ const PhoneVerification = () => {
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
+    setIsClicked(true);
 
-   
+    console.log(phoneNumber);
     if (!isValidPhoneNumber(phoneNumber)) {
       toast.error("Invalid phone number");
       return;
@@ -89,7 +98,6 @@ const PhoneVerification = () => {
 
       window.confirmationResult = confirmationResult;
 
-
       setStep("verification");
     } catch (error) {
       console.error("Error signing in with phone number:", error);
@@ -111,11 +119,17 @@ const PhoneVerification = () => {
 
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
+    setIsClicked(true);
+
+    // Check if verification code is empty or not exactly 6 digits
+    if (verificationCode.trim() === "" || verificationCode.length !== 6) {
+      toast.error("Verification code must be 6 digits");
+      return;
+    }
 
     try {
       await window.confirmationResult.confirm(verificationCode);
       await setPersistence(auth, browserLocalPersistence);
-
 
       const exists = await axios.get(
         `http://localhost:4000/seller/findPhoneNumber/${phoneNumber}`
@@ -124,19 +138,18 @@ const PhoneVerification = () => {
       const seller = exists.data.seller;
 
       if (exists.data.found === false) {
-
         signOut(auth);
 
         setData({
-          firebaseuid: auth.currentUser.uid, 
-        })
+          firebaseuid: auth.currentUser.uid,
+        });
         const result = await axios.post(
           "http://localhost:4000/seller/createphone",
           Data
         );
 
         const uid = result.data._id;
-      
+
         setuid(uid);
 
         toast.success(result.data.message);
@@ -155,7 +168,7 @@ const PhoneVerification = () => {
         signOut(auth);
 
         setStep("wait");
-        
+
         return;
       }
 
@@ -165,9 +178,8 @@ const PhoneVerification = () => {
         setStep("unapproved");
         return;
       }
-     
-        navigate("/seller");
 
+      navigate("/seller");
     } catch (error) {
       console.error("Error confirming verification code:", error);
 
@@ -180,15 +192,54 @@ const PhoneVerification = () => {
   };
 
   const uploadPhoto = () => {
+    setIsClicked(true);
+
+    // Check if any field is empty
+    if (
+      Data.firstname === "" ||
+      Data.lastname === "" ||
+      Data.shopname === "" ||
+      Data.email === "" ||
+      Data.password === "" ||
+      confirmPass === "" ||
+      Data.birthday === ""
+    ) {
+      toast.error("Please fill out all fields");
+      return;
+    }
+
     if (Data.password !== confirmPass) {
       toast.error("Password do not Match");
       return;
     }
+
+    if (Data.password.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+
     setStep("Photo");
+  };
+
+  const resetForm = () => {
+    setData({
+      firstname: "",
+      lastname: "",
+      shopname: "",
+      password: "",
+      email: "",
+      birthday: "",
+      picture: "",
+      idPicture: "",
+    });
+    setConfirmpass("");
+    setIsClicked(false); // Reset the clicked state as well
   };
 
   const saveUser = async (event) => {
     event.preventDefault();
+    setIsClicked(true);
+
     try {
       // Assuming idPicture is set in your data state
       const profilePictureFile = picture;
@@ -221,7 +272,6 @@ const PhoneVerification = () => {
         submit: "true", // Set the 'submit' field to true
       };
 
-
       const response = await axios.put(
         `http://localhost:4000/seller/updateSeller/${uid}`,
         updatedData
@@ -237,7 +287,6 @@ const PhoneVerification = () => {
     }
   };
 
- 
   const handleFormChanges = (event) => {
     const { name, value } = event.target;
 
@@ -270,6 +319,8 @@ const PhoneVerification = () => {
 
   const update_photo = async (event) => {
     event.preventDefault();
+    setIsClicked(true);
+
     try {
       // Assuming idPicture is set in your data state
       const profilePictureFile = picture;
@@ -296,7 +347,6 @@ const PhoneVerification = () => {
       const idPictureURL = await getDownloadURL(idPictureRef);
 
       const updatedData = {
-        
         approved: "false",
         picture: profilePictureURL,
         idPicture: idPictureURL,
@@ -319,237 +369,457 @@ const PhoneVerification = () => {
   };
 
   return (
-  
-    <div>
+    <div className="sellerReg ">
       <Toaster />
-      <div className="sellerReg ">
+      {step === "phone" && (
+        <MDBContainer fluid className="HEY  vh-100">
+          <MDBRow className="d-flex justify-content-center align-items-center vh-100">
+            <MDBCol>
+              <MDBCard
+                className="my-4"
+                style={{ width: "100%", height: "100%" }}
+              >
+                <MDBRow className="g-0 ">
+                  <MDBCol md="6">
+                    <MDBCardImage
+                      style={{ height: "100%" }}
+                      src={Bg}
+                      alt="Sample photo"
+                      className="rounded"
+                      fluid
+                    />
+                  </MDBCol>
 
-        {step === "phone" && (
-          <MDBContainer fluid className="HEY ">
-            <MDBRow className="d-flex justify-content-center align-items-center ">
-              <MDBCol>
-                <MDBCard className="my-4">
-                  <MDBRow className="g-0">
-                    <MDBCol md="6">
-                      <MDBCardImage
-                        style={{ height: "80vh" }}
-                        src="https://i0.wp.com/www.adobomagazine.com/wp-content/uploads/2021/09/Lazada-launches-Start-It-Up-Laz-It-Up-program-for-more-accessible-business-registration-on-the-platform-HERO.jpg?w=1440&ssl=1"
-                        alt="Sample photo"
-                        className="rounded"
-                        fluid
-                      />
-                    </MDBCol>
-
-                    <MDBCol md="6">
-                      <MDBCardBody className="text-black d-flex flex-column justify-content-center ">
-                        <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                          Create your Booklot Store Now!{" "}
-                        </MDBCardTitle>
-                        <MDBCardText className="mb-4 ">
-                          Enter your Mobile Number to Start Selling.
-                        </MDBCardText>
-                        <MDBRow>
-                          <MDBCardText>
+                  <MDBCol md="6">
+                    <MDBCardBody className="text-black d-flex flex-column justify-content-center align-items-center">
+                      <MDBCardTitle className="mb-4 text-uppercase fw-bold text-center">
+                        Create your Booklot Store Now!
+                      </MDBCardTitle>
+                      <MDBCardText className="mb-4 text-center">
+                        Enter your Mobile Number to Start Selling.
+                      </MDBCardText>
+                      <MDBRow className="w-100">
+                        <MDBCardText className="w-100">
+                          {isClicked &&
+                            phoneNumber &&
+                            !isValidPhoneNumber(phoneNumber) && (
+                              <div className="error-message text-center">
+                                Invalid phone number.
+                              </div>
+                            )}
+                          <div className="w-100 d-flex justify-content-center">
                             <Input
+                              className={`input ${isFocused ? "focus" : ""} ${
+                                isClicked && phoneNumber === "" ? "error" : ""
+                              }`}
                               country="PH"
                               international
                               withCountryCallingCode
                               value={phoneNumber}
                               onChange={handlePhoneChange}
                               maxLength={16}
+                              style={{ width: "80%" }}
                             />
-                          </MDBCardText>
-                        </MDBRow>
-                        <div id="recaptcha-container"></div>
-                        <div>
-                          <button
-                            type="submit"
-                            className="verify-btn"
-                            onClick={handlePhoneSubmit}
-                          >
-                            Verify with SMS
-                          </button>
-                        </div>
-                      </MDBCardBody>
-                    </MDBCol>
-                  </MDBRow>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
-        )}
-        {step === "verification" && (
-          <MDBContainer fluid className="HEY" size="sm">
-            <MDBRow className="d-flex justify-content-center align-items-center ">
-              <MDBCol>
-                <MDBCard className="my-4">
-                  <MDBRow className="g-0">
-                    <MDBCol md="6">
-                      <MDBCardImage
-                        src=""
-                        alt="Sample photo"
-                        className="rounded"
-                        fluid
-                      />
-                    </MDBCol>
+                          </div>
+                        </MDBCardText>
+                      </MDBRow>
+                      <div
+                        id="recaptcha-container"
+                        className="w-100 text-center"
+                      ></div>
+                      <div className="w-100 d-flex justify-content-center mt-3">
+                        <button
+                          type="submit"
+                          className="verify-btn"
+                          onClick={handlePhoneSubmit}
+                          style={{ width: "80%" }}
+                        >
+                          Verify with SMS
+                        </button>
+                      </div>
+                    </MDBCardBody>
+                  </MDBCol>
+                </MDBRow>
+              </MDBCard>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      )}
 
-                    <MDBCol md="6">
-                      <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                     
-                        <MDBCardTitle className="mb-2 text-uppercase fw-bold">
-                          Create your Booklot Store Now!{" "}
-                        </MDBCardTitle>
-                        <MDBCardText>Enter your verification code.</MDBCardText>
-                        <MDBRow>
-                          <MDBCardText>
-                            Verification Code:
-                            <MDBInput
-                              className="code-input"
+      {step === "verification" && (
+        <MDBContainer fluid className="HEY  vh-100">
+          <MDBRow className="d-flex justify-content-center align-items-center vh-100">
+            <MDBCol>
+              <MDBCard
+                className="my-4"
+                style={{ width: "100%", height: "100%" }}
+              >
+                <MDBRow className="g-0">
+                  <MDBCol md="6">
+                    <MDBCardImage
+                      src={Bg}
+                      alt="Sample photo"
+                      className="rounded"
+                      fluid
+                    />
+                  </MDBCol>
+
+                  <MDBCol md="6">
+                    <MDBCardBody className="text-black d-flex flex-column justify-content-center">
+                      <MDBCardTitle className="mb-4 text-uppercase fw-bold text-center">
+                        Create your Booklot Store Now!
+                      </MDBCardTitle>
+                      <MDBCardText className="mb-4 text-center">
+                        Enter your verification code.
+                      </MDBCardText>
+                      <MDBRow className="w-100">
+                        <MDBCardText className="w-100">
+                          <div className="error-message text-center">
+                            {isClicked &&
+                              verificationCode === "" &&
+                              "Verification code is required."}
+                          </div>
+                          <div className="error-message text-center">
+                            {isClicked &&
+                              verificationCode.length !== 6 &&
+                              "Verification code must be 6 digits."}
+                          </div>
+                          <div className="w-100 d-flex justify-content-center">
+                            <input
+                              className={`input ${isFocused ? "focus" : ""} ${
+                                isClicked && verificationCode === ""
+                                  ? "error"
+                                  : ""
+                              }`}
                               type="text"
                               value={verificationCode}
+                              placeholder="6-PIN Code: ******"
+                              onFocus={() => setIsFocused(true)}
+                              onBlur={() => setIsFocused(false)}
                               onChange={(e) =>
                                 setVerificationCode(e.target.value)
                               }
+                              maxLength={6}
+                              style={{ width: "70%", textAlign: "center" }}
                             />
-                          </MDBCardText>
-                        </MDBRow>
-                        <div>
-                          <button
-                            className="code-btn"
-                            type="submit"
-                            onClick={handleVerificationSubmit}
-                          >
-                            Verify
-                          </button>
-                        </div>
-            
-                      </MDBCardBody>
-                    </MDBCol>
-                  </MDBRow>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
-        )}
+                          </div>
+                        </MDBCardText>
+                      </MDBRow>
+                      <div className="w-100 d-flex justify-content-center mt-3">
+                        <button
+                          className="code-btn"
+                          type="submit"
+                          onClick={handleVerificationSubmit}
+                          style={{ width: "60%" }}
+                        >
+                          Verify
+                        </button>
+                      </div>
+                    </MDBCardBody>
+                  </MDBCol>
+                </MDBRow>
+              </MDBCard>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      )}
 
-        {step === "form" && (
-          <MDBContainer fluid className="HEY" size="sm">
-            <MDBRow className="d-flex justify-content-center align-items-center ">
+      {step === "form" && (
+        <MDBContainer fluid className="HEY  h-800">
+          <MDBRow className="d-flex justify-content-center align-items-center vh-100">
+            <MDBCol>
+              <MDBCard className="my-4">
+                <MDBRow className="g-0">
+                  <MDBCol md="6">
+                    <MDBCardImage
+                      src={Bg}
+                      alt="Sample photo"
+                      className="rounded"
+                      fluid
+                      style={{
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "left center",
+                      }}
+                    />
+                  </MDBCol>
+
+                  <MDBCol md="6">
+                    <MDBCardBody
+                      className="text-black d-flex flex-column justify-content-center"
+                      style={{ overflowY: "auto" }}
+                    >
+                      <MDBCardTitle className="mb-4 text-uppercase fw-bold text-center">
+                        SELLER REGISTRATION
+                      </MDBCardTitle>
+                      <MDBCardText className="mb-4 text-center">
+                        Please fill out all the required fields to complete the
+                        registration process.
+                      </MDBCardText>
+
+                      <MDBRow>
+                        <MDBCol md="6">
+                          {isClicked && Data.firstname === "" && (
+                            <div className="error-message">
+                              First name is required.
+                            </div>
+                          )}
+
+                          <input
+                            className={`input ${isFocused ? "focus" : ""} ${
+                              isClicked && Data.firstname === "" ? "error" : ""
+                            }`}
+                            placeholder="First Name"
+                            name="firstname"
+                            id="form1"
+                            type="text"
+                            value={Data.firstname}
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
+                            onChange={handleFormChanges}
+                          />
+                        </MDBCol>
+
+                        <MDBCol md="6">
+                          {isClicked && Data.lastname === "" && (
+                            <div className="error-message">
+                              Last name is required.
+                            </div>
+                          )}
+                          <input
+                            className={`input ${isFocused ? "focus" : ""} ${
+                              isClicked && Data.lastname === "" ? "error" : ""
+                            }`}
+                            placeholder="Last Name"
+                            name="lastname"
+                            id="form2"
+                            type="text"
+                            value={Data.lastname}
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
+                            onChange={handleFormChanges}
+                          />
+                        </MDBCol>
+                      </MDBRow>
+                      {isClicked && Data.birthday === "" && (
+                        <div className="error-message">
+                          Birthday is required.
+                        </div>
+                      )}
+
+                      <input
+                        className={`input ${isFocused ? "focus" : ""} ${
+                          isClicked && Data.birthday === "" ? "error" : ""
+                        }`}
+                        placeholder="Birthday"
+                        name="birthday"
+                        id="form3"
+                        type="date"
+                        value={Data.birthday}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        onChange={handleFormChanges}
+                      />
+                      {isClicked && Data.shopname === "" && (
+                        <div className="error-message">
+                          Shop Name is required.
+                        </div>
+                      )}
+
+                      <input
+                        className={`input ${isFocused ? "focus" : ""} ${
+                          isClicked && Data.shopname === "" ? "error" : ""
+                        }`}
+                        placeholder="Shop Name"
+                        name="shopname"
+                        id="form4"
+                        type="text"
+                        value={Data.shopname}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        onChange={handleFormChanges}
+                      />
+                      {isClicked && Data.email === "" && (
+                        <div className="error-message">Email is required.</div>
+                      )}
+
+                      <input
+                        className={`input ${isFocused ? "focus" : ""} ${
+                          isClicked && Data.email === "" ? "error" : ""
+                        }`}
+                        placeholder="Email"
+                        name="email"
+                        id="form5"
+                        type="email"
+                        value={Data.email}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        onChange={handleFormChanges}
+                      />
+                      {isClicked && Data.password === "" && (
+                        <div className="error-message">
+                          Password is required.
+                        </div>
+                      )}
+
+                      {isClicked &&
+                        Data.password !== "" &&
+                        Data.password.length < 8 && (
+                          <div className="error-message">
+                            Password must be at least 8 characters long.
+                          </div>
+                        )}
+
+                      {isClicked &&
+                        Data.password !== "" &&
+                        confirmPass !== "" &&
+                        Data.password !== confirmPass && (
+                          <div className="error-message">
+                            Passwords do not match.
+                          </div>
+                        )}
+
+                      <input
+                        className={`input ${isFocused ? "focus" : ""} ${
+                          isClicked &&
+                          (Data.password === "" || Data.password.length < 8)
+                            ? "error"
+                            : ""
+                        }`}
+                        placeholder="Password"
+                        name="password"
+                        id="form6"
+                        type="password"
+                        value={Data.password}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        onChange={handleFormChanges}
+                      />
+
+                      {isClicked && confirmPass === "" && (
+                        <div className="error-message">
+                          Confirm your password.
+                        </div>
+                      )}
+
+                      <input
+                        className={`input ${isFocused ? "focus" : ""} ${
+                          isClicked && confirmPass === "" ? "error" : ""
+                        }`}
+                        placeholder="Confirm Password"
+                        name="confirmPass"
+                        id="form7"
+                        type="password"
+                        value={confirmPass}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
+                        onChange={handleConfirmPassChange}
+                      />
+
+                      <div className="d-flex justify-content-end pt-3">
+                        <button
+                          className="abutton mb-3"
+                          type="button"
+                          onClick={resetForm}
+                        >
+                          RESET
+                        </button>
+                        <button
+                          className="abutton mb-3"
+                          type="button"
+                          onClick={uploadPhoto}
+                        >
+                          PROCEED
+                        </button>
+                      </div>
+                    </MDBCardBody>
+                  </MDBCol>
+                </MDBRow>
+              </MDBCard>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      )}
+
+      {step == "Photo" && (
+        <div>
+          <MDBContainer fluid className="HEY vh-100">
+            <MDBRow className="d-flex justify-content-center align-items-center vh-100">
               <MDBCol>
                 <MDBCard className="my-4">
-                  <MDBRow className="g-0">
-                    <MDBCol md="6">
+                  <MDBRow>
+                    <MDBCol md="">
                       <MDBCardImage
-                        src="{Bg}"
+                        position="left"
+                        src={Bg}
                         alt="Sample photo"
                         className="rounded"
                         fluid
+                        style={{
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "left center",
+                        }}
                       />
                     </MDBCol>
 
                     <MDBCol md="6">
                       <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                        <MDBCardTitle className="mb-4 text-uppercase fw-bold">
+                        <MDBCardTitle className="mb-4 text-uppercase fw-bold text-center">
                           SELLER REGISTRATION
                         </MDBCardTitle>
-                        <MDBCardText>
+                        <MDBCardText className="mb-4 text-center">
                           Please fill out all the required fields to complete
                           the registration process.
                         </MDBCardText>
 
-                        <MDBRow>
-                          <MDBCol md="6">
-                            <MDBInput
-                              wrapperClass="mb-4"
-                              label="First Name"
-                              size="lg"
-                              id="form1"
-                              type="text"
-                              value={Data.firstname}
-                              onChange={handleFormChanges}
-                              name="firstname"
-                            />
-                          </MDBCol>
-
-                          <MDBCol md="6">
-                            <MDBInput
-                              wrapperClass="mb-4"
-                              label="Last Name"
-                              size="lg"
-                              id="form2"
-                              type="text"
-                              value={Data.lastname}
-                              onChange={handleFormChanges}
-                              name="lastname"
-                            />
-                          </MDBCol>
-                        </MDBRow>
-
+                        <MDBCardText>
+                          Upload your Profile Picture here:
+                        </MDBCardText>
+                        {isClicked && !picture && (
+                          <div className="error-message">
+                            Profile picture is required.
+                          </div>
+                        )}
                         <MDBInput
-                          wrapperClass="mb-4"
-                          label="Birthday"
+                          wrapperClass={`input mb-4 ${
+                            isClicked && !picture ? "error" : ""
+                          }`}
                           size="lg"
                           id="form3"
-                          type="date"
-                          value={Data.birthday}
-                          onChange={handleFormChanges}
-                          name="birthday"
+                          type="file"
+                          accept="image/*"
+                          capture="filesystem"
+                          name="picture"
+                          onChange={handlePicture}
                         />
 
+                        <MDBCardText>Upload your Valid ID here: </MDBCardText>
+                        {isClicked && !idp && (
+                          <div className="error-message">
+                            ID picture is required.
+                          </div>
+                        )}
                         <MDBInput
-                          wrapperClass="mb-4"
-                          label="Shop Name"
+                          wrapperClass={`input mb-4 ${
+                            isClicked && !idp ? "error" : ""
+                          }`}
                           size="lg"
                           id="form4"
-                          type="text"
-                          value={Data.shopname}
-                          onChange={handleFormChanges}
-                          name="shopname"
-                        />
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Email"
-                          size="lg"
-                          id="form5"
-                          type="email"
-                          value={Data.email}
-                          onChange={handleFormChanges}
-                          name="email"
-                        />
-
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Password"
-                          size="lg"
-                          id="form7"
-                          type="password"
-                          value={Data.password}
-                          onChange={handleFormChanges}
-                          name="password"
-                        />
-
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Confirm Password"
-                          size="lg"
-                          id="form6"
-                          type="password"
-                          value={confirmPass}
-                          onChange={handleConfirmPassChange}
+                          type="file"
+                          accept="image/*"
+                          capture="filesystem"
+                          name="idPicture"
+                          onChange={handleId}
                         />
 
                         <div className="d-flex justify-content-end pt-3">
-                          <MDBBtn color="light" size="lg">
-                            Reset all
-                          </MDBBtn>
-                          <MDBBtn
-                            className="ms-2"
-                            color="danger"
-                            size="lg"
-                            onClick={uploadPhoto}
-                          >
-                            Proceed
-                          </MDBBtn>
+                          <button className="abutton mb-3" onClick={resetForm}>
+                            RESET
+                          </button>
+                          <button className="abutton mb-3" onClick={saveUser}>
+                            PROCEED
+                          </button>
                         </div>
                       </MDBCardBody>
                     </MDBCol>
@@ -558,181 +828,121 @@ const PhoneVerification = () => {
               </MDBCol>
             </MDBRow>
           </MDBContainer>
-        )}
-
-        {step == "Photo" && (
-          <div>
-            <MDBContainer fluid className="HEY" size="sm">
-              <MDBRow className="d-flex justify-content-center align-items-center ">
-                <MDBCol>
-                  <MDBCard className="my-4">
-                    <MDBRow>
-                      <MDBCol md="">
-                        <MDBCardImage
-                          position="left"
-                          src="{Bg}"
-                          alt="Sample photo"
-                          className="rounded"
-                          fluid
-                        />
-                      </MDBCol>
-
-                      <MDBCol md="6">
-                        <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                          <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                            SELLER REGISTRATION
-                          </MDBCardTitle>
-                          <MDBCardText>
-                            Please fill out all the required fields to complete
-                            the registration process.
-                          </MDBCardText>
-
-                          <MDBCardText>
-                            Upload your Profile Picture here:{" "}
-                          </MDBCardText>
-                          <MDBInput
-                            wrapperClass="mb-4"
-                            size="lg"
-                            id="form3"
-                            type="file"
-                            accept="image/*"
-                            capture="filesystem"
-                            name="picture"
-                            onChange={handlePicture}
-                          />
-
-                          <MDBCardText>Upload your Valid ID here: </MDBCardText>
-                          <MDBInput
-                            wrapperClass="mb-4"
-                            size="lg"
-                            id="form4"
-                            type="file"
-                            accept="image/*"
-                            capture="filesystem"
-                            name="idPicture"
-                            onChange={handleId}
-                          />
-
-                          <div className="d-flex justify-content-end pt-3">
-                            <MDBBtn color="light" size="lg">
-                              Reset all
-                            </MDBBtn>
-                            <MDBBtn
-                              className="ms-2"
-                              color="danger"
-                              size="lg"
-                              onClick={saveUser}
-                            >
-                              Proceed
-                            </MDBBtn>
-                          </div>
-                        </MDBCardBody>
-                      </MDBCol>
-                    </MDBRow>
-                  </MDBCard>
-                </MDBCol>
-              </MDBRow>
-            </MDBContainer>
-          </div>
-        )}
-
-        {step === "wait" && (
-          <MDBContainer fluid className="wait-page" my="4">
-            <MDBRow
-              id="wait-content"
-              className="d-flex justify-content-center align-items-center "
-            >
-              <h1>We`re evaluating your profile.</h1>
-              <p>
-                In order to maintain our community standards, each profile is
-                carefully reviewed before approval.
-              </p>
-            </MDBRow>
-
-            <button type="submit">OK</button>
-          </MDBContainer>
-        )}
-
-        {step == "unapproved" && (
-          <div>
-            <MDBContainer fluid className="HEY" size="sm">
-              <MDBRow className="d-flex justify-content-center align-items-center ">
-                <MDBCol>
-                  <MDBCard className="my-4">
-                    <MDBRow>
-                      <MDBCol md="">
-                        <MDBCardImage
-                          position="left"
-                          src="{Bg}"
-                          alt="Sample photo"
-                          className="rounded"
-                          fluid
-                        />
-                      </MDBCol>
-
-                      <MDBCol md="6">
-                        <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                          <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                            Upload Photo
-                          </MDBCardTitle>
-                          <MDBCardText>
-                            Please upload another photo becaouse your id and
-                            photo you provide is invalid.
-                          </MDBCardText>
-
-                          <MDBCardText>Upload your Picture here: </MDBCardText>
-                          <MDBInput
-                            wrapperClass="mb-4"
-                            size="lg"
-                            id="form3"
-                            type="file"
-                            accept="image/*"
-                            capture="filesystem"
-                            name="picture"
-                            onChange={handlePicture}
-                          />
-
-                          <MDBCardText>Upload your Valid ID here: </MDBCardText>
-                          <MDBInput
-                            wrapperClass="mb-4"
-                            size="lg"
-                            id="form4"
-                            type="file"
-                            accept="image/*"
-                            capture="filesystem"
-                            name="idPicture"
-                            onChange={handleId}
-                          />
-
-                          <div className="d-flex justify-content-end pt-3">
-                            <MDBBtn color="light" size="lg">
-                              Reset all
-                            </MDBBtn>
-                            <MDBBtn
-                              className="ms-2"
-                              color="danger"
-                              size="lg"
-                              onClick={update_photo}
-                            >
-                              Proceed
-                            </MDBBtn>
-                          </div>
-                        </MDBCardBody>
-                      </MDBCol>
-                    </MDBRow>
-                  </MDBCard>
-                </MDBCol>
-              </MDBRow>
-            </MDBContainer>
-          </div>
-        )}
-        <div>
-        
         </div>
-      </div>
-    </div>
+      )}
 
-    );
+      {step === "wait" && (
+        <MDBContainer fluid className="wait-page" my="4">
+          <MDBRow
+            id="wait-content"
+            className="d-flex justify-content-center align-items-center flex-column text-center"
+          >
+            <i className="fas fa-hourglass-half icon"></i>
+
+            <h1 className="h mt-3">We’re evaluating your profile.</h1>
+            <p>
+              In order to maintain our community standards, each profile is
+              carefully reviewed before approval.
+            </p>
+            <button className="ok-button mt-4" onClick={() => setStep("phone")}>
+              OK
+            </button>
+          </MDBRow>
+        </MDBContainer>
+      )}
+
+      {step == "unapproved" && (
+        <div>
+          <MDBContainer fluid className="HEY vh-100">
+          <MDBRow className="d-flex justify-content-center align-items-center vh-100">
+              <MDBCol>
+                <MDBCard className="my-4">
+                  <MDBRow>
+                    <MDBCol md="">
+                      <MDBCardImage
+                        position="left"
+                        src={Bg}
+                        alt="Sample photo"
+                        className="rounded"
+                        fluid
+                        style={{
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "left center",
+                        }}
+                      />
+                    </MDBCol>
+
+                    <MDBCol md="6">
+                      <MDBCardBody className="text-black d-flex flex-column justify-content-center">
+                      <MDBCardTitle className="mb-4 text-uppercase fw-bold text-center">
+                          UPLOAD PHOTO
+                        </MDBCardTitle>
+                        <MDBCardText className="mb-4 text-center">
+                          Please upload another photo because your ID and/or
+                          photo you provided were invalid.
+                        </MDBCardText>
+
+                        <MDBCardText>Upload your Picture here: </MDBCardText>
+                        {isClicked && !picture && (
+                          <div className="error-message">
+                            Profile picture is required.
+                          </div>
+                        )}
+                        <MDBInput
+                          wrapperClass={`input mb-4 ${
+                            isClicked && !picture ? "error" : ""
+                          }`}
+                          size="lg"
+                          id="form3"
+                          type="file"
+                          accept="image/*"
+                          capture="filesystem"
+                          name="picture"
+                          onChange={handlePicture}
+                        />
+
+                        <MDBCardText>Upload your Valid ID here: </MDBCardText>
+                        {isClicked && !idp && (
+                          <div className="error-message">
+                            ID picture is required.
+                          </div>
+                        )}
+                        <MDBInput
+                          wrapperClass={`input mb-4 ${
+                            isClicked && !idp ? "error" : ""
+                          }`}
+                          size="lg"
+                          id="form4"
+                          type="file"
+                          accept="image/*"
+                          capture="filesystem"
+                          name="idPicture"
+                          onChange={handleId}
+                        />
+
+                        <div className="d-flex justify-content-end pt-3">
+                          <button className="abutton mb-3" onClick={resetForm}>
+                            RESET
+                          </button>
+                          <button
+                            className="abutton mb-3"
+                            onClick={update_photo}
+                          >
+                            PROCEED
+                          </button>
+                        </div>
+                      </MDBCardBody>
+                    </MDBCol>
+                  </MDBRow>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default PhoneVerification;
