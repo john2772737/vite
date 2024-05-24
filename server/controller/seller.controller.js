@@ -179,6 +179,47 @@ const getProduct= async(req,res)=>{
   }
 }
 
+const updateStock = async (req, res) => {
+  const { id } = req.params;
+  const { totalItem } = req.body;
+
+  // Ensure totalItem is present and is a number
+  if (typeof totalItem === 'undefined') {
+    return res.status(400).json({ error: "Missing 'totalItem' field" });
+  }
+
+  const totalItemNumber = Number(totalItem);
+  if (isNaN(totalItemNumber)) {
+    return res.status(400).json({ error: "'totalItem' must be a valid number" });
+  }
+
+  try {
+    // Fetch the current product to get totalSold
+    const currentProduct = await Product.findById(id);
+    if (!currentProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Calculate the new remainingItem
+    const remainingItem = totalItemNumber - currentProduct.totalSold;
+
+    // Update the product with new totalItem and remainingItem
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { totalItem: totalItemNumber, remainingItem },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
 
 module.exports = {
   createphone,
@@ -191,4 +232,6 @@ module.exports = {
   verified,
   createProduct,
   getProduct,
+
+  updateStock
 };

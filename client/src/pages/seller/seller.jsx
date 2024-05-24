@@ -1,16 +1,25 @@
 import React from "react";
 import { Outlet } from 'react-router-dom'; 
-import Seller_navbar from "../../components/seller_navbar";
-import Footer from "../../components/footer"
-function user() {
+import SellerNavbar from "../../components/seller_navbar";
+import Footer from "../../components/footer";
+import SellerSidebar from "../../components/seller_sidebar";
+import "./seller.css"
+
+function User() {
   return (
-    <div className="user">
-      <Seller_navbar />
-      <Outlet />
-      <Footer />
+    <div>
+        <SellerNavbar />
+        <div className="main-container">
+          <SellerSidebar />
+          <div className="content">
+            <Outlet />
+        </div>
+      </div>
+      <div>
+          <Footer/>
+        </div>
     </div>
-    
   );
 }
 
-export default user;
+export default User;

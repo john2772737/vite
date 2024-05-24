@@ -11,6 +11,10 @@ const sellerSchema = new mongoose.Schema({
     lastname: {
         type: String,
     },
+    deliveryaddress:{
+        type: String,
+      
+    },
     shopname: {
         type: String,
     

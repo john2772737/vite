@@ -4,6 +4,10 @@
     background-color: red;
 }
 
+.navbar-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .notification-tab > .active{
     --tw-border-opacity: 1;
     border-bottom-color: rgb(59 130 246 / var(--tw-border-opacity));

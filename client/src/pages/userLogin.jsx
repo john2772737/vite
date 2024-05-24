@@ -386,140 +386,79 @@ const [formData, setFormData] = useState(initialFormData);
   return (
     <div>
       {step === "login" && (
-        <div>
-          <Toaster />
-          <MDBContainer
-            fluid
-            className="p-4 background-radial-gradient overflow-hidden"
-            style={{
-              backgroundImage: `url(${backgroundImage})`,
-              backgroundSize: "100% 100%",
-              backgroundPosition: "center",
-            }}
-          >
-            <MDBRow>
-              {/* <MDBCol
-            md="6"
-            className="text-center text-md-start d-flex flex-column justify-content-center"
-          >
-            <h1
-              className="my-5 display-3 fw-bold ls-tight px-3"
-              style={{ color: "hsl(218, 81%, 95%)" }}
+        <div
+      className="py-4 md:py-8 dark:bg-gray-800"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          Sign In
+        </h2>
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <div>
+              {isClicked && login.email === "" && <span className="text-red-500">Email is required.</span>}
+            </div>
+            <input
+              type="text"
+              placeholder="Email"
+              name="email"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onChange={handleLoginChanges}
+            />
+            <div>
+              {isClicked && login.password === "" && <span className="text-red-500">Password is required.</span>}
+              {incorrectPassword && <span className="text-red-500">Incorrect password.</span>}
+            </div>
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onChange={handleLoginChanges}
+            />
+            <div>
+              <Link to="/forgotPassword" className="text-teal-600 hover:underline">Forgot Password?</Link>
+            </div>
+            <button
+              onClick={handleLogin}
+              className="text-white bg-teal-600 py-1.5 px-4 rounded font-bold w-full"
             >
-              The best offer <br />
-              <span style={{ color: "hsl(218, 81%, 75%)" }}>
-                for your business
-              </span>
-            </h1>
-
-            <p className="px-3" style={{ color: "hsl(218, 81%, 85%)" }}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet,
-              itaque accusantium odio, soluta, corrupti aliquam quibusdam
-              tempora at cupiditate quis eum maiores libero veritatis? Dicta
-              facilis sint aliquid ipsum atque?
-            </p>
-          </MDBCol> */}
-
-              <MDBCol
-                md="6"
-                className="position-relative"
-                style={{ opacity: "1", fontFamily: "League Spartan" }}
+              Sign In
+            </button>
+            <button
+              onClick={userRegistration}
+              className="text-white bg-gray-500 py-1.5 px-4 rounded font-bold w-full"
+            >
+              Sign Up
+            </button>
+            <div>
+              <p>or sign in with:</p>
+              <button
+                onClick={signInWithFacebook}
+                className="text-white bg-blue-600 py-1.5 px-4 rounded font-bold mr-2"
               >
-                <div
-                  id="radius-shape-1"
-                  className="position-absolute rounded-circle shadow-5-strong"
-                ></div>
-                <div
-                  id="radius-shape-2"
-                  className="position-absolute shadow-5-strong"
-                ></div>
-
-                <MDBCard className="my-5 bg-glass">
-                  <MDBCardBody className="p-5">
-                    <h2>
-                      Sign In <i className="fa fa-sign-in-alt mb-5"></i>
-                    </h2>
-
-                    <div className="error-message">
-                      {isClicked && login.email === "" && "Email is required."}
-                    </div>
-
-                    <input
-                      className={`input ${isFocused ? "focus" : ""} `}
-                      type="text"
-                      placeholder="Email"
-                      name="email" // Make sure the name attribute corresponds to the state key
-                      onFocus={() => setIsFocused(true)}
-                      onBlur={() => setIsFocused(false)}
-                      onChange={handleLoginChanges}
-                    />
-                    <div className="error-message">
-                      {isClicked &&
-                        login.password === "" &&
-                        "Password is required."}
-                      {incorrectPassword && "Incorrect password."}
-                    </div>
-                    <input
-                      className={`input password-input ${
-                        isFocused ? "focus" : ""
-                      } ${login.password !== "" && "wrong-password"}`}
-                      type="password"
-                      placeholder="Password"
-                      name="password"
-                      onFocus={() => setIsFocused(true)}
-                      onBlur={() => setIsFocused(false)}
-                      onChange={handleLoginChanges}
-                    />
-
-                    <div className="d-flex justify-content-center mb-4">
-                      <Link to="/forgotPassword">Forgot Password?</Link>
-                    </div>
-
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
-                      style={{ backgroundColor: "#ef3a29" }}
-                      onClick={handleLogin}
-                    >
-                      sign in
-                    </MDBBtn>
-                    <MDBBtn
-                      className="w-100 mb-4"
-                      size="md"
-                      onClick={userRegistration}
-                    >
-                      sign up
-                    </MDBBtn>
-
-                    <div className="text-center">
-                      <p>or sign in with:</p>
-
-                      <MDBBtn
-                        tag="a"
-                        color="none"
-                        className="mx-3"
-                        style={{ color: "#1266f1" }}
-                        onClick={signInWithFacebook}
-                      >
-                        <MDBIcon fab icon="facebook-f" size="sm" />
-                      </MDBBtn>
-
-                      <MDBBtn
-                        tag="a"
-                        color="none"
-                        className="mx-3"
-                        style={{ color: "#1266f1" }}
-                        onClick={signInWithGooogle}
-                      >
-                        <MDBIcon fab icon="google" size="sm" />
-                      </MDBBtn>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
+                <i className="fab fa-facebook-f"></i>
+              </button>
+              <button
+                onClick={signInWithGooogle}
+                className="text-white bg-red-600 py-1.5 px-4 rounded font-bold"
+              >
+                <i className="fab fa-google"></i>
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
       )}
 
       {step === "signup" && (

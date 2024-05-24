@@ -1,98 +1,49 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import logo from '../../../client/src/components/images/b_logo.png';
+import '../../../client/src/css/navbar.css';
 
-const drawerWidth = 240;
-const navItems = ['NOTIFICATION', 'ADMIN', 'SETTINGS'];
+const Navbar = () => {
+    const [menu, setMenu] = useState("shop");
 
-export default function DrawerAppBar() {
+    const handleMenuClick = (menuItem) => {
+        setMenu(menuItem);
+        setIsDropdownOpen(false); // Optionally close the dropdown after a selection
+    };
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
-  };
-
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        Booklot
-      </Typography>
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }} > 
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-
-
-
-  return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar component="nav" position="static" sx={{color:'#000', backgroundColor: '#F4F4F4', fontFamily: 'Bodoni Ferrara' }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block'} }}
-          >
-            Booklot
-          </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#000', fontFamily:'Bodoni Ferrara', fontSize:'15px'}}>
-                {item}
-              </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <nav>
-        <Drawer
-         
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </nav>
-      
-    </Box>
-  );
+    return (
+        <div className='navbar navbar-shadow'>
+            <div className="flex flex-wrap place-items-center w-full">
+                <section className="relative w-full">
+                    {/* Navbar */}
+                    <nav className="flex justify-between bg-white-900 text-black w-full">
+                        <div className="px-5 xl:px-12 py-3 flex items-center w-full">
+                            <div className="flex-shrink-0 mr-10">
+                                <Link to='' className="text-3xl font-bold font-heading hover:text-black-500">
+                                    <img src={logo} alt='Logo' className="h-11" onClick={() => { setMenu("dashboard") }} />
+                                </Link>
+                            </div>
+                            <div className="flex-grow flex items-center justify-end space-x-4">
+                                {/* Nav Links and Icons */}
+                                <ul className="flex items-center font-semibold font-heading space-x-4 font-bodoni-ferrara">
+                                  <li>
+                                      <a className="flex items-center">
+                                          <span className="inline-flex justify-center items-center">
+                                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                              </svg>
+                                          </span>
+                                          <span className="ml-2 text-sm tracking-wide truncate">Logout</span>
+                                      </a>
+                                  </li>
+                              </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </section>
+            </div>
+        </div>
+    );
 }
+
+export default Navbar;

@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
 import Form from '../../components/form'; // Assuming this is a custom form component you've created
 import form from '../../components/form';
-import './create_manager.css';
+import '../../components/table.css'
+
 
 function CreateManager() {
   const [formData, setFormData] = useState({

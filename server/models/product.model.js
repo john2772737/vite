@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Seller = require("../models/seller.model");
 
 // Define the product schema
 const productSchema = new mongoose.Schema({
@@ -24,6 +25,11 @@ const productSchema = new mongoose.Schema({
   remainingItem: {
     type: Number // Remove required: true
   },
+
+  seller: [{
+    type:String,
+    ref: 'Seller'
+}],
   createdAt: {
     type: Date,
     default: Date.now

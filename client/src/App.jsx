@@ -37,7 +37,7 @@ function App() {
       <Route path="/userLogin" element={<UserLogin />} /> {/* Corrected route path */}
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/sellerLogin" element={<NotSeller />} /> {/* Added sellerLogin route */}
-     
+      <Route path="/sellerRegistration" element={<FirebaseProvider><SellerRegistration /></FirebaseProvider>} />
       <Route path="*" element={<PageNotFound />} /> {/* Catch-all route for page not found */}
 
       <Route path="user" element={<Users />}>
@@ -62,7 +62,7 @@ function App() {
           <Seller />
         </FirebaseProvider>
       }>
-        <Route path="/seller/sellerRegistration" element={<SellerRegistration />} />
+       
         <Route index element={< SellerDashboard />} />
         <Route path="/seller/dashboard" element={< PrivateRoute element={SellerDashboard} />} />
         <Route path="/seller/golive" element={<PrivateRoute element={GoLive} />} /> 

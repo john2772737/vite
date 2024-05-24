@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
   password: String, // Consider using a more secure method for storing passwords, like hashing
   birthday: Date,
   phoneNumber: String,
+
+
+
 });
 
 const User = mongoose.model("user", userSchema);

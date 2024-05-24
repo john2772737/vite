@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import ResponsiveTable from "../../components/tables";
 import axios from "axios";
 import ModalCom from "../../components/modal";
-import '../../components/table.css'
 
 import { Toaster, toast } from "react-hot-toast";
-import Container from "react-bootstrap/Container"; 
 function List_manager() {
   const [data, setData] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -311,7 +309,6 @@ function List_manager() {
   
 
   return (
-    <Container fluid className="table-container">
       <div className="table-flex-container">
         {" "}
         {/* Add a wrapper with flex properties */}
@@ -329,7 +326,6 @@ function List_manager() {
         />
         <ResponsiveTable heading={tableHeading} dataa={setlist} action={true}  onActionClick={handleActionClick} />
       </div>
-    </Container>
   );
 }
 

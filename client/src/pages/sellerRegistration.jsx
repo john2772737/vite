@@ -6,6 +6,8 @@ import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
 import "../css/sellerRegistration.css";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import backgroundimage from "../components/images/booklot_bg.png"
+
 import {
   MDBBtn,
   MDBContainer,
@@ -39,11 +41,11 @@ const PhoneVerification = () => {
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
 
-  useEffect(() => {
-    if (currentUser) {
-      navigate('/seller/dashboard');
-    }
-  }, [currentUser, navigate]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     navigate('/seller/dashboard');
+  //   }
+  // }, [currentUser, navigate]);
 
 
   const [Data, setData] = useState({
@@ -146,7 +148,7 @@ const PhoneVerification = () => {
 
       setuid(seller._id);
 
-      if (seller.submit === "false") {
+      if (seller.submit === false) {
         signOut(auth);
         setStep("form");
         return;
@@ -324,260 +326,290 @@ const PhoneVerification = () => {
       <Toaster />
       <div className="sellerReg ">
 
-        {step === "phone" && (
-          <MDBContainer fluid className="HEY ">
-            <MDBRow className="d-flex justify-content-center align-items-center ">
-              <MDBCol>
-                <MDBCard className="my-4">
-                  <MDBRow className="g-0">
-                    <MDBCol md="6">
-                      <MDBCardImage
-                        style={{ height: "80vh" }}
-                        src="https://i0.wp.com/www.adobomagazine.com/wp-content/uploads/2021/09/Lazada-launches-Start-It-Up-Laz-It-Up-program-for-more-accessible-business-registration-on-the-platform-HERO.jpg?w=1440&ssl=1"
-                        alt="Sample photo"
-                        className="rounded"
-                        fluid
+      {step === "phone" && (
+          <div
+            className="background-container"
+            style={{
+              position: "relative",
+              minHeight: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              className="background-image"
+              style={{
+                backgroundImage: `url(${backgroundimage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "100%",
+                height: "100%",
+                filter: "blur(5px)", // Adjust the blur intensity here
+                position: "absolute",
+                zIndex: "-1",
+              }}
+            ></div>
+            <MDBContainer fluid className="d-flex justify-content-center align-items-center">
+              <MDBCard className="my-4">
+                <MDBCardBody className="text-black d-flex flex-column justify-content-center">
+                  <MDBCardTitle className="mb-4 text-uppercase fw-bold">
+                    Create your Booklot Store Now!
+                  </MDBCardTitle>
+                  <MDBCardText className="mb-4">
+                    Enter your Mobile Number to Start Selling.
+                  </MDBCardText>
+                  <MDBRow className="justify-content-center">
+                    <MDBCardText>
+                      <Input
+                        country="PH"
+                        international
+                        withCountryCallingCode
+                        value={phoneNumber}
+                        onChange={handlePhoneChange}
+                        maxLength={16}
                       />
-                    </MDBCol>
-
-                    <MDBCol md="6">
-                      <MDBCardBody className="text-black d-flex flex-column justify-content-center ">
-                        <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                          Create your Booklot Store Now!{" "}
-                        </MDBCardTitle>
-                        <MDBCardText className="mb-4 ">
-                          Enter your Mobile Number to Start Selling.
-                        </MDBCardText>
-                        <MDBRow>
-                          <MDBCardText>
-                            <Input
-                              country="PH"
-                              international
-                              withCountryCallingCode
-                              value={phoneNumber}
-                              onChange={handlePhoneChange}
-                              maxLength={16}
-                            />
-                          </MDBCardText>
-                        </MDBRow>
-                        <div id="recaptcha-container"></div>
-                        <div>
-                          <button
-                            type="submit"
-                            className="verify-btn"
-                            onClick={handlePhoneSubmit}
-                          >
-                            Verify with SMS
-                          </button>
-                        </div>
-                      </MDBCardBody>
-                    </MDBCol>
+                    </MDBCardText>
                   </MDBRow>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
+                  <div id="recaptcha-container"></div>
+                  <div className="d-flex justify-content-center">
+                    <button
+                      type="submit"
+                      className="verify-btn"
+                      onClick={handlePhoneSubmit}
+                    >
+                      Verify with SMS
+                    </button>
+                  </div>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBContainer>
+          </div>
         )}
+
         {step === "verification" && (
-          <MDBContainer fluid className="HEY" size="sm">
-            <MDBRow className="d-flex justify-content-center align-items-center ">
-              <MDBCol>
-                <MDBCard className="my-4">
-                  <MDBRow className="g-0">
-                    <MDBCol md="6">
-                      <MDBCardImage
-                        src=""
-                        alt="Sample photo"
-                        className="rounded"
-                        fluid
+          <div
+            className="background-container"
+            style={{
+              position: "relative",
+              minHeight: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              className="background-image"
+              style={{
+                backgroundImage: `url(${backgroundimage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "100%",
+                height: "100%",
+                filter: "blur(5px)", // Adjust the blur intensity here
+                position: "absolute",
+                zIndex: "-1",
+              }}
+            ></div>
+            <MDBContainer fluid className="d-flex justify-content-center align-items-center">
+              <MDBCard className="my-4">
+                <MDBCardBody className="text-black d-flex flex-column justify-content-center">
+                  <MDBCardTitle className="mb-2 text-uppercase fw-bold">
+                    Create your Booklot Store Now!
+                  </MDBCardTitle>
+                  <MDBCardText>Enter your verification code.</MDBCardText>
+                  <MDBRow>
+                    <MDBCardText>
+                      Verification Code:
+                      <MDBInput
+                        className="code-input"
+                        type="text"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
                       />
-                    </MDBCol>
-
-                    <MDBCol md="6">
-                      <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                     
-                        <MDBCardTitle className="mb-2 text-uppercase fw-bold">
-                          Create your Booklot Store Now!{" "}
-                        </MDBCardTitle>
-                        <MDBCardText>Enter your verification code.</MDBCardText>
-                        <MDBRow>
-                          <MDBCardText>
-                            Verification Code:
-                            <MDBInput
-                              className="code-input"
-                              type="text"
-                              value={verificationCode}
-                              onChange={(e) =>
-                                setVerificationCode(e.target.value)
-                              }
-                            />
-                          </MDBCardText>
-                        </MDBRow>
-                        <div>
-                          <button
-                            className="code-btn"
-                            type="submit"
-                            onClick={handleVerificationSubmit}
-                          >
-                            Verify
-                          </button>
-                        </div>
-            
-                      </MDBCardBody>
-                    </MDBCol>
+                    </MDBCardText>
                   </MDBRow>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
+                  <div>
+                    <button
+                      className="code-btn"
+                      type="submit"
+                      onClick={handleVerificationSubmit}
+                    >
+                      Verify
+                    </button>
+                  </div>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBContainer>
+          </div>
         )}
+
 
         {step === "form" && (
-          <MDBContainer fluid className="HEY" size="sm">
-            <MDBRow className="d-flex justify-content-center align-items-center ">
-              <MDBCol>
-                <MDBCard className="my-4">
-                  <MDBRow className="g-0">
-                    <MDBCol md="6">
-                      <MDBCardImage
-                        src="{Bg}"
-                        alt="Sample photo"
-                        className="rounded"
-                        fluid
-                      />
-                    </MDBCol>
-
-                    <MDBCol md="6">
-                      <MDBCardBody className="text-black d-flex flex-column justify-content-center">
-                        <MDBCardTitle className="mb-4 text-uppercase fw-bold">
-                          SELLER REGISTRATION
-                        </MDBCardTitle>
-                        <MDBCardText>
-                          Please fill out all the required fields to complete
-                          the registration process.
-                        </MDBCardText>
-
-                        <MDBRow>
-                          <MDBCol md="6">
-                            <MDBInput
-                              wrapperClass="mb-4"
-                              label="First Name"
-                              size="lg"
-                              id="form1"
-                              type="text"
-                              value={Data.firstname}
-                              onChange={handleFormChanges}
-                              name="firstname"
-                            />
-                          </MDBCol>
-
-                          <MDBCol md="6">
-                            <MDBInput
-                              wrapperClass="mb-4"
-                              label="Last Name"
-                              size="lg"
-                              id="form2"
-                              type="text"
-                              value={Data.lastname}
-                              onChange={handleFormChanges}
-                              name="lastname"
-                            />
-                          </MDBCol>
-                        </MDBRow>
-
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Birthday"
-                          size="lg"
-                          id="form3"
-                          type="date"
-                          value={Data.birthday}
-                          onChange={handleFormChanges}
-                          name="birthday"
-                        />
-
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Shop Name"
-                          size="lg"
-                          id="form4"
-                          type="text"
-                          value={Data.shopname}
-                          onChange={handleFormChanges}
-                          name="shopname"
-                        />
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Email"
-                          size="lg"
-                          id="form5"
-                          type="email"
-                          value={Data.email}
-                          onChange={handleFormChanges}
-                          name="email"
-                        />
-
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Password"
-                          size="lg"
-                          id="form7"
-                          type="password"
-                          value={Data.password}
-                          onChange={handleFormChanges}
-                          name="password"
-                        />
-
-                        <MDBInput
-                          wrapperClass="mb-4"
-                          label="Confirm Password"
-                          size="lg"
-                          id="form6"
-                          type="password"
-                          value={confirmPass}
-                          onChange={handleConfirmPassChange}
-                        />
-
-                        <div className="d-flex justify-content-end pt-3">
-                          <MDBBtn color="light" size="lg">
-                            Reset all
-                          </MDBBtn>
-                          <MDBBtn
-                            className="ms-2"
-                            color="danger"
-                            size="lg"
-                            onClick={uploadPhoto}
-                          >
-                            Proceed
-                          </MDBBtn>
-                        </div>
-                      </MDBCardBody>
-                    </MDBCol>
-                  </MDBRow>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
-        )}
-
-        {step == "Photo" && (
-          <div>
-            <MDBContainer fluid className="HEY" size="sm">
-              <MDBRow className="d-flex justify-content-center align-items-center ">
+          <div
+            className="background-container"
+            style={{
+              position: "relative",
+              minHeight: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              className="background-image"
+              style={{
+                backgroundImage: `url(${backgroundimage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "100%",
+                height: "100%",
+                filter: "blur(5px)", // Adjust the blur intensity here
+                position: "absolute",
+                zIndex: "-1",
+              }}
+            ></div>
+            <MDBContainer fluid className="HEY" size="sm" style={{ maxWidth: "600px" }}>
+              <MDBRow className="d-flex justify-content-center align-items-center">
                 <MDBCol>
                   <MDBCard className="my-4">
-                    <MDBRow>
-                      <MDBCol md="">
-                        <MDBCardImage
-                          position="left"
-                          src="{Bg}"
-                          alt="Sample photo"
-                          className="rounded"
-                          fluid
-                        />
-                      </MDBCol>
+                    <MDBCardBody className="text-black d-flex flex-column justify-content-center">
+                      <MDBCardTitle className="mb-4 text-uppercase fw-bold">
+                        SELLER REGISTRATION
+                      </MDBCardTitle>
+                      <MDBCardText>
+                        Please fill out all the required fields to complete the
+                        registration process.
+                      </MDBCardText>
+                      <MDBRow>
+                        <MDBCol>
+                          <MDBInput
+                            wrapperClass="mb-4"
+                            label="First Name"
+                            size="lg"
+                            id="form1"
+                            type="text"
+                            value={Data.firstname}
+                            onChange={handleFormChanges}
+                            name="firstname"
+                          />
+                        </MDBCol>
+                        <MDBCol>
+                          <MDBInput
+                            wrapperClass="mb-4"
+                            label="Last Name"
+                            size="lg"
+                            id="form2"
+                            type="text"
+                            value={Data.lastname}
+                            onChange={handleFormChanges}
+                            name="lastname"
+                          />
+                        </MDBCol>
+                      </MDBRow>
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="Birthday"
+                        size="lg"
+                        id="form3"
+                        type="date"
+                        value={Data.birthday}
+                        onChange={handleFormChanges}
+                        name="birthday"
+                      />
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="Shop Name"
+                        size="lg"
+                        id="form4"
+                        type="text"
+                        value={Data.shopname}
+                        onChange={handleFormChanges}
+                        name="shopname"
+                      />
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="Email"
+                        size="lg"
+                        id="form5"
+                        type="email"
+                        value={Data.email}
+                        onChange={handleFormChanges}
+                        name="email"
+                      />
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="Password"
+                        size="lg"
+                        id="form7"
+                        type="password"
+                        value={Data.password}
+                        onChange={handleFormChanges}
+                        name="password"
+                      />
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="Confirm Password"
+                        size="lg"
+                        id="form6"
+                        type="password"
+                        value={confirmPass}
+                        onChange={handleConfirmPassChange}
+                      />
+                      <div className="d-flex justify-content-end pt-3">
+                        <MDBBtn color="light" size="lg">
+                          Reset all
+                        </MDBBtn>
+                        <MDBBtn
+                          className="ms-2"
+                          color="danger"
+                          size="lg"
+                          onClick={uploadPhoto}
+                        >
+                          Proceed
+                        </MDBBtn>
+                      </div>
+                    </MDBCardBody>
+                  </MDBCard>
+                </MDBCol>
+              </MDBRow>
+            </MDBContainer>
+          </div>
+        )}
 
-                      <MDBCol md="6">
+
+
+        {step === "Photo" && (
+          <div
+            className="background-container"
+            style={{
+              position: "relative",
+              minHeight: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              className="background-image"
+              style={{
+                backgroundImage: `url(${backgroundimage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "100%",
+                height: "100%",
+                filter: "blur(5px)", // Adjust the blur intensity here
+                position: "absolute",
+                zIndex: "-1",
+              }}
+            ></div>
+            <MDBContainer fluid className="HEY" size="sm">
+              <MDBRow className="d-flex justify-content-center align-items-center">
+                <MDBCol md="6">
+                  <MDBCard className="my-4">
+                    <MDBRow>
+
+                      <MDBCol>
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
                             SELLER REGISTRATION
@@ -637,47 +669,89 @@ const PhoneVerification = () => {
         )}
 
         {step === "wait" && (
-          <MDBContainer fluid className="wait-page" my="4">
-            <MDBRow
-              id="wait-content"
-              className="d-flex justify-content-center align-items-center "
-            >
-              <h1>We`re evaluating your profile.</h1>
-              <p>
-                In order to maintain our community standards, each profile is
-                carefully reviewed before approval.
-              </p>
-            </MDBRow>
+          <div
+            className="background-container"
+            style={{
+              position: "relative",
+              minHeight: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              className="background-image"
+              style={{
+                backgroundImage: `url(${backgroundimage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "100%",
+                height: "100%",
+                filter: "blur(5px)", // Adjust the blur intensity here
+                position: "absolute",
+                zIndex: "-1",
+              }}
+            ></div>
+           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+              <MDBContainer fluid className="wait-page my-4" style={{ backgroundColor: "white", color: "black", borderRadius: "10px" }}>
+                <MDBCol md="8">
+                  <MDBRow
+                    id="wait-content"
+                    className="d-flex justify-content-center align-items-center"
+                  >
+                    <h1>We're evaluating your profile.</h1>
+                    <p>
+                      In order to maintain our community standards, each profile is
+                      carefully reviewed before approval.
+                    </p>
+                  </MDBRow>
+                </MDBCol>
+                <button type="submit">OK</button>
+              </MDBContainer>
+            </div>
 
-            <button type="submit">OK</button>
-          </MDBContainer>
+
+          </div>
         )}
 
-        {step == "unapproved" && (
-          <div>
+        {step === "unapproved" && (
+          <div
+            className="background-container"
+            style={{
+              position: "relative",
+              minHeight: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              className="background-image"
+              style={{
+                backgroundImage: `url(${backgroundimage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "100%",
+                height: "100%",
+                filter: "blur(5px)", // Adjust the blur intensity here
+                position: "absolute",
+                zIndex: "-1",
+              }}
+            ></div>
             <MDBContainer fluid className="HEY" size="sm">
-              <MDBRow className="d-flex justify-content-center align-items-center ">
-                <MDBCol>
+              <MDBRow className="d-flex justify-content-center align-items-center">
+                <MDBCol md="6">
                   <MDBCard className="my-4">
                     <MDBRow>
-                      <MDBCol md="">
-                        <MDBCardImage
-                          position="left"
-                          src="{Bg}"
-                          alt="Sample photo"
-                          className="rounded"
-                          fluid
-                        />
-                      </MDBCol>
 
-                      <MDBCol md="6">
+                      <MDBCol>
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
                             Upload Photo
                           </MDBCardTitle>
                           <MDBCardText>
-                            Please upload another photo becaouse your id and
-                            photo you provide is invalid.
+                            Please upload another photo because your ID and photo you
+                            provided are invalid.
                           </MDBCardText>
 
                           <MDBCardText>Upload your Picture here: </MDBCardText>
@@ -726,6 +800,7 @@ const PhoneVerification = () => {
             </MDBContainer>
           </div>
         )}
+
         <div>
         
         </div>
