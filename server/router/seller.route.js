@@ -11,6 +11,7 @@ const {
   verified,
   createProduct,
   getProduct,
+  deleteSeller
 
 } = require("../controller/seller.controller");
 
@@ -24,5 +25,7 @@ router.put("/updateSeller/:id", updateSeller);
 router.post("/verified/:phoneNumber", verified);
 router.post("/createProduct", createProduct);
 router.get("/:firebaseuid/getProduct", getProduct);
+
+router.delete("/deleteSeller/:id", deleteSeller);
 
 module.exports = router;

@@ -67,6 +67,14 @@ const handleDelete = (_id) =>{
   console.log(_id)
 
   
+  const response = axios.delete(`http://localhost:4000/seller/deleteSeller/${_id}`);
+  try{
+    toast.success("Deleted succesfully")
+  }catch(error){
+    toast.error(error)
+  }
+  fetchlist()
+  
 
 }
   return (

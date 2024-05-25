@@ -204,7 +204,13 @@ console.log(selectedProduct)
     "Comics",
     "Cookbooks",
   ];
-
+  const handleDelete =async(id)=>{
+    
+    
+    const response = await axios.delete(`http://localhost:4000/product/deleteProduct/${id}`);
+    toast.success("SUCCESFULLY DELETED")
+    fetchData();
+  }
   const openModel = () => {
     setcreateModal(true);
   };
@@ -784,6 +790,7 @@ console.log(selectedProduct)
         Data={setlist}
         updateProduct={true}
         onOpensModal={updateStock}
+        deleteP={handleDelete}
       />
     </div>
   );

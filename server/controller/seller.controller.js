@@ -50,7 +50,7 @@ const listseller = async (req, res) => {
 };
 
 
-const deleteseller = async (req, res) => {
+const deleteSeller = async (req, res) => {
   try {
     const { id } = req.params;
     const seller = await Seller.findByIdAndDelete(id);
@@ -239,6 +239,6 @@ module.exports = {
   verified,
   createProduct,
   getProduct,
-
+  deleteSeller,
   updateStock
 };

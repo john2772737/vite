@@ -4,7 +4,7 @@ import Table from "react-bootstrap/Table";
 import { useState, useEffect } from "react";
  // Import the CSS file for custom styles
 
-function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onOpensModal }) {
+function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onOpensModal , deleteP }) {
   // Define PropTypes
   TableComponent.propTypes = {
     Heading: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -100,7 +100,18 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
                     >
                       update Product
                     </button>
+                    <button
+                      onClick={() => deleteP(item[0])}
+                      className="action-button"
+                      type="button"
+                      data-modal-target="crud-modals"
+                      data-modal-toggle="crud-modals"
+                    >
+                      delete Product
+                    </button>
                   </td>
+
+                  
                 )}
               </tr>
             ))}
