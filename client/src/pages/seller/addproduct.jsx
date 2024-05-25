@@ -30,7 +30,7 @@ function AddProduct() {
     description: "",
     price: "",
     category: "",
-    totalItem: 0,
+    totalItem: "",
   });
 
   const [idp, setId] = useState("");
@@ -225,6 +225,7 @@ console.log(selectedProduct)
       const updateCreateProduct = {
         firebaseUid: currentUserUid,
         ...createProduct,
+        totalItem: parseInt(createProduct.totalItem, 10), // Convert totalItem to integer
         imageUrl: url,
       };
 
