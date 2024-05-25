@@ -1,7 +1,6 @@
 
 import Container from 'react-bootstrap/Container';
 import Table from './/..//../components/tables'
-import './list_seller.css'; // Import your CSS file
 import axios from 'axios';
 import { useState,useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
@@ -99,11 +98,9 @@ const handleApprove = async(_id) =>{
   return (
     <div className='listseller'>
     <Toaster/>
-    <h1> Seller Approval</h1>
-    <Container className="container-box"> {/* Container box */}
 
     <Table  heading={tableHeading} dataa={setlist} action={false} approvalAction={true} handleDelete={handleDelete} handleApprove={handleApprove} />
-    </Container>
+
     </div>
   );
 }

@@ -72,10 +72,9 @@ const handleDelete = (_id) =>{
   return (
     <div className='listseller'>
     <Toaster/>
-    <Container className="container-box"> {/* Container box */}
 
     <Table  heading={tableHeading} dataa={setlist} action={true} approvalAction={false} removeseller={true} handleDelete={handleDelete} />
-    </Container>
+
     </div>
   );
 }

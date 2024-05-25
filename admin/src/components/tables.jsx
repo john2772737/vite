@@ -1,70 +1,68 @@
 import PropTypes from 'prop-types';
-import Table from "react-bootstrap/Table";
 
-function ResponsiveTable({ heading, dataa, action, handleDelete,handleApprove ,approvalAction,removeseller}) {
-  ResponsiveTable.propTypes = {
-    heading: PropTypes.arrayOf(PropTypes.string).isRequired,
-    dataa: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.any)).isRequired,
-    action: PropTypes.bool,
-    onActionClick: PropTypes.func.isRequired,
-    approvalAction: PropTypes.bool,
-    handleDelete: PropTypes.func.isRequired,
-    handleApprove: PropTypes.func.isRequired,
-    removeseller:PropTypes.bool
-  };
-
+function ResponsiveTable({
+  heading, dataa, action, handleDelete, handleApprove, approvalAction, removeseller
+}) {
   return (
-    <Table responsive>
+    <table className="min-w-full divide-y divide-gray-200">
       <thead>
-        <tr
-          style={{
-            backgroundColor: "black",
-            color: "white",
-            fontFamily: "League Spartan",
-            border: "1px solid black",
-          }}
-        >
-          <th>#</th>
+        <tr className="bg-black text-white" style={{ fontFamily: 'League Spartan', border: '1px solid black' }}>
+          <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider whitespace-nowrap">#</th>
           {heading.map((item, index) => (
-            <th key={index}>{item}</th>
+            <th key={index} className="px-20 py-3 text-xs font-medium uppercase tracking-wider whitespace-nowrap">{item}</th>
           ))}
-          {action && <th>Action</th>}
-
-          {approvalAction && <th>Action</th>}
+          {action && <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider whitespace-nowrap">Action</th>}
+          {approvalAction && <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider whitespace-nowrap">Action</th>}
         </tr>
       </thead>
-      <tbody>
+      <tbody className="bg-white divide-y divide-gray-200">
         {dataa.map((rowData, rowIndex) => (
           <tr key={rowIndex}>
-            <td>{rowIndex + 1}</td>
-            
+            <td className="px-6 py-4 text-center whitespace-nowrap">{rowIndex + 1}</td>
             {rowData.map((data, colIndex) => (
-              <td key={colIndex}>{data}</td>
+              <td key={colIndex} className="px-6 py-4 text-center whitespace-nowrap">{data}</td>
             ))}
-           
-
-           {approvalAction &&(
-            <td>
-                <button onClick={() => handleDelete(rowData[0])}>EKIS</button>
-                <button onClick={() => handleApprove(rowData[0])}>APPROVE</button>
+            {approvalAction && (
+              <td className="px-6 py-4 text-center whitespace-nowrap">
+                <button
+                  onClick={() => handleDelete(rowData[0])}
+                  className="px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out"
+                >
+                  EKIS
+                </button>
+                <button
+                  onClick={() => handleApprove(rowData[0])}
+                  className="ml-2 px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-500 focus:outline-none focus:shadow-outline-green active:bg-green-600 transition duration-150 ease-in-out"
+                >
+                  APPROVE
+                </button>
               </td>
-           )}
-
-           
-           {removeseller &&(
-            <td>
-                <button onClick={() => handleDelete(rowData[0])}>remove</button>
-               
+            )}
+            {removeseller && (
+              <td className="px-6 py-4 text-center whitespace-nowrap">
+                <button
+                  onClick={() => handleDelete(rowData[0])}
+                  className="px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out"
+                >
+                  remove
+                </button>
               </td>
-           )}
-
-
-         
+            )}
           </tr>
         ))}
       </tbody>
-    </Table>
+    </table>
   );
 }
+
+ResponsiveTable.propTypes = {
+  heading: PropTypes.arrayOf(PropTypes.string).isRequired,
+  dataa: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.any)).isRequired,
+  action: PropTypes.bool,
+  handleDelete: PropTypes.func.isRequired,
+  handleApprove: PropTypes.func.isRequired,
+  approvalAction: PropTypes.bool,
+  removeseller: PropTypes.bool
+};
 
 export default ResponsiveTable;
