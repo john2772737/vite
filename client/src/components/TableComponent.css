@@ -1,0 +1,102 @@
+/* TableComponent.css */
+.table-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.search-form {
+  margin: 0 auto 20px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 30px;
+  padding: 10px;
+}
+
+.search-input {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+.search-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.search-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.table-header {
+  background-color: #000;
+  color: #fff;
+  font-family: 'League Spartan', sans-serif;
+}
+
+.table-header th {
+  padding: 10px;
+  border: 1px solid #000;
+}
+
+.table-index {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.table-custom th, .table-custom td {
+  padding: 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.action-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .table-header th, .table-custom td {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .search-form {
+    flex-direction: column;
+    padding: 5px;
+  }
+
+  .search-input {
+    margin-bottom: 10px;
+  }
+}

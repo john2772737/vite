@@ -5,6 +5,7 @@ import Footer from "../../components/footer";
 import SellerSidebar from "../../components/seller_sidebar";
 import "./seller.css"
 
+
 function User() {
   return (
     <div>

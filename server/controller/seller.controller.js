@@ -168,16 +168,23 @@ const createProduct = async (req, res) => {
   }
 };
 
-const getProduct= async(req,res)=>{
-  const {firebaseuid}= req.params
-  try{
-   const seller = await Seller.findOne({firebaseuid:firebaseuid}).populate('products');
- 
-   res.json(seller.products)
-  }catch(error){
-    console.log(error)
+const getProduct = async (req, res) => {
+  const { firebaseuid } = req.params;
+  
+  try {
+    const seller = await Seller.findOne({ firebaseuid }).populate('products');
+    
+    if (!seller || seller.products.length === 0) {
+      return res.json({ message: "no products" });
+    }
+
+    res.json(seller.products);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" }); // It's good practice to send a response in case of an error
   }
-}
+};
+
 
 const updateStock = async (req, res) => {
   const { id } = req.params;

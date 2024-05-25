@@ -8,41 +8,32 @@ const productSchema = new mongoose.Schema({
     required: true
   },
   description: String,
-  price: {
-    type: Number,
-    required: true
-  },
+  price: Number, // Removed an unnecessary comma
   category: String,
   imageUrl: String,
   totalItem: {
     type: Number,
-    required: true
+    default: 0 // Added a default value
   },
   totalSold: {
     type: Number,
-    default: 0 // Assuming it starts from 0
+    default: 0
   },
   remainingItem: {
-    type: Number // Remove required: true
+    type: Number,
+    default: 0
   },
-
-  seller: [{
+  seller: {
     type:String,
     ref: 'Seller'
-}],
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-// Define a pre-save hook to calculate remainingItem
-productSchema.pre('save', function(next) {
-  this.remainingItem = this.totalItem - this.totalSold;
-  next();
-});
 
-// Create the Product model
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

@@ -57,9 +57,28 @@ const getsingleProduct = async(req,res)=>{
       }
 }
 
+
+const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  
+
+  try {
+    const product = await Product.findByIdAndUpdate(id, req.body);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports={
     createProduct,
     getProductseller,
-    getsingleProduct
+    getsingleProduct,
+    updateProduct
     
 }
