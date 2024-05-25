@@ -11,7 +11,7 @@ const sellerSchema = new mongoose.Schema({
     lastname: {
         type: String,
     },
-    deliveryaddress:{
+    address:{
         type: String,
       
     },
