@@ -38,9 +38,6 @@ const PhoneVerification = () => {
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
 
@@ -69,7 +66,6 @@ const PhoneVerification = () => {
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
-    setIsClicked(true);
 
     if (!isValidPhoneNumber(phoneNumber)) {
       toast.error("Invalid phone number");
@@ -118,7 +114,6 @@ const PhoneVerification = () => {
 
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
-    setIsClicked(true);
 
     try {
       await window.confirmationResult.confirm(verificationCode);
@@ -185,9 +180,6 @@ const PhoneVerification = () => {
   };
 
   const uploadPhoto = () => {
-    setIsClicked(true);
-
-    // Check if any field is empty
     if (
       Data.firstname === "" ||
       Data.lastname === "" ||
@@ -201,16 +193,53 @@ const PhoneVerification = () => {
       return;
     }
 
+    const nameRegex = /^[A-Za-z]+$/;
+    if (!nameRegex.test(Data.firstname) || !nameRegex.test(Data.lastname)) {
+      toast.error("Firstname and Lastname must contain only letters.");
+      return;
+    }
+
+    // Validate email format to include @gmail.com
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(Data.email)) {
+      toast.error(
+        "Email must be a valid Gmail address. (e.g., example@gmail.com)"
+      );
+      return;
+    }
+
+    // Validate age (should be at least 18 years old)
+    const today = new Date();
+    const birthdayDate = new Date(Data.birthday);
+    const ageDifference = today.getFullYear() - birthdayDate.getFullYear();
+    const isAdult =
+      ageDifference > 18 ||
+      (ageDifference === 18 && today.getMonth() > birthdayDate.getMonth()) ||
+      (ageDifference === 18 &&
+        today.getMonth() === birthdayDate.getMonth() &&
+        today.getDate() >= birthdayDate.getDate());
+
+    if (!isAdult) {
+      toast.error("You must be at least 18 years old.");
+      return;
+    }
+
+    // Validate password to include at least one letter and one number
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(Data.password)) {
+      toast.error("Password must contain at least one letter and one number.");
+      return;
+    }
+    
     if (Data.password !== confirmPass) {
       toast.error("Password do not Match");
       return;
     }
 
     if (Data.password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
+      toast.error("Password must be at least 8 characters long.");
       return;
     }
-
     setStep("Photo");
   };
 
@@ -226,20 +255,17 @@ const PhoneVerification = () => {
       idPicture: "",
     });
     setConfirmpass("");
-    setIsClicked(false); // Reset the clicked state as well
   };
 
   const saveUser = async (event) => {
     event.preventDefault();
-    setIsClicked(true);
-
     try {
       // Assuming idPicture is set in your data state
       const profilePictureFile = picture;
       const idPictureFile = idp;
 
       if (!profilePictureFile || !idPictureFile) {
-        toast.error("Both profile picture and ID picture are required");
+        toast.error("Both profile picture and ID picture are required.");
       }
 
       const profilePictureRef = ref(
@@ -312,15 +338,13 @@ const PhoneVerification = () => {
 
   const update_photo = async (event) => {
     event.preventDefault();
-    setIsClicked(true);
-
     try {
       // Assuming idPicture is set in your data state
       const profilePictureFile = picture;
       const idPictureFile = idp;
 
       if (!profilePictureFile || !idPictureFile) {
-        toast.error("Both profile picture and ID picture are required");
+        toast.error("Both profile picture and ID picture are required.");
       }
 
       const profilePictureRef = ref(
@@ -403,26 +427,15 @@ const PhoneVerification = () => {
                   </MDBCardText>
                   <MDBRow className="justify-content-center">
                     <MDBCardText>
-                      {isClicked &&
-                        phoneNumber &&
-                        !isValidPhoneNumber(phoneNumber) && (
-                          <div className="error-message text-center">
-                            Invalid phone number.
-                          </div>
-                        )}
-                      <div className="w-100 d-flex justify-content-center">
-                        <Input
-                          className={`input ${isFocused ? "focus" : ""} ${
-                            isClicked && phoneNumber === "" ? "error" : ""
-                          }`}
-                          country="PH"
-                          international
-                          withCountryCallingCode
-                          value={phoneNumber}
-                          onChange={handlePhoneChange}
-                          maxLength={16}
-                        />
-                      </div>
+                      <Input
+                        className="input"
+                        country="PH"
+                        international
+                        withCountryCallingCode
+                        value={phoneNumber}
+                        onChange={handlePhoneChange}
+                        maxLength={16}
+                      />
                     </MDBCardText>
                   </MDBRow>
                   <div id="recaptcha-container"></div>
@@ -477,32 +490,14 @@ const PhoneVerification = () => {
                   <MDBCardText>Enter your verification code.</MDBCardText>
                   <MDBRow>
                     <MDBCardText>
-                      Verification Code:
-                      <div className="error-message text-center">
-                        {isClicked &&
-                          verificationCode === "" &&
-                          "Verification code is required."}
-                      </div>
-                      <div className="error-message text-center">
-                        {isClicked &&
-                          verificationCode.length !== 6 &&
-                          "Verification code must be 6 digits."}
-                      </div>
-                      <div className="w-100 d-flex justify-content-center">
-                        <input
-                          className={`input ${isFocused ? "focus" : ""} ${
-                            isClicked && verificationCode === "" ? "error" : ""
-                          }`}
-                          type="text"
-                          value={verificationCode}
-                          placeholder="6-PIN Code: ******"
-                          onFocus={() => setIsFocused(true)}
-                          onBlur={() => setIsFocused(false)}
-                          onChange={(e) => setVerificationCode(e.target.value)}
-                          maxLength={6}
-                          style={{ textAlign: "center" }}
-                        />
-                      </div>
+                      <MDBInput
+                        className="code-input text-center"
+                        placeholder="Verification Code"
+                        type="text"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        maxLength={6}
+                      />
                     </MDBCardText>
                   </MDBRow>
                   <div>
@@ -563,17 +558,8 @@ const PhoneVerification = () => {
                       </MDBCardText>
                       <MDBRow>
                         <MDBCol>
-                          {isClicked && Data.firstname === "" && (
-                            <div className="error-message">
-                              First name is required.
-                            </div>
-                          )}
                           <MDBInput
-                            wrapperClass={`input mb-4 ${
-                              isFocused ? "focus" : ""
-                            } ${
-                              isClicked && Data.firstname === "" ? "error" : ""
-                            }`}
+                            wrapperClass="mb-4"
                             label="First Name"
                             size="lg"
                             id="form1"
@@ -584,18 +570,8 @@ const PhoneVerification = () => {
                           />
                         </MDBCol>
                         <MDBCol>
-                          {isClicked && Data.lastname === "" && (
-                            <div className="error-message">
-                              Last name is required.
-                            </div>
-                          )}
-
                           <MDBInput
-                            wrapperClass={`input mb-4 ${
-                              isFocused ? "focus" : ""
-                            } ${
-                              isClicked && Data.lastname === "" ? "error" : ""
-                            }`}
+                            wrapperClass="mb-4"
                             label="Last Name"
                             size="lg"
                             id="form2"
@@ -606,15 +582,8 @@ const PhoneVerification = () => {
                           />
                         </MDBCol>
                       </MDBRow>
-                      {isClicked && Data.birthday === "" && (
-                        <div className="error-message">
-                          Birthday is required.
-                        </div>
-                      )}
                       <MDBInput
-                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
-                          isClicked && Data.birthday === "" ? "error" : ""
-                        }`}
+                        wrapperClass="mb-4"
                         label="Birthday"
                         size="lg"
                         id="form3"
@@ -623,16 +592,8 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="birthday"
                       />
-
-                      {isClicked && Data.shopname === "" && (
-                        <div className="error-message">
-                          Shop Name is required.
-                        </div>
-                      )}
                       <MDBInput
-                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
-                          isClicked && Data.shopname === "" ? "error" : ""
-                        }`}
+                        wrapperClass="mb-4"
                         label="Shop Name"
                         size="lg"
                         id="form4"
@@ -641,13 +602,8 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="shopname"
                       />
-                      {isClicked && Data.email === "" && (
-                        <div className="error-message">Email is required.</div>
-                      )}
                       <MDBInput
-                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
-                          isClicked && Data.email === "" ? "error" : ""
-                        }`}
+                        wrapperClass="mb-4"
                         label="Email"
                         size="lg"
                         id="form5"
@@ -656,33 +612,8 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="email"
                       />
-                      {isClicked && Data.password === "" && (
-                        <div className="error-message">
-                          Password is required.
-                        </div>
-                      )}
-                      {isClicked &&
-                        Data.password !== "" &&
-                        Data.password.length < 8 && (
-                          <div className="error-message">
-                            Password must be at least 8 characters long.
-                          </div>
-                        )}
-                      {isClicked &&
-                        Data.password !== "" &&
-                        confirmPass !== "" &&
-                        Data.password !== confirmPass && (
-                          <div className="error-message">
-                            Passwords do not match.
-                          </div>
-                        )}
                       <MDBInput
-                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
-                          isClicked &&
-                          (Data.password === "" || Data.password.length < 8)
-                            ? "error"
-                            : ""
-                        }`}
+                        wrapperClass="mb-4"
                         label="Password"
                         size="lg"
                         id="form7"
@@ -691,15 +622,8 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="password"
                       />
-                      {isClicked && confirmPass === "" && (
-                        <div className="error-message">
-                          Confirm your password.
-                        </div>
-                      )}
                       <MDBInput
-                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
-                          isClicked && confirmPass === "" ? "error" : ""
-                        }`}
+                        wrapperClass="mb-4"
                         label="Confirm Password"
                         size="lg"
                         id="form6"
@@ -773,15 +697,8 @@ const PhoneVerification = () => {
                           <MDBCardText>
                             Upload your Profile Picture here:{" "}
                           </MDBCardText>
-                          {isClicked && !picture && (
-                            <div className="error-message">
-                              Profile picture is required.
-                            </div>
-                          )}
                           <MDBInput
-                            wrapperClass={`input mb-4 ${
-                              isClicked && !picture ? "error" : ""
-                            }`}
+                            wrapperClass="mb-4"
                             size="lg"
                             id="form3"
                             type="file"
@@ -792,15 +709,8 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
-                          {isClicked && !idp && (
-                            <div className="error-message">
-                              ID picture is required.
-                            </div>
-                          )}
                           <MDBInput
-                            wrapperClass={`input mb-4 ${
-                              isClicked && !idp ? "error" : ""
-                            }`}
+                            wrapperClass="mb-4"
                             size="lg"
                             id="form4"
                             type="file"
@@ -811,12 +721,6 @@ const PhoneVerification = () => {
                           />
 
                           <div className="d-flex justify-content-end pt-3">
-                            <button
-                              className="abutton mb-3"
-                              onClick={resetForm}
-                            >
-                              RESET
-                            </button>
                             <button className="abutton mb-3" onClick={saveUser}>
                               PROCEED
                             </button>
@@ -939,15 +843,8 @@ const PhoneVerification = () => {
                           </MDBCardText>
 
                           <MDBCardText>Upload your Picture here: </MDBCardText>
-                          {isClicked && !picture && (
-                            <div className="error-message">
-                              Profile picture is required.
-                            </div>
-                          )}
                           <MDBInput
-                            wrapperClass={`input mb-4 ${
-                              isClicked && !picture ? "error" : ""
-                            }`}
+                            wrapperClass="mb-4"
                             size="lg"
                             id="form3"
                             type="file"
@@ -958,15 +855,8 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
-                          {isClicked && !idp && (
-                            <div className="error-message">
-                              ID picture is required.
-                            </div>
-                          )}
                           <MDBInput
-                            wrapperClass={`input mb-4 ${
-                              isClicked && !idp ? "error" : ""
-                            }`}
+                            wrapperClass="mb-4"
                             size="lg"
                             id="form4"
                             type="file"
@@ -977,12 +867,6 @@ const PhoneVerification = () => {
                           />
 
                           <div className="d-flex justify-content-end pt-3">
-                            <button
-                              className="abutton mb-3"
-                              onClick={resetForm}
-                            >
-                              RESET
-                            </button>
                             <button
                               className="abutton mb-3"
                               onClick={update_photo}
