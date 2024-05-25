@@ -91,11 +91,36 @@ const deleteProduct = async (req, res) => {
   }
 }
 
+const listProductQuery = async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ message: "Query parameter is required" });
+  }
+
+  try {
+    const products = await Product.find({ category: query });
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found for this category" });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error fetching products:", error);
+  }
+};
+
+module.exports = listProductQuery;
+
+
 module.exports={
     createProduct,
     getProductseller,
     getsingleProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    listProductQuery
     
 }

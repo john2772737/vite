@@ -11,6 +11,7 @@ function ApprovedSeller() {
     "ID number",
     "First Name",
     "Last Name",
+    "address",
     "Shop Name",
     "Email",
     "Birthday",
@@ -21,7 +22,7 @@ function ApprovedSeller() {
   ];
   const[data,setData]= useState([])
 
-console.log(data)
+
   const setlist = data.map((item) => {
     const picture = <img src={item.picture} alt="Description of the image" style={{ width: '200px', height: '200px' }} />;
     const idPicture = <img src={item.idPicture} alt="Description of the image" style={{ width: '200px', height: '200px' }} />;
@@ -30,6 +31,7 @@ console.log(data)
       item._id,
       item.firstname,
       item.lastname,
+      item.address,
       item.shopname,
       item.email,
       item.birthday.replace("T00:00:00.000Z", " "), // Assuming item.birthday is a string

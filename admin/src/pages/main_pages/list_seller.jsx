@@ -10,6 +10,7 @@ function ListSeller() {
     "ID number",
     "First Name",
     "Last Name",
+    "Address",
     "Shop Name",
     "Email",
     "Birthday",
@@ -28,6 +29,7 @@ console.log(data)
       item._id,
       item.firstname,
       item.lastname,
+      item.address,
       item.shopname,
       item.email,
       item.birthday.replace("T00:00:00.000Z", " "), // Assuming item.birthday is a string

@@ -36,7 +36,7 @@ import PrivateRouteuser from "./utils/privateuser";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<UserLogin />} />
+      <Route path="/" element={<FirebaseProvideruser><UserLogin /></FirebaseProvideruser>} />
       <Route path="/userLogin" element={<FirebaseProvideruser><UserLogin /></FirebaseProvideruser>} /> {/* Corrected route path */}
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       

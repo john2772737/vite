@@ -1,13 +1,19 @@
-
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../utils/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber ,setPersistence,browserLocalPersistence ,onAuthStateChanged,signOut} from "firebase/auth";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
 import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
 import "../css/sellerRegistration.css";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import backgroundimage from "../components/images/booklot_bg.png"
+import backgroundimage from "../components/images/booklot_bg.png";
 
 import {
   MDBBtn,
@@ -25,19 +31,13 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import axios from "axios";
 
-
-
 import { imageDb } from "../utils/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import {useFirebase } from '../utils/context';
+import { useFirebase } from "../utils/context";
 const PhoneVerification = () => {
-
-
- 
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
-
 
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
@@ -48,11 +48,14 @@ const PhoneVerification = () => {
   //   }
   // }, [currentUser, navigate]);
 
-
   const [Data, setData] = useState({
-    firebaseuid:"",
+    firebaseuid: "",
     firstname: "",
     lastname: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
     shopname: "",
     password: "",
     email: "",
@@ -65,7 +68,6 @@ const PhoneVerification = () => {
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
 
-   
     if (!isValidPhoneNumber(phoneNumber)) {
       toast.error("Invalid phone number");
       return;
@@ -91,7 +93,6 @@ const PhoneVerification = () => {
       );
 
       window.confirmationResult = confirmationResult;
-
 
       setStep("verification");
     } catch (error) {
@@ -119,7 +120,6 @@ const PhoneVerification = () => {
       await window.confirmationResult.confirm(verificationCode);
       await setPersistence(auth, browserLocalPersistence);
 
-
       const exists = await axios.get(
         `http://localhost:4000/seller/findPhoneNumber/${phoneNumber}`
       );
@@ -127,19 +127,18 @@ const PhoneVerification = () => {
       const seller = exists.data.seller;
 
       if (exists.data.found === false) {
-
         signOut(auth);
 
         setData({
-          firebaseuid: auth.currentUser.uid, 
-        })
+          firebaseuid: auth.currentUser.uid,
+        });
         const result = await axios.post(
           "http://localhost:4000/seller/createphone",
           Data
         );
 
         const uid = result.data._id;
-      
+
         setuid(uid);
 
         toast.success(result.data.message);
@@ -158,7 +157,7 @@ const PhoneVerification = () => {
         signOut(auth);
 
         setStep("wait");
-        
+
         return;
       }
 
@@ -168,9 +167,8 @@ const PhoneVerification = () => {
         setStep("unapproved");
         return;
       }
-     
-        navigate("/seller");
 
+      navigate("/seller");
     } catch (error) {
       console.error("Error confirming verification code:", error);
 
@@ -216,14 +214,14 @@ const PhoneVerification = () => {
       await uploadBytes(idPictureRef, idPictureFile);
       // Retrieve the download URL of the ID picture
       const idPictureURL = await getDownloadURL(idPictureRef);
-
+      const address = `${Data.city}, ${Data.state}, ${Data.zip}`;
       const updatedData = {
         ...Data, // Include existing data
+        address: address,
         picture: profilePictureURL,
         idPicture: idPictureURL,
         submit: "true", // Set the 'submit' field to true
       };
-
 
       const response = await axios.put(
         `http://localhost:4000/seller/updateSeller/${uid}`,
@@ -240,7 +238,6 @@ const PhoneVerification = () => {
     }
   };
 
- 
   const handleFormChanges = (event) => {
     const { name, value } = event.target;
 
@@ -299,7 +296,6 @@ const PhoneVerification = () => {
       const idPictureURL = await getDownloadURL(idPictureRef);
 
       const updatedData = {
-        
         approved: "false",
         picture: profilePictureURL,
         idPicture: idPictureURL,
@@ -322,12 +318,10 @@ const PhoneVerification = () => {
   };
 
   return (
-  
     <div>
       <Toaster />
       <div className="sellerReg ">
-
-      {step === "phone" && (
+        {step === "phone" && (
           <div
             className="background-container"
             style={{
@@ -351,7 +345,10 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-            <MDBContainer fluid className="d-flex justify-content-center align-items-center">
+            <MDBContainer
+              fluid
+              className="d-flex justify-content-center align-items-center"
+            >
               <MDBCard className="my-4">
                 <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                   <MDBCardTitle className="mb-4 text-uppercase fw-bold">
@@ -412,7 +409,10 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-            <MDBContainer fluid className="d-flex justify-content-center align-items-center">
+            <MDBContainer
+              fluid
+              className="d-flex justify-content-center align-items-center"
+            >
               <MDBCard className="my-4">
                 <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                   <MDBCardTitle className="mb-2 text-uppercase fw-bold">
@@ -445,7 +445,6 @@ const PhoneVerification = () => {
           </div>
         )}
 
-
         {step === "form" && (
           <div
             className="background-container"
@@ -470,7 +469,12 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-            <MDBContainer fluid className="HEY" size="sm" style={{ maxWidth: "600px" }}>
+            <MDBContainer
+              fluid
+              className="HEY"
+              size="sm"
+              style={{ maxWidth: "600px" }}
+            >
               <MDBRow className="d-flex justify-content-center align-items-center">
                 <MDBCol>
                   <MDBCard className="my-4">
@@ -508,6 +512,40 @@ const PhoneVerification = () => {
                           />
                         </MDBCol>
                       </MDBRow>
+
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="City"
+                        size="lg"
+                        id="city"
+                        type="text"
+                        value={Data.city}
+                        onChange={handleFormChanges}
+                        name="city"
+                      />
+
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="State / Province"
+                        size="lg"
+                        id="state"
+                        type="text"
+                        value={Data.state}
+                        onChange={handleFormChanges}
+                        name="state"
+                      />
+
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="ZIP / Postal code"
+                        size="lg"
+                        id="zip"
+                        type="text"
+                        value={Data.zip}
+                        onChange={handleFormChanges}
+                        name="zip"
+                      />
+
                       <MDBInput
                         wrapperClass="mb-4"
                         label="Birthday"
@@ -578,8 +616,6 @@ const PhoneVerification = () => {
           </div>
         )}
 
-
-
         {step === "Photo" && (
           <div
             className="background-container"
@@ -609,7 +645,6 @@ const PhoneVerification = () => {
                 <MDBCol md="6">
                   <MDBCard className="my-4">
                     <MDBRow>
-
                       <MDBCol>
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
@@ -693,8 +728,23 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
-              <MDBContainer fluid className="wait-page my-4" style={{ backgroundColor: "white", color: "black", borderRadius: "10px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "100vh",
+              }}
+            >
+              <MDBContainer
+                fluid
+                className="wait-page my-4"
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  borderRadius: "10px",
+                }}
+              >
                 <MDBCol md="8">
                   <MDBRow
                     id="wait-content"
@@ -702,16 +752,14 @@ const PhoneVerification = () => {
                   >
                     <h1>We're evaluating your profile.</h1>
                     <p>
-                      In order to maintain our community standards, each profile is
-                      carefully reviewed before approval.
+                      In order to maintain our community standards, each profile
+                      is carefully reviewed before approval.
                     </p>
                   </MDBRow>
                 </MDBCol>
                 <button type="submit">OK</button>
               </MDBContainer>
             </div>
-
-
           </div>
         )}
 
@@ -744,15 +792,14 @@ const PhoneVerification = () => {
                 <MDBCol md="6">
                   <MDBCard className="my-4">
                     <MDBRow>
-
                       <MDBCol>
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
                             Upload Photo
                           </MDBCardTitle>
                           <MDBCardText>
-                            Please upload another photo because your ID and photo you
-                            provided are invalid.
+                            Please upload another photo because your ID and
+                            photo you provided are invalid.
                           </MDBCardText>
 
                           <MDBCardText>Upload your Picture here: </MDBCardText>
@@ -802,13 +849,10 @@ const PhoneVerification = () => {
           </div>
         )}
 
-        <div>
-        
-        </div>
+        <div></div>
       </div>
     </div>
-
-    );
+  );
 };
 
 export default PhoneVerification;
