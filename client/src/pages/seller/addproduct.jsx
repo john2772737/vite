@@ -225,6 +225,7 @@ console.log(selectedProduct)
       const updateCreateProduct = {
         firebaseUid: currentUserUid,
         ...createProduct,
+        remainingItem:createProduct.totalItem,
         imageUrl: url,
       };
 
