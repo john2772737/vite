@@ -199,10 +199,8 @@ console.log(selectedProduct)
     "Romance",
     "Biography",
     "History",
-    "Self-help",
-    "Poetry",
     "Comics",
-    "Cookbooks",
+   
   ];
   const handleDelete =async(id)=>{
     

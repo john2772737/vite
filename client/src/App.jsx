@@ -30,30 +30,34 @@ import MyVoucher from "./pages/seller/voucher";
 import NotifSeller from "./pages/seller/sellernotif";
 import { FirebaseProvider } from "./utils/context";
 import PrivateRoute from "./utils/privateroute";
+import { FirebaseProvideruser }  from "./utils/usercontext";
+
+import PrivateRouteuser from "./utils/privateuser";
 function App() {
   return (
     <Routes>
       <Route path="/" element={<UserLogin />} />
-      <Route path="/userLogin" element={<UserLogin />} /> {/* Corrected route path */}
+      <Route path="/userLogin" element={<FirebaseProvideruser><UserLogin /></FirebaseProvideruser>} /> {/* Corrected route path */}
       <Route path="/forgotPassword" element={<ForgotPassword />} />
-      <Route path="/sellerLogin" element={<NotSeller />} /> {/* Added sellerLogin route */}
+      
       <Route path="/sellerRegistration" element={<FirebaseProvider><SellerRegistration /></FirebaseProvider>} />
       <Route path="*" element={<PageNotFound />} /> {/* Catch-all route for page not found */}
 
-      <Route path="user" element={<Users />}>
+      <Route path="user" element={<FirebaseProvideruser><Users /></FirebaseProvideruser>}>
+        
         <Route index element={<Home />} />
         <Route path="/user" element={<Home />} />
-        <Route path="/user/live" element={<LiveCustomer />} />
-        <Route path="/user/cart" element={<CartCustomer />} />
-        <Route path="/user/purchase" element={<PurchaseCustomer />} />
-        <Route path="/user/notif" element={<NotifCustomer />} />
-        {/* <Route path="profile" element={<Profile />}>
-          <Route index element={<Editprofile />} />
+        <Route path="/user/live" element={< PrivateRouteuser element={LiveCustomer} />} />
+        <Route path="/user/cart" element={< PrivateRouteuser element={CartCustomer} />} />
+        <Route path="/user/purchase" element={< PrivateRouteuser element={PurchaseCustomer} />} />
+        <Route path="/user/notif" element={< PrivateRouteuser element={NotifCustomer} />} />
+        {/* <Route path="profile" element={< PrivateRouteuser element={}Profile />}>
+          <Route index element={< PrivateRouteuser element={}Editprofile />} />
           <Route path="editprofile" element={<Editprofile />} />
-          <Route path="purchase" element={<Purchase />} />
+          <Route path="purchase" element={< PrivateRouteuser element={}Purchase />} />
         </Route> */}
-        <Route path="/user/cart1" element={<CartCustomer/>}/>
-        <Route path="/user/login" element={<LoginCustomer/>}/>
+        <Route path="/user/cart1" element={< PrivateRouteuser element={CartCustomer}/>}/>
+       
       </Route>
 
 

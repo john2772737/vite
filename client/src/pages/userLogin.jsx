@@ -12,14 +12,14 @@ import {
   MDBCheckbox,
   MDBIcon,
 } from "mdb-react-ui-kit";
-
+import {useFirebase} from '../utils/usercontext'
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
   GithubAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../utils/firebase";
+import { auth } from "../utils/firebaseuser";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -28,6 +28,8 @@ import axios from "axios";
 
 function App() {
   const navigate = useNavigate();
+
+  const { currentUser } = useFirebase();
   const [step, setStep] = useState("login");
   const [isFocused, setIsFocused] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
