@@ -558,10 +558,10 @@ console.log(selectedProduct)
                 <input
                   type="number"
                   id="productPrice"
-                  name="total item"
+                  name="totalItem"
                   className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                   placeholder="Enter total item"
-                  value={selectedProduct.price}
+                  value={selectedProduct.totalItem}
                   onChange={handleInputChange}
                 />
               </div>
