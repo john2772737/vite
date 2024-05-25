@@ -30,7 +30,7 @@ function AddProduct() {
     description: "",
     price: "",
     category: "",
-    totalItem: "",
+    totalItem: null,
   });
 
   const [idp, setId] = useState("");
