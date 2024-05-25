@@ -167,19 +167,7 @@ function AddProduct() {
     }
   };
 console.log(selectedProduct)
-if (data.length === 0) {
-  return (
-    <div>
-      <h1>No Products Available</h1>
-      <button
-        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50"
-        onClick={openModel}
-      >
-        Create Product
-      </button>
-    </div>
-  );
-}
+
 
 
   const setlist = data.map((item) => {
@@ -253,6 +241,20 @@ if (data.length === 0) {
       console.log("Error creating product:", error);
     }
   };
+
+  if (data.length === 0) {
+    return (
+      <div>
+        <h1>No Products Available</h1>
+        <button
+          className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50"
+          onClick={openModel}
+        >
+          Create Product
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>
