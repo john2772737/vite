@@ -225,7 +225,6 @@ console.log(selectedProduct)
       const updateCreateProduct = {
         firebaseUid: currentUserUid,
         ...createProduct,
-        totalItem: parseInt(createProduct.totalItem, 10), // Convert totalItem to integer
         imageUrl: url,
       };
 
@@ -250,7 +249,7 @@ console.log(selectedProduct)
       
       <div>
 
-<div
+         <div
         id="crud-modals"
         className={`${
           createModal ? "" : "hidden"
@@ -363,8 +362,8 @@ console.log(selectedProduct)
                 </label>
                 <input
                   type="number"
-                  id="productPrice"
-                  name="total item"
+                  id="productitem"
+                  name="totalItem"
                   className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                   placeholder="Enter total item"
                   value={createProduct.totalItem}
@@ -722,8 +721,8 @@ console.log(selectedProduct)
                 </label>
                 <input
                   type="number"
-                  id="productPrice"
-                  name="total item"
+                  id="procductitem"
+                  name="totalItem"
                   className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                   placeholder="Enter total item"
                   value={createProduct.totalItem}
