@@ -1,0 +1,42 @@
+.product-list-container {
+  position: relative;
+  overflow: hidden;
+  background-color: #f4f4f4;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent cards from wrapping */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  padding-bottom: 10px; /* Add padding at the bottom to ensure space for arrows */
+}
+
+.card {
+  margin-right: 10px; /* Add margin between cards */
+}
+
+.arrow-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  outline: none;
+  color: white;
+}
+
+.left-arrow {
+  left: 10px;
+}
+
+.right-arrow {
+  right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .arrow-button {
+    font-size: 20px;
+  }
+}

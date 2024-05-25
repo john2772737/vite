@@ -145,21 +145,6 @@ function AddProduct() {
       fetchData();
     }  
 
-     
-    const updateCreateProduct = {
-      name: selectedProduct.name,
-  
-      description: selectedProduct.description,
-      price: selectedProduct.price,
-      category: selectedProduct.category,
-     
-    };
-    await axios.put(
-      `http://localhost:4000/product/updateProduct/${selectedProduct._id}`,
-      updateCreateProduct
-    );
-    closeModal();
-      fetchData();
 
 
     } catch (error) {
@@ -229,7 +214,6 @@ console.log(selectedProduct)
       const updateCreateProduct = {
         firebaseUid: currentUserUid,
         ...createProduct,
-        remainingItem:createProduct.totalItem,
         imageUrl: url,
       };
 
@@ -552,23 +536,7 @@ console.log(selectedProduct)
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="productPrice"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Total Item
-                </label>
-                <input
-                  type="number"
-                  id="productPrice"
-                  name="totalItem"
-                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter total item"
-                  value={selectedProduct.totalItem}
-                  onChange={handleInputChange}
-                />
-              </div>
+              
 
               <div className="mb-4">
                 <label

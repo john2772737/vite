@@ -42,12 +42,23 @@ const PhoneVerification = () => {
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
 
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     navigate('/seller/dashboard');
-  //   }
-  // }, [currentUser, navigate]);
-
+  useEffect(() => {
+    const checkApproval = async () => {
+      if (currentUser && currentUser !== null) {
+        const exists = await axios.get(
+          `http://localhost:4000/seller/findPhoneNumber/${phoneNumber}`
+        );
+        const seller = exists.data.seller;
+        
+        if (seller.approved === "true") {
+          navigate('/seller/dashboard');
+        }
+      }
+    };
+  
+    checkApproval();
+  }, [currentUser, navigate, phoneNumber]);
+  
   const [Data, setData] = useState({
     firebaseuid: "",
     firstname: "",

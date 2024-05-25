@@ -95,7 +95,7 @@ function Inventory() {
       const remaining=updatedTotalItem- selectedProduct.totalSold
       const updatedProductData = {
         totalItem: updatedTotalItem,
-        remainingItem:remaining
+      
       };
    
       

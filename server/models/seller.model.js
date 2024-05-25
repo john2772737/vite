@@ -50,6 +50,10 @@ const sellerSchema = new mongoose.Schema({
     products: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
+    }],
+    vouchers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Voucher'
     }]
 });
 
