@@ -1,12 +1,19 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../utils/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber ,setPersistence,browserLocalPersistence ,onAuthStateChanged,signOut} from "firebase/auth";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
 import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
 import "../css/sellerRegistration.css";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import backgroundimage from "../components/images/booklot_bg.png"
+import backgroundimage from "../components/images/booklot_bg.png";
 
 import {
   MDBBtn,
@@ -24,19 +31,16 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import axios from "axios";
 
-
-
 import { imageDb } from "../utils/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import {useFirebase } from '../utils/context';
+import { useFirebase } from "../utils/context";
 const PhoneVerification = () => {
-
-
- 
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
 
+  const [isFocused, setIsFocused] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
@@ -48,8 +52,9 @@ const PhoneVerification = () => {
   // }, [currentUser, navigate]);
 
 
+
   const [Data, setData] = useState({
-    firebaseuid:"",
+    firebaseuid: "",
     firstname: "",
     lastname: "",
     shopname: "",
@@ -63,8 +68,8 @@ const PhoneVerification = () => {
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
+    setIsClicked(true);
 
-   
     if (!isValidPhoneNumber(phoneNumber)) {
       toast.error("Invalid phone number");
       return;
@@ -91,7 +96,6 @@ const PhoneVerification = () => {
 
       window.confirmationResult = confirmationResult;
 
-
       setStep("verification");
     } catch (error) {
       console.error("Error signing in with phone number:", error);
@@ -113,11 +117,11 @@ const PhoneVerification = () => {
 
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
+    setIsClicked(true);
 
     try {
       await window.confirmationResult.confirm(verificationCode);
       await setPersistence(auth, browserLocalPersistence);
-
 
       const exists = await axios.get(
         `http://localhost:4000/seller/findPhoneNumber/${phoneNumber}`
@@ -126,19 +130,18 @@ const PhoneVerification = () => {
       const seller = exists.data.seller;
 
       if (exists.data.found === false) {
-
         signOut(auth);
 
         setData({
-          firebaseuid: auth.currentUser.uid, 
-        })
+          firebaseuid: auth.currentUser.uid,
+        });
         const result = await axios.post(
           "http://localhost:4000/seller/createphone",
           Data
         );
 
         const uid = result.data._id;
-      
+
         setuid(uid);
 
         toast.success(result.data.message);
@@ -157,7 +160,7 @@ const PhoneVerification = () => {
         signOut(auth);
 
         setStep("wait");
-        
+
         return;
       }
 
@@ -167,9 +170,8 @@ const PhoneVerification = () => {
         setStep("unapproved");
         return;
       }
-     
-        navigate("/seller");
 
+      navigate("/seller");
     } catch (error) {
       console.error("Error confirming verification code:", error);
 
@@ -182,15 +184,54 @@ const PhoneVerification = () => {
   };
 
   const uploadPhoto = () => {
+    setIsClicked(true);
+
+    // Check if any field is empty
+    if (
+      Data.firstname === "" ||
+      Data.lastname === "" ||
+      Data.shopname === "" ||
+      Data.email === "" ||
+      Data.password === "" ||
+      confirmPass === "" ||
+      Data.birthday === ""
+    ) {
+      toast.error("Please fill out all fields");
+      return;
+    }
+
     if (Data.password !== confirmPass) {
       toast.error("Password do not Match");
       return;
     }
+
+    if (Data.password.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+
     setStep("Photo");
+  };
+
+  const resetForm = () => {
+    setData({
+      firstname: "",
+      lastname: "",
+      shopname: "",
+      password: "",
+      email: "",
+      birthday: "",
+      picture: "",
+      idPicture: "",
+    });
+    setConfirmpass("");
+    setIsClicked(false); // Reset the clicked state as well
   };
 
   const saveUser = async (event) => {
     event.preventDefault();
+    setIsClicked(true);
+
     try {
       // Assuming idPicture is set in your data state
       const profilePictureFile = picture;
@@ -223,7 +264,6 @@ const PhoneVerification = () => {
         submit: "true", // Set the 'submit' field to true
       };
 
-
       const response = await axios.put(
         `http://localhost:4000/seller/updateSeller/${uid}`,
         updatedData
@@ -239,7 +279,6 @@ const PhoneVerification = () => {
     }
   };
 
- 
   const handleFormChanges = (event) => {
     const { name, value } = event.target;
 
@@ -298,7 +337,6 @@ const PhoneVerification = () => {
       const idPictureURL = await getDownloadURL(idPictureRef);
 
       const updatedData = {
-        
         approved: "false",
         picture: profilePictureURL,
         idPicture: idPictureURL,
@@ -321,12 +359,10 @@ const PhoneVerification = () => {
   };
 
   return (
-  
     <div>
       <Toaster />
       <div className="sellerReg ">
-
-      {step === "phone" && (
+        {step === "phone" && (
           <div
             className="background-container"
             style={{
@@ -350,7 +386,10 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-            <MDBContainer fluid className="d-flex justify-content-center align-items-center">
+            <MDBContainer
+              fluid
+              className="d-flex justify-content-center align-items-center"
+            >
               <MDBCard className="my-4">
                 <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                   <MDBCardTitle className="mb-4 text-uppercase fw-bold">
@@ -361,14 +400,26 @@ const PhoneVerification = () => {
                   </MDBCardText>
                   <MDBRow className="justify-content-center">
                     <MDBCardText>
-                      <Input
-                        country="PH"
-                        international
-                        withCountryCallingCode
-                        value={phoneNumber}
-                        onChange={handlePhoneChange}
-                        maxLength={16}
-                      />
+                      {isClicked &&
+                        phoneNumber &&
+                        !isValidPhoneNumber(phoneNumber) && (
+                          <div className="error-message text-center">
+                            Invalid phone number.
+                          </div>
+                        )}
+                      <div className="w-100 d-flex justify-content-center">
+                        <Input
+                          className={`input ${isFocused ? "focus" : ""} ${
+                            isClicked && phoneNumber === "" ? "error" : ""
+                          }`}
+                          country="PH"
+                          international
+                          withCountryCallingCode
+                          value={phoneNumber}
+                          onChange={handlePhoneChange}
+                          maxLength={16}
+                        />
+                      </div>
                     </MDBCardText>
                   </MDBRow>
                   <div id="recaptcha-container"></div>
@@ -411,7 +462,10 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-            <MDBContainer fluid className="d-flex justify-content-center align-items-center">
+            <MDBContainer
+              fluid
+              className="d-flex justify-content-center align-items-center"
+            >
               <MDBCard className="my-4">
                 <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                   <MDBCardTitle className="mb-2 text-uppercase fw-bold">
@@ -420,13 +474,31 @@ const PhoneVerification = () => {
                   <MDBCardText>Enter your verification code.</MDBCardText>
                   <MDBRow>
                     <MDBCardText>
-                      Verification Code:
-                      <MDBInput
-                        className="code-input"
-                        type="text"
-                        value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value)}
-                      />
+                      <div className="error-message text-center">
+                        {isClicked &&
+                          verificationCode === "" &&
+                          "Verification code is required."}
+                      </div>
+                      <div className="error-message text-center">
+                        {isClicked &&
+                          verificationCode.length !== 6 &&
+                          "Verification code must be 6 digits."}
+                      </div>
+                      <div className="w-100 d-flex justify-content-center">
+                        <input
+                          className={`input ${isFocused ? "focus" : ""} ${
+                            isClicked && verificationCode === "" ? "error" : ""
+                          }`}
+                          type="text"
+                          value={verificationCode}
+                          placeholder="6-PIN Code: ******"
+                          onFocus={() => setIsFocused(true)}
+                          onBlur={() => setIsFocused(false)}
+                          onChange={(e) => setVerificationCode(e.target.value)}
+                          maxLength={6}
+                          style={{ textAlign: "center" }}
+                        />
+                      </div>
                     </MDBCardText>
                   </MDBRow>
                   <div>
@@ -443,7 +515,6 @@ const PhoneVerification = () => {
             </MDBContainer>
           </div>
         )}
-
 
         {step === "form" && (
           <div
@@ -469,7 +540,12 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-            <MDBContainer fluid className="HEY" size="sm" style={{ maxWidth: "600px" }}>
+            <MDBContainer
+              fluid
+              className="HEY"
+              size="sm"
+              style={{ maxWidth: "600px" }}
+            >
               <MDBRow className="d-flex justify-content-center align-items-center">
                 <MDBCol>
                   <MDBCard className="my-4">
@@ -483,8 +559,17 @@ const PhoneVerification = () => {
                       </MDBCardText>
                       <MDBRow>
                         <MDBCol>
+                          {isClicked && Data.firstname === "" && (
+                            <div className="error-message">
+                              First name is required.
+                            </div>
+                          )}
                           <MDBInput
-                            wrapperClass="mb-4"
+                            wrapperClass={`input mb-4 ${
+                              isFocused ? "focus" : ""
+                            } ${
+                              isClicked && Data.firstname === "" ? "error" : ""
+                            }`}
                             label="First Name"
                             size="lg"
                             id="form1"
@@ -495,8 +580,18 @@ const PhoneVerification = () => {
                           />
                         </MDBCol>
                         <MDBCol>
+                          {isClicked && Data.lastname === "" && (
+                            <div className="error-message">
+                              Last name is required.
+                            </div>
+                          )}
+
                           <MDBInput
-                            wrapperClass="mb-4"
+                            wrapperClass={`input mb-4 ${
+                              isFocused ? "focus" : ""
+                            } ${
+                              isClicked && Data.lastname === "" ? "error" : ""
+                            }`}
                             label="Last Name"
                             size="lg"
                             id="form2"
@@ -507,8 +602,15 @@ const PhoneVerification = () => {
                           />
                         </MDBCol>
                       </MDBRow>
+                      {isClicked && Data.birthday === "" && (
+                        <div className="error-message">
+                          Birthday is required.
+                        </div>
+                      )}
                       <MDBInput
-                        wrapperClass="mb-4"
+                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
+                          isClicked && Data.birthday === "" ? "error" : ""
+                        }`}
                         label="Birthday"
                         size="lg"
                         id="form3"
@@ -517,8 +619,17 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="birthday"
                       />
+
+                      {isClicked && Data.shopname === "" && (
+                        <div className="error-message">
+                          Shop Name is required.
+                        </div>
+                      )}
+
                       <MDBInput
-                        wrapperClass="mb-4"
+                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
+                          isClicked && Data.shopname === "" ? "error" : ""
+                        }`}
                         label="Shop Name"
                         size="lg"
                         id="form4"
@@ -527,8 +638,13 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="shopname"
                       />
+                      {isClicked && Data.email === "" && (
+                        <div className="error-message">Email is required.</div>
+                      )}
                       <MDBInput
-                        wrapperClass="mb-4"
+                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
+                          isClicked && Data.email === "" ? "error" : ""
+                        }`}
                         label="Email"
                         size="lg"
                         id="form5"
@@ -537,8 +653,36 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="email"
                       />
+                      {isClicked && Data.password === "" && (
+                        <div className="error-message">
+                          Password is required.
+                        </div>
+                      )}
+
+                      {isClicked &&
+                        Data.password !== "" &&
+                        Data.password.length < 8 && (
+                          <div className="error-message">
+                            Password must be at least 8 characters long.
+                          </div>
+                        )}
+
+                      {isClicked &&
+                        Data.password !== "" &&
+                        confirmPass !== "" &&
+                        Data.password !== confirmPass && (
+                          <div className="error-message">
+                            Passwords do not match.
+                          </div>
+                        )}
+
                       <MDBInput
-                        wrapperClass="mb-4"
+                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
+                          isClicked &&
+                          (Data.password === "" || Data.password.length < 8)
+                            ? "error"
+                            : ""
+                        }`}
                         label="Password"
                         size="lg"
                         id="form7"
@@ -547,8 +691,16 @@ const PhoneVerification = () => {
                         onChange={handleFormChanges}
                         name="password"
                       />
+
+                      {isClicked && confirmPass === "" && (
+                        <div className="error-message">
+                          Confirm your password.
+                        </div>
+                      )}
                       <MDBInput
-                        wrapperClass="mb-4"
+                        wrapperClass={`input mb-4 ${isFocused ? "focus" : ""} ${
+                          isClicked && confirmPass === "" ? "error" : ""
+                        }`}
                         label="Confirm Password"
                         size="lg"
                         id="form6"
@@ -557,17 +709,20 @@ const PhoneVerification = () => {
                         onChange={handleConfirmPassChange}
                       />
                       <div className="d-flex justify-content-end pt-3">
-                        <MDBBtn color="light" size="lg">
-                          Reset all
-                        </MDBBtn>
-                        <MDBBtn
-                          className="ms-2"
-                          color="danger"
-                          size="lg"
+                        <button
+                          className="abutton mb-3"
+                          type="button"
+                          onClick={resetForm}
+                        >
+                          RESET
+                        </button>
+                        <button
+                          className="abutton mb-3"
+                          type="button"
                           onClick={uploadPhoto}
                         >
-                          Proceed
-                        </MDBBtn>
+                          PROCEED
+                        </button>
                       </div>
                     </MDBCardBody>
                   </MDBCard>
@@ -576,8 +731,6 @@ const PhoneVerification = () => {
             </MDBContainer>
           </div>
         )}
-
-
 
         {step === "Photo" && (
           <div
@@ -608,7 +761,6 @@ const PhoneVerification = () => {
                 <MDBCol md="6">
                   <MDBCard className="my-4">
                     <MDBRow>
-
                       <MDBCol>
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
@@ -620,10 +772,17 @@ const PhoneVerification = () => {
                           </MDBCardText>
 
                           <MDBCardText>
-                            Upload your Profile Picture here:{" "}
+                            Upload your Profile Picture here:
                           </MDBCardText>
+                          {isClicked && !picture && (
+                            <div className="error-message">
+                              Profile picture is required.
+                            </div>
+                          )}
                           <MDBInput
-                            wrapperClass="mb-4"
+                            wrapperClass={`input mb-4 ${
+                              isClicked && !picture ? "error" : ""
+                            }`}
                             size="lg"
                             id="form3"
                             type="file"
@@ -634,8 +793,15 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
+                          {isClicked && !idp && (
+                            <div className="error-message">
+                              ID picture is required.
+                            </div>
+                          )}
                           <MDBInput
-                            wrapperClass="mb-4"
+                            wrapperClass={`input mb-4 ${
+                              isClicked && !idp ? "error" : ""
+                            }`}
                             size="lg"
                             id="form4"
                             type="file"
@@ -646,17 +812,15 @@ const PhoneVerification = () => {
                           />
 
                           <div className="d-flex justify-content-end pt-3">
-                            <MDBBtn color="light" size="lg">
-                              Reset all
-                            </MDBBtn>
-                            <MDBBtn
-                              className="ms-2"
-                              color="danger"
-                              size="lg"
-                              onClick={saveUser}
+                            <button
+                              className="abutton mb-3"
+                              onClick={resetForm}
                             >
-                              Proceed
-                            </MDBBtn>
+                              RESET
+                            </button>
+                            <button className="abutton mb-3" onClick={saveUser}>
+                              PROCEED
+                            </button>
                           </div>
                         </MDBCardBody>
                       </MDBCol>
@@ -692,25 +856,47 @@ const PhoneVerification = () => {
                 zIndex: "-1",
               }}
             ></div>
-           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
-              <MDBContainer fluid className="wait-page my-4" style={{ backgroundColor: "white", color: "black", borderRadius: "10px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "100vh",
+              }}
+            >
+              <MDBContainer
+                fluid
+                className="wait-page-container my-4 d-flex flex-column align-items-center justify-content-center"
+                style={{
+                  backgroundColor: "white",
+                  maxWidth: "500px", // Adjust the max-width here
+                  color: "black",
+                  borderRadius: "10px",
+                  width: "100%",
+                  padding: "20px",
+                }}
+              >
                 <MDBCol md="8">
-                  <MDBRow
-                    id="wait-content"
-                    className="d-flex justify-content-center align-items-center"
-                  >
-                    <h1>We're evaluating your profile.</h1>
+                  <MDBRow id="wait-content" className="wait-message">
+                    <i className="fas fa-hourglass-half icon"></i>
+
+                    <h1 className="h mt-3">We’re evaluating your profile.</h1>
                     <p>
-                      In order to maintain our community standards, each profile is
-                      carefully reviewed before approval.
+                      In order to maintain our community standards, each profile
+                      is carefully reviewed before approval.
                     </p>
                   </MDBRow>
+                  <div className="button-container">
+                    <button
+                      className="ok-button mt-4"
+                      onClick={() => setStep("phone")}
+                    >
+                      OK
+                    </button>
+                  </div>
                 </MDBCol>
-                <button type="submit">OK</button>
               </MDBContainer>
             </div>
-
-
           </div>
         )}
 
@@ -743,20 +929,26 @@ const PhoneVerification = () => {
                 <MDBCol md="6">
                   <MDBCard className="my-4">
                     <MDBRow>
-
                       <MDBCol>
                         <MDBCardBody className="text-black d-flex flex-column justify-content-center">
                           <MDBCardTitle className="mb-4 text-uppercase fw-bold">
                             Upload Photo
                           </MDBCardTitle>
                           <MDBCardText>
-                            Please upload another photo because your ID and photo you
-                            provided are invalid.
+                            Please upload another photo because your ID and
+                            photo you provided are invalid.
                           </MDBCardText>
 
                           <MDBCardText>Upload your Picture here: </MDBCardText>
+                          {isClicked && !picture && (
+                            <div className="error-message">
+                              Profile picture is required.
+                            </div>
+                          )}
                           <MDBInput
-                            wrapperClass="mb-4"
+                            wrapperClass={`input mb-4 ${
+                              isClicked && !picture ? "error" : ""
+                            }`}
                             size="lg"
                             id="form3"
                             type="file"
@@ -767,8 +959,15 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
+                          {isClicked && !idp && (
+                            <div className="error-message">
+                              ID picture is required.
+                            </div>
+                          )}
                           <MDBInput
-                            wrapperClass="mb-4"
+                            wrapperClass={`input mb-4 ${
+                              isClicked && !idp ? "error" : ""
+                            }`}
                             size="lg"
                             id="form4"
                             type="file"
@@ -779,17 +978,18 @@ const PhoneVerification = () => {
                           />
 
                           <div className="d-flex justify-content-end pt-3">
-                            <MDBBtn color="light" size="lg">
-                              Reset all
-                            </MDBBtn>
-                            <MDBBtn
-                              className="ms-2"
-                              color="danger"
-                              size="lg"
+                            <button
+                              className="abutton mb-3"
+                              onClick={resetForm}
+                            >
+                              RESET
+                            </button>
+                            <button
+                              className="abutton mb-3"
                               onClick={update_photo}
                             >
-                              Proceed
-                            </MDBBtn>
+                              PROCEED
+                            </button>
                           </div>
                         </MDBCardBody>
                       </MDBCol>
@@ -801,13 +1001,10 @@ const PhoneVerification = () => {
           </div>
         )}
 
-        <div>
-        
-        </div>
+        <div></div>
       </div>
     </div>
-
-    );
+  );
 };
 
 export default PhoneVerification;

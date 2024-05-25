@@ -26,6 +26,7 @@
   .verify-btn {
     display: block;
     width: 100%;
+    font-weight: bold;
     padding: 12px;
     background-color: #000000;
     color: #fff;
@@ -59,6 +60,7 @@
   .code-btn{
     display: block;
     width: 100%;
+    font-weight: bold;
     padding: 12px;
     background-color: #000000;
     color: #fff;
@@ -82,14 +84,88 @@
   
   
   /* Confirmation message styles */
-  .wait-page{
-    .custom-container {
-      max-width: 800px; /* Adjust the maximum width as needed */
-    }
-  }
+
   .wait-message {
-    font-size: 24px;
+    font-size: 1em;
     text-align: center;
     margin-top: 20px;
   }
   
+  .icon {
+    color: #ffc107; 
+    font-size: 4em;
+  }
+
+  .h {
+    margin-top: 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  
+  p {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #555;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%; /* Ensures the container spans full width */
+  }
+  
+  .ok-button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    width: 70%;
+    font-size: 1.2em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .ok-button:hover {
+    background-color: #ff0000;
+  }
+
+  /* ERROR HANDLING */
+  .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid transparent; 
+    border-radius: 7px;
+    transition: border-color 0.3s; 
+    margin-bottom: 10px;
+  }
+  
+  .input.error {
+    border-color: red; 
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+  .error {
+    border: 1px solid red;
+  }
+  .abutton{
+    background-color: black;
+    color: white;
+    border-radius: 4px;
+    margin-left: 5%;
+    width: 25%;
+    font-size: 18px;
+    font-weight: bold;
+    height: 40px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .abutton:hover{
+    background-color: red;
+  }
