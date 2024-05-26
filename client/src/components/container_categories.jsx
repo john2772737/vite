@@ -18,6 +18,7 @@ const ProductList = ({ category }) => {
           },
         });
         setProducts(response.data);
+        console.log(response.data);
       } catch (error) {
         if (error.response) {
           setError(error.response.data.message);
@@ -33,13 +34,13 @@ const ProductList = ({ category }) => {
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      setCurrentIndex((prevIndex) => prevIndex - 1);
+      setCurrentIndex(prevIndex => prevIndex - 1);
     }
   };
-
+  
   const handleNext = () => {
-    if (currentIndex < products.length - 4) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
+    if (currentIndex < products.length - 1) {
+      setCurrentIndex(prevIndex => prevIndex + 1);
     }
   };
 
@@ -47,18 +48,18 @@ const ProductList = ({ category }) => {
     if (productListRef.current) {
       const containerWidth = productListRef.current.offsetWidth;
       const newPosition = currentIndex * containerWidth;
-      productListRef.current.style.transform = `translateX(-${newPosition}px)`;
+      productListRef.current.scrollTo({ left: newPosition, behavior: 'smooth' });
     }
   }, [currentIndex]);
 
   return (
-    <div className="product-list-container">
-      <h2>{category}</h2>
+    <div className="product-list-container" style={{marginBottom: '20px' }}>
+      <h3>{category}</h3>
       {error && <p className="error">{error}</p>}
-      <div className="product-list" ref={productListRef}>
-        {products.slice(currentIndex, currentIndex + 4).map((product, index) => (
-          <div key={product.id} style={{ marginRight: '10px' }}>
-            <Card product={product} />
+      <div className="product-list"  ref={productListRef} >
+        {products.map((product, index) => (
+          <div key={product.id} className="card-container">
+            <Card product={product} showTotalSold={true} />
           </div>
         ))}
       </div>

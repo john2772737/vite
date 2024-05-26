@@ -9,15 +9,20 @@ const home = () => {
     <div>
       <Banner/>
       <div className="p-6">
-      <ScrollableProductList category="Horror" />
-      <ScrollableProductList category="Comedy" />
+     
+      
       <ScrollableProductList category="Fantasy" />
+      <ScrollableProductList category="Horror" />
       <ScrollableProductList category="Romance" />
+      <ScrollableProductList category="Comedy" />
+      <ScrollableProductList category="Business" />
+      <ScrollableProductList category="Children's" />
+      <ScrollableProductList category="Educational" />
+      
    
     </div>
 
-      
-      <For_attraction />
+    
     </div>
   )
 }

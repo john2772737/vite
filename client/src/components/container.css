@@ -1,42 +1,72 @@
 .product-list-container {
-  position: relative;
-  overflow: hidden;
-  background-color: #f4f4f4;
+  background-color: #e5e7eb; /* Light gray background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+  position: relative; /* Ensure position relative for absolute positioning of buttons */
+  border: 2px solid #e5e7eb; /* Modern border with blue color */
 }
 
 .product-list {
+  
   display: flex;
-  flex-wrap: nowrap; /* Prevent cards from wrapping */
-  overflow-x: auto; /* Enable horizontal scrolling */
-  padding-bottom: 10px; /* Add padding at the bottom to ensure space for arrows */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  margin-top: 20px;
+  padding-bottom: 20px;
+  
 }
 
-.card {
-  margin-right: 10px; /* Add margin between cards */
+
+.card-container {
+  margin-right: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .arrow-button {
+  background: #ff5555; /* Red accent background color */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 24px;
-  outline: none;
-  color: white;
 }
 
+.product-list-container h3 {
+  color: black; /* Red accent color for the category title */
+  font-size: 28px; /* Larger font size */
+  font-weight: 600; /* Slightly lighter font weight */
+  margin-bottom: 15px; /* Increase space below the title */
+  text-transform: uppercase; /* Uppercase text */
+  letter-spacing: 1px; /* Add letter spacing for readability */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+  position: relative; /* Position relative for pseudo-elements */
+  display: inline-block; /* Ensure inline-block for pseudo-elements */
+}
+
+.product-list-container h3::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; /* Adjust position below the title */
+  left: 0;
+  width: 100%;
+  height: 3px; /* Height of the underline */
+  background-color: #ff5555; /* Red accent color for the underline */
+  border-radius: 2px; /* Rounded corners for the underline */
+}
+
+
+
 .left-arrow {
-  left: 10px;
+  left: 20px; /* Position on the left side */
 }
 
 .right-arrow {
-  right: 10px;
-}
-
-@media screen and (max-width: 768px) {
-  .arrow-button {
-    font-size: 20px;
-  }
+  right: 20px; /* Position on the right side */
 }
