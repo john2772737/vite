@@ -3,7 +3,17 @@ import PropTypes from "prop-types";
 import Table from "react-bootstrap/Table";
 import { useState, useEffect } from "react";
 
-function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onOpensModal, deleteP, showSearch }) {
+function TableComponent({
+  Heading,
+  Data,
+  Action,
+  onOpenModal,
+  updateProduct,
+  onOpensModal,
+  deleteP,
+  showSearch,
+  updateVoucher
+}) {
   // Define PropTypes
   TableComponent.propTypes = {
     Heading: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -36,10 +46,7 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
   return (
     <div className="table-container">
       {showSearch && (
-        <form
-          className="search-form"
-          onSubmit={handleSearch}
-        >
+        <form className="search-form" onSubmit={handleSearch}>
           <input
             type="text"
             placeholder="Search for Books"
@@ -48,10 +55,7 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
             onChange={(e) => setSearchQuery(e.target.value)}
             value={searchQuery}
           />
-          <button
-            type="submit"
-            className="search-button"
-          >
+          <button type="submit" className="search-button">
             Search
           </button>
         </form>
@@ -64,6 +68,7 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
               {Heading.map((item, index) => (
                 <th key={index}>{item}</th>
               ))}
+              {updateVoucher && <th>Update Voucher</th>}
               {Action && <th>Action</th>}
               {updateProduct && <th>Action</th>}
             </tr>
@@ -108,6 +113,29 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
                       data-modal-toggle="crud-modals"
                     >
                       delete Product
+                    </button>
+                  </td>
+                )}
+
+                {updateVoucher && (
+                  <td>
+                    <button
+                      onClick={() => onOpensModal(item[0])}
+                      className="action-button"
+                      type="button"
+                      data-modal-target="crud-modals"
+                      data-modal-toggle="crud-modals"
+                    >
+                      update Voucher
+                    </button>
+                    <button
+                      onClick={() => deleteP(item[0])}
+                      className="action-button"
+                      type="button"
+                      data-modal-target="crud-modals"
+                      data-modal-toggle="crud-modals"
+                    >
+                      delete Voucher
                     </button>
                   </td>
                 )}

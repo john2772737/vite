@@ -205,22 +205,31 @@ console.log(selectedProduct)
         imageDb,
         "profiles/" + profilePictureFile.name
       );
+  
+      const uploadPromise = uploadBytes(profilePictureRef, profilePictureFile)
+        .then(() => getDownloadURL(profilePictureRef));
+  
 
-      await uploadBytes(profilePictureRef, profilePictureFile);
-      // Retrieve the download URL of the profile picture
-      const url = await getDownloadURL(profilePictureRef);
-      console.log(url);
-
+      const url = await toast.promise(
+        uploadPromise,
+        {
+          loading: 'Saving...',
+          success: 'Product created successfully',
+          error: 'Error creating product'
+        }
+      );
+  
       const updateCreateProduct = {
         firebaseUid: currentUserUid,
         ...createProduct,
         imageUrl: url,
       };
-
+  
       const response = await axios.post(
         `http://localhost:4000/product/createProduct`,
         updateCreateProduct
       );
+  
       console.log("Response data:", response.data);
       setcreateModal(false);
       fetchData();

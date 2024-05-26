@@ -11,6 +11,8 @@ const home = () => {
       <div className="p-6">
       <ScrollableProductList category="Horror" />
       <ScrollableProductList category="Comedy" />
+      <ScrollableProductList category="Fantasy" />
+      <ScrollableProductList category="Romance" />
    
     </div>
 
