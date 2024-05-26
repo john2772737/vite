@@ -137,19 +137,7 @@
     transition: border-color 0.3s; /* Add transition for smooth effect */
     margin-bottom: 10px;
   }
-  
-  .input.error {
-    border-color: red; /* Border color when input has error */
-  }
-  
-  .error-message {
-    color: red;
-    font-size: 15px;
-    margin-bottom: 5px;
-  }
-  .error {
-    border: 1px solid red;
-  }
+
   .abutton{
     background-color: black;
     color: white;
