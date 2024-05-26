@@ -28,6 +28,7 @@ import Inventory from "./pages/seller/inventory";
 import AddProduct from "./pages/seller/addproduct";
 import MyVoucher from "./pages/seller/voucher";
 import NotifSeller from "./pages/seller/sellernotif";
+import Product_Income from "./pages/seller/product_income";
 import { FirebaseProvider } from "./utils/context";
 import PrivateRoute from "./utils/privateroute";
 import { FirebaseProvideruser }  from "./utils/usercontext";
@@ -73,7 +74,8 @@ function App() {
         <Route path="/seller/inventory" element={<PrivateRoute element={Inventory} />} />
         <Route path="/seller/addproduct" element={<PrivateRoute element={AddProduct} />} />
         <Route path="/seller/voucher" element={<PrivateRoute element={MyVoucher} />} />
-        <Route path="/seller/sellernotif" element={<NotifSeller />} />
+        <Route path="/seller/product_income" element={<PrivateRoute element={Product_Income} />} />
+        {/* <Route path="/seller/sellernotif" element={<NotifSeller />} /> */}
       </Route>
   
 

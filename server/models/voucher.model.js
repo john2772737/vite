@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+import Seller from './seller.model'
 
 // Define the Voucher Schema
 const voucherSchema = new Schema({

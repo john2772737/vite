@@ -116,7 +116,7 @@ const listProductQuery = async (req, res) => {
   }
 };
 
-module.exports = listProductQuery;
+
 
 
 module.exports={
