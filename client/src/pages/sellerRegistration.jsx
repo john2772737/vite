@@ -34,6 +34,203 @@ import axios from "axios";
 import { imageDb } from "../utils/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useFirebase } from "../utils/context";
+
+const validCities = [
+  "MANILA",
+  "QUEZON",
+  "CEBU",
+  "DAVAO",
+  "ZAMBOANGA",
+  "CANDABA",
+  "GUAGUA",
+  "ABUCAY",
+  "BAGAC",
+  "DINALUPIHAN",
+  "HERMOSA",
+  "LIMAY",
+  "MARIVELES",
+  "ORANI",
+  "ORION",
+  "PILAR",
+  "SAMAL",
+  "ANGELES",
+  "APALIT",
+  "ARAYAT",
+  "BACOLOR",
+  "CANDABA",
+  "FLORIDABLANCA",
+  "GUAGUA",
+  "MABALACAT",
+  "MACABEBE",
+  "MAGALANG",
+  "MASANTOL",
+  "MEXICO",
+  "MINALIN",
+  "PORAC",
+  "SAN FERNANDO",
+  "SAN LUIS",
+  "SAN SIMON",
+  "SANTA ANA",
+  "SANTA RITA",
+  "SANTO TOMAS",
+  "SASMUAN",
+  "ANAO",
+  "BAMBAN",
+  "CAMILING",
+  "CAPAS",
+  "CONCEPCION",
+  "GERONA",
+  "LA PAZ",
+  "MAYANTOC",
+  "MONCADA",
+  "PANIQUI",
+  "PURA",
+  "RAMOS",
+  "SAN CLEMENTE",
+  "SAN MANUEL",
+  "SANTA IGNACIA",
+  "TARLAC CITY",
+  "VICTORIA",
+  "ALAMINOS",
+  "ALCALA",
+  "ANDA",
+  "ASINGAN",
+  "BALUNGAO",
+  "BANI",
+  "BASISTA",
+  "BAYAMBANG",
+  "BINALONAN",
+  "BINMALEY",
+  "BOLINAO",
+  "BUGALLON",
+  "BURGOS",
+  "CALASIAO",
+  "DAGUPAN",
+  "DASOL",
+  "INFANTA",
+  "LABRADOR",
+  "LINGAYEN",
+  "MABINI",
+  "MALASIQUI",
+  "MANAOAG",
+  "MANGALDAN",
+  "MANGATAREM",
+  "MAPANDAN",
+  "NATIVIDAD",
+  "POZORRUBIO",
+  "ROSALES",
+  "SAN CARLOS",
+  "SAN FABIAN",
+  "SAN JACINTO",
+  "SAN MANUEL",
+  "SAN NICOLAS",
+  "SAN QUINTIN",
+  "SANTA BARBARA",
+  "SANTA MARIA",
+  "SANTO TOMAS",
+  "SISON",
+  "SUAL",
+  "TAYUG",
+  "UMINGAN",
+  "URBIZTONDO",
+  "VILLASIS",
+  "LAOAC",
+  "LUPAO",
+  "NAMPICUAN",
+  "QUEZON",
+  "RIZAL",
+  "SAN LEONARDO",
+  "SANTO DOMINGO",
+  "TALAVERA",
+  "CABANATUAN",
+  "GAPAN",
+  "PALAYAN",
+];
+
+const validStates = [
+  "ABRA",
+  "AGUSAN DEL NORTE",
+  "AGUSAN DEL SUR",
+  "AKLAN",
+  "ALBAY",
+  "ANTIQUE",
+  "APAYAO",
+  "AURORA",
+  "BASILAN",
+  "BATAAN",
+  "BATANES",
+  "BATANGAS",
+  "BENGUET",
+  "BILIRAN",
+  "BOHOL",
+  "BUKIDNON",
+  "BULACAN",
+  "CAGAYAN",
+  "CAMARINES NORTE",
+  "CAMARINES SUR",
+  "CAMIGUIN",
+  "CAPIZ",
+  "CATANDUANES",
+  "CAVITE",
+  "CEBU",
+  "COMPOSTELA VALLEY",
+  "COTABATO",
+  "DAVAO DEL NORTE",
+  "DAVAO DEL SUR",
+  "DAVAO OCCIDENTAL",
+  "DAVAO ORIENTAL",
+  "DINAGAT ISLANDS",
+  "EASTERN SAMAR",
+  "GUIMARAS",
+  "IFUGAO",
+  "ILOCOS NORTE",
+  "ILOCOS SUR",
+  "ILOILO",
+  "ISABELA",
+  "KALINGA",
+  "LA UNION",
+  "LAGUNA",
+  "LANAO DEL NORTE",
+  "LANAO DEL SUR",
+  "LEYTE",
+  "MAGUINDANAO",
+  "MARINDUQUE",
+  "MASBATE",
+  "MISAMIS OCCIDENTAL",
+  "MISAMIS ORIENTAL",
+  "MOUNTAIN PROVINCE",
+  "NEGROS OCCIDENTAL",
+  "NEGROS ORIENTAL",
+  "NORTHERN SAMAR",
+  "NUEVA ECIJA",
+  "NUEVA VIZCAYA",
+  "OCCIDENTAL MINDORO",
+  "ORIENTAL MINDORO",
+  "PALAWAN",
+  "PAMPANGA",
+  "PANGASINAN",
+  "QUEZON",
+  "QUIRINO",
+  "RIZAL",
+  "ROMBLON",
+  "SAMAR",
+  "SARANGANI",
+  "SIQUIJOR",
+  "SORSOGON",
+  "SOUTH COTABATO",
+  "SOUTHERN LEYTE",
+  "SULTAN KUDARAT",
+  "SULU",
+  "SURIGAO DEL NORTE",
+  "SURIGAO DEL SUR",
+  "TARLAC",
+  "TAWI-TAWI",
+  "ZAMBALES",
+  "ZAMBOANGA DEL NORTE",
+  "ZAMBOANGA DEL SUR",
+  "ZAMBOANGA SIBUGAY",
+];
+
 const PhoneVerification = () => {
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
@@ -42,6 +239,10 @@ const PhoneVerification = () => {
   const navigate = useNavigate();
   const { currentUser } = useFirebase();
 
+  // const sample = () => {
+  //   setStep("form");
+  // };
+
   useEffect(() => {
     const checkApproval = async () => {
       if (currentUser && currentUser !== null) {
@@ -49,16 +250,16 @@ const PhoneVerification = () => {
           `http://localhost:4000/seller/findPhoneNumber/${phoneNumber}`
         );
         const seller = exists.data.seller;
-        
+
         if (seller.approved === "true") {
-          navigate('/seller/dashboard');
+          navigate("/seller/dashboard");
         }
       }
     };
-  
+
     checkApproval();
   }, [currentUser, navigate, phoneNumber]);
-  
+
   const [Data, setData] = useState({
     firebaseuid: "",
     firstname: "",
@@ -192,62 +393,162 @@ const PhoneVerification = () => {
   };
 
   const uploadPhoto = () => {
+    if (
+      !Data.firstname ||
+      !Data.lastname ||
+      !Data.city ||
+      !Data.state ||
+      !Data.zip ||
+      !Data.birthday ||
+      !Data.shopname ||
+      !Data.email ||
+      !Data.password ||
+      !confirmPass
+    ) {
+      toast.error("Please fill out all fields.");
+      return;
+    }
+    const nameRegex = /^[A-Za-z]+$/;
+    if (!nameRegex.test(Data.firstname) || !nameRegex.test(Data.lastname)) {
+      toast.error("Firstname and Lastname must contain only letters.");
+      return;
+    }
+    // Validate city and state (province) for the Philippines
+    const capitalizedCity = Data.city.toUpperCase();
+    if (!validCities.includes(capitalizedCity) || /\d/.test(capitalizedCity)) {
+      toast.error(
+        "Invalid city. Please enter a valid city in the Philippines without numbers in all capital letters."
+      );
+      return;
+    }
+
+    const capitalizedState = Data.state.toUpperCase();
+    if (
+      !validStates.includes(capitalizedState) ||
+      /\d/.test(capitalizedState)
+    ) {
+      toast.error(
+        "Invalid state. Please enter a valid state (province) in the Philippines without numbers in all capital letters."
+      );
+      return;
+    }
+    const zipCodeRegex = /^\d+$/;
+    if (!zipCodeRegex.test(Data.zip)) {
+      toast.error("Invalid zip code.");
+      return;
+    }
+
+    // Validate age (should be at least 18 years old)
+    const today = new Date();
+    const birthdayDate = new Date(Data.birthday);
+    const ageDifference = today.getFullYear() - birthdayDate.getFullYear();
+    const isAdult =
+      ageDifference > 18 ||
+      (ageDifference === 18 && today.getMonth() > birthdayDate.getMonth()) ||
+      (ageDifference === 18 &&
+        today.getMonth() === birthdayDate.getMonth() &&
+        today.getDate() >= birthdayDate.getDate());
+
+    if (!isAdult) {
+      toast.error("You must be at least 18 years old.");
+      return;
+    }
+
+    // Validate email format to include @gmail.com
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(Data.email)) {
+      toast.error(
+        "Email must be a valid Gmail address. (e.g., example@gmail.com)"
+      );
+      return;
+    }
+    // Validate password to include at least one letter and one number
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(Data.password)) {
+      toast.error("Password must contain at least one letter and one number.");
+      return;
+    }
+
     if (Data.password !== confirmPass) {
       toast.error("Password do not Match");
+      return;
+    }
+
+    if (Data.password.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
       return;
     }
     setStep("Photo");
   };
 
+  const resetForm = () => {
+    setData({
+      firstname: "",
+      lastname: "",
+      city: "",
+      zip: "",
+      state: "",
+      shopname: "",
+      password: "",
+      email: "",
+      birthday: "",
+      picture: "",
+      idPicture: "",
+    });
+    setConfirmpass("");
+  };
+
   const saveUser = async (event) => {
     event.preventDefault();
     try {
-      // Assuming idPicture is set in your data state
-      const profilePictureFile = picture;
-      const idPictureFile = idp;
-
+      const profilePictureFile = picture; // Assuming 'picture' is defined in your state
+      const idPictureFile = idp; // Assuming 'idp' is defined in your state
+  
       if (!profilePictureFile || !idPictureFile) {
-        toast.error("Both profile picture and ID picture are required");
+        toast.error("Both profile picture and ID picture are required.");
+        return; // Exit the function if files are missing
       }
-
-      const profilePictureRef = ref(
-        imageDb,
-        "profiles/" + profilePictureFile.name
-      );
+  
+      const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
       const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-
-      // Upload the profile picture
-      await uploadBytes(profilePictureRef, profilePictureFile);
-      // Retrieve the download URL of the profile picture
-      const profilePictureURL = await getDownloadURL(profilePictureRef);
-
-      // Upload the ID picture
-      await uploadBytes(idPictureRef, idPictureFile);
-      // Retrieve the download URL of the ID picture
-      const idPictureURL = await getDownloadURL(idPictureRef);
-      const address = `${Data.city}, ${Data.state}, ${Data.zip}`;
+  
+      // Use toast.promise to handle the upload process
+      const [profilePictureURL, idPictureURL] = await toast.promise(
+        Promise.all([
+          uploadBytes(profilePictureRef, profilePictureFile).then(() => getDownloadURL(profilePictureRef)),
+          uploadBytes(idPictureRef, idPictureFile).then(() => getDownloadURL(idPictureRef))
+        ]),
+        {
+          loading: "Uploading pictures...",
+          success: "Pictures uploaded successfully!",
+          error: "Failed to upload pictures"
+        }
+      );
+  
       const updatedData = {
         ...Data, // Include existing data
-        address: address,
         picture: profilePictureURL,
         idPicture: idPictureURL,
         submit: "true", // Set the 'submit' field to true
       };
-
-      const response = await axios.put(
-        `http://localhost:4000/seller/updateSeller/${uid}`,
-        updatedData
+  
+      // Use toast.promise for the axios request
+      await toast.promise(
+        axios.put(`http://localhost:4000/seller/updateSeller/${uid}`, updatedData),
+        {
+          loading: "Saving user data...",
+          success: "User data saved successfully!",
+          error: "Failed to save user data. Please try again later."
+        }
       );
-
-      toast.success(response.data.message);
+  
       setStep("phone");
     } catch (error) {
       console.error("Error:", error.message);
-      // Handle error, show it to the user, or do any necessary cleanup
-      // For example, you can show an error toast
       toast.error("Failed to save user data. Please try again later.");
     }
   };
+  
 
   const handleFormChanges = (event) => {
     const { name, value } = event.target;
@@ -287,7 +588,7 @@ const PhoneVerification = () => {
       const idPictureFile = idp;
 
       if (!profilePictureFile || !idPictureFile) {
-        toast.error("Both profile picture and ID picture are required");
+        toast.error("Both profile picture and ID picture are required.");
       }
 
       const profilePictureRef = ref(
@@ -296,15 +597,22 @@ const PhoneVerification = () => {
       );
       const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
 
-      // Upload the profile picture
-      await uploadBytes(profilePictureRef, profilePictureFile);
-      // Retrieve the download URL of the profile picture
-      const profilePictureURL = await getDownloadURL(profilePictureRef);
+      // Upload profile picture and ID picture concurrently
+      const uploadProfilePromise = uploadBytes(
+        profilePictureRef,
+        profilePictureFile
+      );
+      const uploadIdPromise = uploadBytes(idPictureRef, idPictureFile);
 
-      // Upload the ID picture
-      await uploadBytes(idPictureRef, idPictureFile);
-      // Retrieve the download URL of the ID picture
-      const idPictureURL = await getDownloadURL(idPictureRef);
+      // Use toast.promise to handle loading indicator and success/error messages
+      const [profilePictureURL, idPictureURL] = await toast.promise(
+        Promise.all([uploadProfilePromise, uploadIdPromise]),
+        {
+          loading: "Uploading...",
+          success: "Pictures uploaded successfully",
+          error: "Failed to upload pictures",
+        }
+      );
 
       const updatedData = {
         approved: "false",
@@ -316,14 +624,13 @@ const PhoneVerification = () => {
         `http://localhost:4000/seller/updateSeller/${uid}`,
         updatedData
       );
-      // Handle successful response
 
-      toast.success("Uploaded succesfully please wait for Approval");
+      // Handle successful response
+      toast.success("Uploaded successfully, please wait for approval.");
       setStep("phone");
     } catch (error) {
       console.error("Error:", error.message);
       // Handle error, show it to the user, or do any necessary cleanup
-      // For example, you can show an error toast
       toast.error("Failed to save user data. Please try again later.");
     }
   };
@@ -371,6 +678,7 @@ const PhoneVerification = () => {
                   <MDBRow className="justify-content-center">
                     <MDBCardText>
                       <Input
+                        className="input text-center"
                         country="PH"
                         international
                         withCountryCallingCode
@@ -434,7 +742,7 @@ const PhoneVerification = () => {
                     <MDBCardText>
                       Verification Code:
                       <MDBInput
-                        className="code-input"
+                        className="code-input text-center"
                         type="text"
                         value={verificationCode}
                         onChange={(e) => setVerificationCode(e.target.value)}
@@ -606,18 +914,22 @@ const PhoneVerification = () => {
                         value={confirmPass}
                         onChange={handleConfirmPassChange}
                       />
+
                       <div className="d-flex justify-content-end pt-3">
-                        <MDBBtn color="light" size="lg">
-                          Reset all
-                        </MDBBtn>
-                        <MDBBtn
-                          className="ms-2"
-                          color="danger"
-                          size="lg"
+                        <button
+                          className="abutton mb-3"
+                          type="button"
+                          onClick={resetForm}
+                        >
+                          RESET
+                        </button>
+                        <button
+                          className="abutton mb-3"
+                          type="button"
                           onClick={uploadPhoto}
                         >
-                          Proceed
-                        </MDBBtn>
+                          PROCEED
+                        </button>
                       </div>
                     </MDBCardBody>
                   </MDBCard>
@@ -693,17 +1005,9 @@ const PhoneVerification = () => {
                           />
 
                           <div className="d-flex justify-content-end pt-3">
-                            <MDBBtn color="light" size="lg">
-                              Reset all
-                            </MDBBtn>
-                            <MDBBtn
-                              className="ms-2"
-                              color="danger"
-                              size="lg"
-                              onClick={saveUser}
-                            >
-                              Proceed
-                            </MDBBtn>
+                            <button className="abutton mb-3" onClick={saveUser}>
+                              PROCEED
+                            </button>
                           </div>
                         </MDBCardBody>
                       </MDBCol>
@@ -749,26 +1053,35 @@ const PhoneVerification = () => {
             >
               <MDBContainer
                 fluid
-                className="wait-page my-4"
+                className="wait-page-container my-4 d-flex flex-column align-items-center justify-content-center"
                 style={{
                   backgroundColor: "white",
+                  maxWidth: "500px", // Adjust the max-width here
                   color: "black",
                   borderRadius: "10px",
+                  width: "100%",
+                  padding: "20px",
                 }}
               >
                 <MDBCol md="8">
-                  <MDBRow
-                    id="wait-content"
-                    className="d-flex justify-content-center align-items-center"
-                  >
-                    <h1>We're evaluating your profile.</h1>
+                  <MDBRow id="wait-content" className="wait-message">
+                    <i className="fas fa-hourglass-half icon"></i>
+
+                    <h1 className="h mt-3">We’re evaluating your profile.</h1>
                     <p>
                       In order to maintain our community standards, each profile
                       is carefully reviewed before approval.
                     </p>
                   </MDBRow>
+                  <div className="button-container">
+                    <button
+                      className="ok-button mt-4"
+                      onClick={() => setStep("phone")}
+                    >
+                      OK
+                    </button>
+                  </div>
                 </MDBCol>
-                <button type="submit">OK</button>
               </MDBContainer>
             </div>
           </div>
@@ -838,17 +1151,12 @@ const PhoneVerification = () => {
                           />
 
                           <div className="d-flex justify-content-end pt-3">
-                            <MDBBtn color="light" size="lg">
-                              Reset all
-                            </MDBBtn>
-                            <MDBBtn
-                              className="ms-2"
-                              color="danger"
-                              size="lg"
+                            <button
+                              className="abutton mb-3"
                               onClick={update_photo}
                             >
-                              Proceed
-                            </MDBBtn>
+                              PROCEED
+                            </button>
                           </div>
                         </MDBCardBody>
                       </MDBCol>
