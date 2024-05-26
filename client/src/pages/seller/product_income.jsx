@@ -77,6 +77,7 @@ function ProductIncome() {
       <TableComponent
         Heading={heading}
         Data={setlist}
+        showSearch={true}
    
       />
     </div>

@@ -757,6 +757,7 @@ console.log(selectedProduct)
         updateProduct={true}
         onOpensModal={updateStock}
         deleteP={handleDelete}
+        showSearch={true}
       />
     </div>
   );

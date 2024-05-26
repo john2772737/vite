@@ -2,9 +2,8 @@
 import PropTypes from "prop-types";
 import Table from "react-bootstrap/Table";
 import { useState, useEffect } from "react";
- // Import the CSS file for custom styles
 
-function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onOpensModal , deleteP }) {
+function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onOpensModal, deleteP, showSearch }) {
   // Define PropTypes
   TableComponent.propTypes = {
     Heading: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -14,6 +13,7 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
     Action: PropTypes.bool.isRequired,
     onOpenModal: PropTypes.func.isRequired,
     onOpensModal: PropTypes.func.isRequired,
+    showSearch: PropTypes.bool.isRequired,
   };
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,27 +35,27 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
 
   return (
     <div className="table-container">
-    
- 
-      <form
-        className="search-form"
-        onSubmit={handleSearch}
-      >
-        <input
-          type="text"
-          placeholder="Search for Books"
-          className="search-input"
-          name="topic"
-          onChange={(e) => setSearchQuery(e.target.value)}
-          value={searchQuery}
-        />
-        <button
-          type="submit"
-          className="search-button"
+      {showSearch && (
+        <form
+          className="search-form"
+          onSubmit={handleSearch}
         >
-          Search
-        </button>
-      </form>
+          <input
+            type="text"
+            placeholder="Search for Books"
+            className="search-input"
+            name="topic"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+          />
+          <button
+            type="submit"
+            className="search-button"
+          >
+            Search
+          </button>
+        </form>
+      )}
       <div className="table-responsive">
         <Table className="table-custom">
           <thead>
@@ -65,7 +65,7 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
                 <th key={index}>{item}</th>
               ))}
               {Action && <th>Action</th>}
-              {updateProduct && <th>Action</th> }
+              {updateProduct && <th>Action</th>}
             </tr>
           </thead>
           <tbody>
@@ -110,8 +110,6 @@ function TableComponent({ Heading, Data, Action, onOpenModal, updateProduct, onO
                       delete Product
                     </button>
                   </td>
-
-                  
                 )}
               </tr>
             ))}

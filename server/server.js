@@ -4,7 +4,8 @@ const cors = require("cors");
 const adminroute = require("./router/admin.router");
 const sellerroute=require('./router/seller.route');
 const userRoute= require('./router/user.route');
-const productRoute= require('./router/product.router')
+const productRoute= require('./router/product.router') 
+const voucherRoute= require('./router/voucher.router')
 
 
 
@@ -18,6 +19,7 @@ app.use("/admin", adminroute);
 app.use("/seller",sellerroute);
 app.use("/user",userRoute);
 app.use('/product',productRoute);
+app.use('/voucher',voucherRoute);
 
 const PORT = 4000;
 mongooese

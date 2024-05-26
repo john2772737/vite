@@ -293,6 +293,7 @@ const handleItemChange = (e) => {
         Data={setlist}
         Action={true}
         onOpenModal={updateStock}
+        showSearch={true}
       />
     </div>
   );
