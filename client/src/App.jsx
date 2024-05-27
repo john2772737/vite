@@ -20,6 +20,7 @@ import CartCustomer from "./pages/user/cart_customer";
 import PurchaseCustomer from "./pages/user/purchase_customer";
 import NotifCustomer from "./pages/user/notification_customer";
 import LoginCustomer from "./pages/user/login_customer";
+import Seecategoryp from "./pages/user/seecategoryp";
 
 import Seller from "./pages/seller/seller";
 import SellerDashboard from "./pages/seller/sellerdashboard";
@@ -32,7 +33,7 @@ import Product_Income from "./pages/seller/product_income";
 import { FirebaseProvider } from "./utils/context";
 import PrivateRoute from "./utils/privateroute";
 import { FirebaseProvideruser }  from "./utils/usercontext";
-
+import Allproduct from './pages/user/allproducts'
 import PrivateRouteuser from "./utils/privateuser";
 function App() {
   return (
@@ -51,6 +52,8 @@ function App() {
         <Route path="/user/live" element={< PrivateRouteuser element={LiveCustomer} />} />
         <Route path="/user/cart" element={< PrivateRouteuser element={CartCustomer} />} />
         <Route path="/user/purchase" element={< PrivateRouteuser element={PurchaseCustomer} />} />
+        <Route path="/user/seecategory" element={< PrivateRouteuser element={Seecategoryp} />} />
+        <Route path="/user/allproduct" element={< PrivateRouteuser element={Allproduct} />} />
         <Route path="/user/notif" element={< PrivateRouteuser element={NotifCustomer} />} />
         {/* <Route path="profile" element={< PrivateRouteuser element={}Profile />}>
           <Route index element={< PrivateRouteuser element={}Editprofile />} />

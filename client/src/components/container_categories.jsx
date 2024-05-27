@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Card from './cardcomponent'; // Assuming Card.js is in the same directory
 import './container.css';
+import { useNavigate } from 'react-router-dom';
 
 const ProductList = ({ category }) => {
   const [products, setProducts] = useState([]);
@@ -52,19 +53,30 @@ const ProductList = ({ category }) => {
     }
   }, [currentIndex]);
 
+  const navigate= useNavigate()
+
+  const handleAll = () => {
+    navigate('/user/seecategory', { state: { category } });
+  };
+
   return (
-    <div className="product-list-container" style={{marginBottom: '20px' }}>
-      <h3>{category}</h3>
+    <div className="product-list-container" style={{ marginBottom: '20px' }}>
+      <div className="header">
+        <h3>{category}</h3>
+        <button className="see-all-button" onClick={handleAll}>See all</button>
+      </div>
       {error && <p className="error">{error}</p>}
-      <div className="product-list"  ref={productListRef} >
-        {products.map((product, index) => (
+      <div className="product-list" ref={productListRef}>
+        {products.map((product) => (
           <div key={product.id} className="card-container">
             <Card product={product} showTotalSold={true} />
           </div>
         ))}
       </div>
-      <button onClick={handlePrev} className="arrow-button left-arrow">&#10094;</button>
-      <button onClick={handleNext} className="arrow-button right-arrow">&#10095;</button>
+      <div className="controls">
+        <button onClick={handlePrev} className="arrow-button left-arrow">&#10094;</button>
+        <button onClick={handleNext} className="arrow-button right-arrow">&#10095;</button>
+      </div>
     </div>
   );
 };

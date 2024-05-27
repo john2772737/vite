@@ -7,15 +7,18 @@
   border: 2px solid #e5e7eb; /* Modern border with blue color */
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .product-list {
-  
   display: flex;
   overflow-x: hidden; /* Hide horizontal scrollbar */
   margin-top: 20px;
   padding-bottom: 20px;
-  
 }
-
 
 .card-container {
   margin-right: 20px;
@@ -61,12 +64,19 @@
   border-radius: 2px; /* Rounded corners for the underline */
 }
 
-
-
 .left-arrow {
   left: 20px; /* Position on the left side */
 }
 
 .right-arrow {
   right: 20px; /* Position on the right side */
+}
+
+.see-all-button {
+  background-color: #ff5555;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px; /* Optional: add some border radius */
 }

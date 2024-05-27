@@ -3,3 +3,8 @@
     margin: 15px; /* Adjust margin as needed */
   }
   
+
+  .text-sm {
+    padding: 0.2rem 0.5rem; /* Adjust the padding as needed */
+    font-size: 0.65rem; /* Adjust the font size as needed */
+  }

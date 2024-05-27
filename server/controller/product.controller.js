@@ -116,6 +116,27 @@ const listProductQuery = async (req, res) => {
   }
 };
 
+const allproducts = async (req, res) => {
+  try {
+      const products = await Product.find();
+      res.status(200).json(products);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+};
+
+const getSuggestions = async (req, res) => {
+  try {
+      const partialQuery = req.query.q; // Assuming 'q' is the parameter for the partial search query
+      // Use partialQuery to find matching suggestions
+      const suggestions = await Product.find({ name: { $regex: new RegExp(`^${partialQuery}`, 'i') } }).limit(5); // Example: Searching product names
+      res.status(200).json(suggestions);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+};
+
+
 
 
 
@@ -125,6 +146,8 @@ module.exports={
     getsingleProduct,
     updateProduct,
     deleteProduct,
-    listProductQuery
+    listProductQuery,
+    allproducts,
+    getSuggestions,
     
 }
