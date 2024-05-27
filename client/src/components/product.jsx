@@ -1,9 +1,9 @@
 import React from 'react'
 
-function product() {
+const product = () => {
   return (
     <div>
-      dsdsd
+      
     </div>
   )
 }
