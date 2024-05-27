@@ -11,11 +11,11 @@ const firebaseConfig = {
   projectId: "auth-c921f",
   storageBucket: "auth-c921f.appspot.com",
   messagingSenderId: "389343469622",
-  appId: "1:389343469622:web:7ce35d8394ee0e65253897"
+  appId: "1:389343469622:web:c111b4f5c0cb6996253897"
 };
 
 // Initialize Firebase app
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig,'seller');
 
 // Get the auth instance
 const auth = getAuth(app);

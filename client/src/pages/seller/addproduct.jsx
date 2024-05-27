@@ -109,49 +109,35 @@ function AddProduct() {
   };
 
   const handleUpdate = async () => {
-
     try {
-      const profilePictureFile = idp;
+      let url = selectedProduct.imageUrl;
+      if (idp) {
+        const profilePictureRef = ref(imageDb, "profiles/" + idp.name);
+        await uploadBytes(profilePictureRef, idp);
+        url = await getDownloadURL(profilePictureRef);
+      }
 
-      if (profilePictureFile){
-      const profilePictureRef = ref(
-        imageDb,
-        "profiles/" + profilePictureFile.name
-      );
-
-      await uploadBytes(profilePictureRef, profilePictureFile);
-      // Retrieve the download URL of the profile picture
-      const url = await getDownloadURL(profilePictureRef);
-      console.log(url);
-
-
-      
-      const updateCreateProduct = {
+      const updateProduct = {
         name: selectedProduct.name,
         imageUrl: url,
         description: selectedProduct.description,
         price: selectedProduct.price,
         category: selectedProduct.category,
-       
       };
-
 
       await axios.put(
         `http://localhost:4000/product/updateProduct/${selectedProduct._id}`,
-        updateCreateProduct
+        updateProduct
       );
 
       closeModal();
       fetchData();
-    }  
-
-
-
     } catch (error) {
       console.log("Error updating product stock:", error);
     }
   };
-console.log(selectedProduct)
+
+
 
 
 
