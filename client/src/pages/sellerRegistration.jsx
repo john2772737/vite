@@ -408,11 +408,13 @@ const PhoneVerification = () => {
       toast.error("Please fill out all fields.");
       return;
     }
-    const nameRegex = /^[A-Za-z]+$/;
+
+    const nameRegex = /^[A-Z][a-zA-Z\s]*$/;
     if (!nameRegex.test(Data.firstname) || !nameRegex.test(Data.lastname)) {
-      toast.error("Firstname and Lastname must contain only letters.");
+      toast.error("Firstname and Lastname must contain only letters and start with a capital letter.");
       return;
     }
+
     // Validate city and state (province) for the Philippines
     const capitalizedCity = Data.city.toUpperCase();
     if (!validCities.includes(capitalizedCity) || /\d/.test(capitalizedCity)) {
@@ -525,12 +527,15 @@ const PhoneVerification = () => {
         }
       );
   
+      const address = `${Data.city}, ${Data.state}, ${Data.zip}`;
       const updatedData = {
         ...Data, // Include existing data
+        address: address,
         picture: profilePictureURL,
         idPicture: idPictureURL,
         submit: "true", // Set the 'submit' field to true
       };
+
   
       // Use toast.promise for the axios request
       await toast.promise(
@@ -583,57 +588,59 @@ const PhoneVerification = () => {
   const update_photo = async (event) => {
     event.preventDefault();
     try {
-      // Assuming idPicture is set in your data state
+      // Assuming 'picture' and 'idp' are set in your data state
       const profilePictureFile = picture;
       const idPictureFile = idp;
-
+  
       if (!profilePictureFile || !idPictureFile) {
-        toast.error("Both profile picture and ID picture are required.");
+        toast.error("Both profile picture and ID picture are required");
+        return; // Exit the function if files are missing
       }
-
-      const profilePictureRef = ref(
-        imageDb,
-        "profiles/" + profilePictureFile.name
-      );
+  
+      const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
       const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-
-      // Upload profile picture and ID picture concurrently
-      const uploadProfilePromise = uploadBytes(
-        profilePictureRef,
-        profilePictureFile
-      );
-      const uploadIdPromise = uploadBytes(idPictureRef, idPictureFile);
-
-      // Use toast.promise to handle loading indicator and success/error messages
+  
+      // Use toast.promise to handle the upload process
       const [profilePictureURL, idPictureURL] = await toast.promise(
-        Promise.all([uploadProfilePromise, uploadIdPromise]),
+        Promise.all([
+          uploadBytes(profilePictureRef, profilePictureFile).then(() => getDownloadURL(profilePictureRef)),
+          uploadBytes(idPictureRef, idPictureFile).then(() => getDownloadURL(idPictureRef))
+        ]),
         {
-          loading: "Uploading...",
-          success: "Pictures uploaded successfully",
-          error: "Failed to upload pictures",
+          loading: "Uploading pictures...",
+          success: "Pictures uploaded successfully!",
+          error: "Failed to upload pictures"
         }
       );
-
+  
       const updatedData = {
         approved: "false",
         picture: profilePictureURL,
         idPicture: idPictureURL,
       };
-
-      const response = await axios.put(
-        `http://localhost:4000/seller/updateSeller/${uid}`,
-        updatedData
+  
+      // Use toast.promise for the axios call as well
+      await toast.promise(
+        axios.put(
+          `http://localhost:4000/seller/updateSeller/${uid}`,
+          updatedData
+        ),
+        {
+          loading: "Saving data...",
+          success: "Data saved successfully, please wait for approval",
+          error: "Failed to save user data. Please try again later."
+        }
       );
-
-      // Handle successful response
-      toast.success("Uploaded successfully, please wait for approval.");
+  
       setStep("phone");
     } catch (error) {
       console.error("Error:", error.message);
-      // Handle error, show it to the user, or do any necessary cleanup
+      // Additional error handling if needed
       toast.error("Failed to save user data. Please try again later.");
     }
   };
+
+
 
   return (
     <div>
@@ -993,6 +1000,7 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
+                          <MDBCardText>We accept any type of ID but it must contain a Picture of yourself, Full Name, Address, and Birthday.</MDBCardText>
                           <MDBInput
                             wrapperClass="mb-4"
                             size="lg"
@@ -1139,6 +1147,8 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
+                          <MDBCardText>We accept any type of ID but it must contain a Picture of yourself, Full Name, Address, and Birthday.</MDBCardText>
+
                           <MDBInput
                             wrapperClass="mb-4"
                             size="lg"
