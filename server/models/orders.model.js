@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
-import Customer from './user.model'
-import Product from './product.model'
+const User = require('./user.model'); // Assuming this is the correct path to your User model
+const Product = require('./product.model'); // Assuming this is the correct path to your Product model
+
 const orderSchema = new mongoose.Schema({
   customer: {
-    type: String,
-    ref: 'Customer', // Assuming you have a Customer model
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Reference to the User model
     required: true
   },
   products: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product', // Assuming you have a Product model
+    ref: 'Product', // Reference to the Product model
     required: true
   }],
   totalPrice: {

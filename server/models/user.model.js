@@ -21,6 +21,12 @@ const userSchema = new mongoose.Schema({
   phoneNumber: String,
 
 
+  carts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cart'
+}]
+  
+
 
 });
 
