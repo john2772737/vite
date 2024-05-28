@@ -54,6 +54,10 @@ const sellerSchema = new mongoose.Schema({
     vouchers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Voucher'
+    }],
+    orders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order'
     }]
 });
 
