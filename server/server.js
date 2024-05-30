@@ -6,6 +6,7 @@ const sellerroute=require('./router/seller.route');
 const userRoute= require('./router/user.route');
 const productRoute= require('./router/product.router') 
 const voucherRoute= require('./router/voucher.router')
+const cartRoute= require('./router/cart.router')
 
 
 
@@ -20,6 +21,7 @@ app.use("/seller",sellerroute);
 app.use("/user",userRoute);
 app.use('/product',productRoute);
 app.use('/voucher',voucherRoute);
+app.use('/cart',cartRoute)
 
 const PORT = 4000;
 mongooese
