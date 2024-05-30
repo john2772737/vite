@@ -36,6 +36,7 @@ import { FirebaseProvideruser }  from "./utils/usercontext";
 import Allproduct from './pages/user/allproducts'
 import PrivateRouteuser from "./utils/privateuser";
 import ProductDetails from "./pages/user/productdetails";
+import Checkout from "./pages/user/checkout";
 function App() {
   return (
     <Routes>
@@ -52,6 +53,7 @@ function App() {
         <Route path="/user" element={<Home />} />
         <Route path="/user/live" element={< PrivateRouteuser element={LiveCustomer} />} />
         <Route path="/user/cart" element={< PrivateRouteuser element={CartCustomer} />} />
+        <Route path="/user/checkout" element={< PrivateRouteuser element={Checkout} />} />
         <Route path="/user/productDetails/:productId" element={< PrivateRouteuser element={ProductDetails} />} />
        
 

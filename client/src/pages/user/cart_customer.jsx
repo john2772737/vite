@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useFirebase } from "../../utils/usercontext";
-
+import { useNavigate } from 'react-router-dom';
 const CartCustomer = () => {
+
+  const navigate = useNavigate()
   const [cart, setCart] = useState([]);
   const { currentUser } = useFirebase();
   const id = currentUser.uid;
@@ -14,6 +16,7 @@ const CartCustomer = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
 
   const fetchData = async () => {
     try {
@@ -32,6 +35,15 @@ const CartCustomer = () => {
 
   const removeItem = (itemId) => {
     ''
+  };
+  
+  const handleCheckout=()=>{
+    const selectedItems = cart.filter(item => item.checked);
+    if (selectedItems.length > 0) {
+      navigate('/user/checkout', { state: { selectedItems } });
+    } else {
+      alert('Please select at least one item to checkout.');
+    }
   };
 
   const toggleCheckbox = (itemId) => {
@@ -110,7 +122,7 @@ const CartCustomer = () => {
             {/* Unit Price */}
             <div className="flex justify-center items-center w-full md:w-1/5">
               <p className="text-lg text-gray-800">
-                ${item.productId.price.toFixed(2)}
+              ₱{item.productId.price.toFixed(2)}
               </p>
             </div>
             {/* Product Quantity */}
@@ -152,7 +164,7 @@ const CartCustomer = () => {
             {/* Total Price */}
             <div className="flex justify-center items-center w-full md:w-1/5">
               <p className="text-lg text-gray-800">
-                ${item.totalPrice.toFixed(2)}
+              ₱{item.totalPrice.toFixed(2)}
               </p>
             </div>
 
@@ -194,8 +206,8 @@ const CartCustomer = () => {
     <p className="text-lg font-semibold text-white">
       Subtotal ({selectedCount} selected)
     </p>
-    <p className="text-lg font-bold text-white">${subtotal.toFixed(2)}</p>
-    <button className="text-lg font-semibold text-white bg-gray-800 px-4 py-2 rounded-md">Checkout</button>
+    <p className="text-lg font-bold text-white">₱{subtotal.toFixed(2)}</p>
+    <button className="text-lg font-semibold text-white bg-gray-800 px-4 py-2 rounded-md" onClick={handleCheckout}>Checkout</button>
   </div>
 </div>
 

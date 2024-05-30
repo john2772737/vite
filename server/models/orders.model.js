@@ -4,7 +4,7 @@ const Product = require('./product.model'); // Assuming this is the correct path
 
 const orderSchema = new mongoose.Schema({
   customer: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'User', // Reference to the User model
     required: true
   },
@@ -22,6 +22,13 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'confirmed', 'shipped', 'delivered'],
     default: 'pending'
   },
+
+  address:{
+    type:String,
+  },
+  paymentMethod:{
+    type:String,
+  }
   createdAt: {
     type: Date,
     default: Date.now
