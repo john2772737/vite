@@ -33,10 +33,12 @@ function Seecategoryp() {
 
   return (
     <div className="product-containerq">
-      <h1 className="product-headerq">Products in {category}</h1>
+      <div className="product-header-containerq">
+        <h1 className="product-headerq">Products in {category}</h1>
+      </div>
       {error && <p className="errorq">{error}</p>}
       <div className="product-listq">
-        {products.map((product, index) => (
+        {products.map((product) => (
           <Card key={product.id} product={product} showCartButton={true} />
         ))}
       </div>

@@ -21,6 +21,10 @@ import PurchaseCustomer from "./pages/user/purchase_customer";
 import NotifCustomer from "./pages/user/notification_customer";
 import LoginCustomer from "./pages/user/login_customer";
 import Seecategoryp from "./pages/user/seecategoryp";
+import Profile_Home from "./components/profile/profile_home";
+import Profile_Settings from "./components/profile/profile_settings";
+import Address_Settings from "./components/profile/address_settings";
+import Change_Settings from "./components/profile/change_settings";
 
 import Seller from "./pages/seller/seller";
 import SellerDashboard from "./pages/seller/sellerdashboard";
@@ -61,6 +65,11 @@ function App() {
         <Route path="/user/seecategory" element={< PrivateRouteuser element={Seecategoryp} />} />
         <Route path="/user/allproduct" element={< PrivateRouteuser element={Allproduct} />} />
         <Route path="/user/notif" element={< PrivateRouteuser element={NotifCustomer} />} />
+        <Route path="/user/profile/*" element={<Profile_Home />}>
+            <Route path="profile_settings" element={<Profile_Settings />} />
+            <Route path="address_settings" element={<Address_Settings />} />
+            <Route path="change_settings" element={<Change_Settings />} />
+        </Route>
         {/* <Route path="profile" element={< PrivateRouteuser element={}Profile />}>
           <Route index element={< PrivateRouteuser element={}Editprofile />} />
           <Route path="editprofile" element={<Editprofile />} />

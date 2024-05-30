@@ -1,0 +1,23 @@
+/* Main.css */
+.main-container {
+    display: flex;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px; /* Adjust padding as needed */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+  }
+  
+  .navlink {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navlink:hover {
+    background-color: red; /* Tailwind CSS bg-indigo-100 */
+}
+
+.navlink.active {
+    background-color: red; /* Tailwind CSS bg-indigo-900 */
+    color: #ffffff; /* Tailwind CSS text-white */
+}

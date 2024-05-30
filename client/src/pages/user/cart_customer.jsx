@@ -10,6 +10,7 @@ const CartCustomer = () => {
 
   const [subtotal, setSubtotal] = useState(0);
   const [selectedCount, setSelectedCount] = useState(0);
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -23,6 +24,7 @@ const CartCustomer = () => {
       const updatedCart = response.data.map((item) => ({
         ...item,
         totalPrice: item.productId.price * item.quantity,
+        checked: false, // Initialize checked property
       }));
       setCart(updatedCart);
     } catch (error) {
@@ -31,7 +33,7 @@ const CartCustomer = () => {
   };
 
   const removeItem = (itemId) => {
-    ''
+    // Your remove item logic
   };
 
   const toggleCheckbox = (itemId) => {
@@ -40,7 +42,18 @@ const CartCustomer = () => {
     );
     setCart(updatedCart);
   };
-// Function to calculate subtotal and count of selected items
+
+  // Function to handle "Select All" checkbox
+  const toggleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    const updatedCart = cart.map((item) => ({
+      ...item,
+      checked: newSelectAll,
+    }));
+    setCart(updatedCart);
+    setSelectAll(newSelectAll);
+  };
+
   useEffect(() => {
     const selectedItems = cart.filter((item) => item.checked);
     const total = selectedItems.reduce(
@@ -51,16 +64,12 @@ const CartCustomer = () => {
     setSelectedCount(selectedItems.length);
   }, [cart]);
 
-
   return (
     <div className="flex flex-col w-full h-full p-8 bg-gray-100">
-
       {/* My Cart */}
       <div className="w-full flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg">
-        <p className="text-2xl font-bold text-blue-700">My Cart</p>
         {/* Header Labels */}
         <div className="hidden md:flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-
           <div className="flex gap-6 items-center w-2/5">
             <p className="font-semibold text-gray-700">Product Name</p>
           </div>
@@ -83,7 +92,6 @@ const CartCustomer = () => {
             key={item._id}
             className="flex flex-col md:flex-row gap-4 justify-between p-4 bg-white shadow-md rounded-lg"
           >
-
             {/* Checkbox */}
             <div className="flex items-center">
               <input
@@ -148,14 +156,12 @@ const CartCustomer = () => {
                 </svg>
               </button>
             </div>
-
             {/* Total Price */}
             <div className="flex justify-center items-center w-full md:w-1/5">
               <p className="text-lg text-gray-800">
                 ${item.totalPrice.toFixed(2)}
               </p>
             </div>
-
             {/* Remove Product Icon */}
             <div className="flex justify-center items-center w-full md:w-1/5">
               <button
@@ -189,16 +195,31 @@ const CartCustomer = () => {
       </div>
 
       {/* Sticky Subtotal */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-red-600 border-t border-gray-200 shadow-lg">
-  <div className="flex justify-between items-center max-w-4xl mx-auto">
-    <p className="text-lg font-semibold text-white">
-      Subtotal ({selectedCount} selected)
-    </p>
-    <p className="text-lg font-bold text-white">${subtotal.toFixed(2)}</p>
-    <button className="text-lg font-semibold text-white bg-gray-800 px-4 py-2 rounded-md">Checkout</button>
-  </div>
-</div>
-
+      <div className="sticky bottom-0 left-0 right-0 p-4 bg-black border-t border-gray-200 shadow-lg mt-4 rounded-lg">
+        <div className="flex justify-between items-center max-w-4xl mx-auto">
+          {/* Left side: Select All Checkbox */}
+          <div className="flex items-left">
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={toggleSelectAll}
+            />
+            <label className="ml-2 text-white font-semibold">Select All</label>
+          </div>
+          {/* Right side: Subtotal and Checkout Button */}
+          <div className="flex items-center">
+            <div>
+              <p className="text-lg font-semibold text-white">
+                Subtotal ({selectedCount} selected)
+              </p>
+              <p className="text-lg font-bold text-white">${subtotal.toFixed(2)}</p>
+            </div>
+            <button className="text-lg font-semibold text-white bg-red-600 px-4 py-2 rounded-md ml-4">
+              Checkout
+            </button>
+          </div>
+        </div>
+      </div>
 
     </div>
   );
