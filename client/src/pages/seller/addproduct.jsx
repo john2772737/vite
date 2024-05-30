@@ -4,7 +4,7 @@ import { useFirebase } from "../../utils/context";
 import { useState, useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { imageDb } from "../../utils/firebase";
-import './/../../components/TableComponent.css'
+import ".//../../components/TableComponent.css";
 
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 function AddProduct() {
@@ -137,10 +137,6 @@ function AddProduct() {
     }
   };
 
-
-
-
-
   const setlist = data.map((item) => {
     const picture = (
       <img
@@ -171,51 +167,72 @@ function AddProduct() {
     "Biography",
     "History",
     "Comics",
-   
   ];
-  const handleDelete =async(id)=>{
-    
-    
-    const response = await axios.delete(`http://localhost:4000/product/deleteProduct/${id}`);
-    toast.success("SUCCESFULLY DELETED")
+  const handleDelete = async (id) => {
+    const response = await axios.delete(
+      `http://localhost:4000/product/deleteProduct/${id}`
+    );
+    toast.success("SUCCESFULLY DELETED");
     fetchData();
-  }
+  };
   const openModel = () => {
     setcreateModal(true);
   };
 
   const handleCreate = async () => {
     try {
+      if (
+        !createProduct.name ||
+        !createProduct.description ||
+        !createProduct.category ||
+        !createProduct.totalItem ||
+        !createProduct.price
+      ) {
+        toast.error("Please fill out all fields.");
+        return;
+      }
+
+            // Utility function to check if all words in a string are capitalized
+            const isCapitalized = (str) => {
+              return str
+                .split(" ")
+                .every((word) => word[0] === word[0].toUpperCase());
+            };
+            if (!isCapitalized(createProduct.name)) {
+              toast.error(
+                "Please capitalize the first letter of each word in the Title."
+              );
+              return;
+            }
+
       const profilePictureFile = idp;
       const profilePictureRef = ref(
         imageDb,
         "profiles/" + profilePictureFile.name
       );
-  
-      const uploadPromise = uploadBytes(profilePictureRef, profilePictureFile)
-        .then(() => getDownloadURL(profilePictureRef));
-  
 
-      const url = await toast.promise(
-        uploadPromise,
-        {
-          loading: 'Saving...',
-          success: 'Product created successfully',
-          error: 'Error creating product'
-        }
-      );
-  
+      const uploadPromise = uploadBytes(
+        profilePictureRef,
+        profilePictureFile
+      ).then(() => getDownloadURL(profilePictureRef));
+
+      const url = await toast.promise(uploadPromise, {
+        loading: "Saving...",
+        success: "Product created successfully",
+        error: "Error creating product",
+      });
+
       const updateCreateProduct = {
         firebaseUid: currentUserUid,
         ...createProduct,
         imageUrl: url,
       };
-  
+
       const response = await axios.post(
         `http://localhost:4000/product/createProduct`,
         updateCreateProduct
       );
-  
+
       console.log("Response data:", response.data);
       setcreateModal(false);
       fetchData();
@@ -227,175 +244,174 @@ function AddProduct() {
   };
 
   if (data.length === 0) {
+    // if no product
 
-    
     return (
-      
       <div>
-
-         <div
-        id="crud-modals"
-        className={`${
-          createModal ? "" : "hidden"
-        } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}
-      >
-        <div className="relative p-4 w-full max-w-md max-h-full">
-          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Product Details
-              </h3>
-              <button
-                type="button"
-                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                onClick={createModalclose}
-              >
-                <svg
-                  className="w-3 h-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 14"
+        <Toaster />
+        <div
+          id="crud-modals"
+          className={`${
+            createModal ? "" : "hidden"
+          } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}
+        >
+          <div className="relative p-4 w-full max-w-md max-h-full">
+            <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Product Details
+                </h3>
+                <button
+                  type="button"
+                  className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={createModalclose}
                 >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span className="sr-only">Close modal</span>
+                </button>
+              </div>
+              <div className="p-4 md:p-5">
+                <div className="mb-4">
+                  <label
+                    htmlFor="productName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    id="productName"
+                    name="name"
+                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Enter Title"
+                    value={createProduct.name}
+                    onChange={handleCreatechanges}
                   />
-                </svg>
-                <span className="sr-only">Close modal</span>
-              </button>
-            </div>
-            <div className="p-4 md:p-5">
-              <div className="mb-4">
-                <label
-                  htmlFor="productName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="productName"
-                  name="name"
-                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter name"
-                  value={createProduct.name}
-                  onChange={handleCreatechanges}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="productImage"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Image URL
-                </label>
-                <input
-                  type="file"
-                  id="productImage"
-                  name="imageUrl"
-                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter image URL"
-                  value={createProduct.image}
-                  onChange={handlepic}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="productDescription"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Description
-                </label>
-                <textarea
-                  id="productDescription"
-                  name="description"
-                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter description"
-                  value={createProduct.description}
-                  onChange={handleCreatechanges}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="productPrice"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Price
-                </label>
-                <input
-                  type="number"
-                  id="productPrice"
-                  name="price"
-                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter price"
-                  value={createProduct.price}
-                  onChange={handleCreatechanges}
-                />
-              </div>
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="productImage"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Image URL
+                  </label>
+                  <input
+                    type="file"
+                    id="productImage"
+                    name="imageUrl"
+                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Enter image URL"
+                    value={createProduct.image}
+                    onChange={handlepic}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="productDescription"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Description
+                  </label>
+                  <textarea
+                    id="productDescription"
+                    name="description"
+                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Enter description"
+                    value={createProduct.description}
+                    onChange={handleCreatechanges}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="productPrice"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    id="productPrice"
+                    name="price"
+                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Enter price"
+                    value={createProduct.price}
+                    onChange={handleCreatechanges}
+                  />
+                </div>
 
-              <div className="mb-4">
-                <label
-                  htmlFor="productPrice"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Total Item
-                </label>
-                <input
-                  type="number"
-                  id="productitem"
-                  name="totalItem"
-                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter total item"
-                  value={createProduct.totalItem}
-                  onChange={handleCreatechanges}
-                />
+                <div className="mb-4">
+                  <label
+                    htmlFor="productPrice"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Total Item
+                  </label>
+                  <input
+                    type="number"
+                    id="productitem"
+                    name="totalItem"
+                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Enter total item"
+                    value={createProduct.totalItem}
+                    onChange={handleCreatechanges}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="productCategory"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Category
+                  </label>
+                  <select
+                    id="productCategory"
+                    name="category"
+                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    value={createProduct.category}
+                    onChange={handleCreatechanges}
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((category, index) => (
+                      <option key={index} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="productCategory"
-                  className="block text-sm font-medium text-gray-700"
+              <div className="flex justify-end p-4 border-t dark:border-gray-600">
+                <button
+                  type="button"
+                  className="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
+                  onClick={createModalclose}
                 >
-                  Category
-                </label>
-                <select
-                  id="productCategory"
-                  name="category"
-                  className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  value={createProduct.category}
-                  onChange={handleCreatechanges}
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                  onClick={handleCreate}
                 >
-                  <option value="">Select a category</option>
-                  {categories.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
+                  Create
+                </button>
               </div>
-            </div>
-            <div className="flex justify-end p-4 border-t dark:border-gray-600">
-              <button
-                type="button"
-                className="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
-                onClick={createModalclose}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                onClick={handleCreate}
-              >
-                Create
-              </button>
             </div>
           </div>
         </div>
-      </div>
 
         <h1>No Products Available</h1>
         <button
@@ -407,6 +423,7 @@ function AddProduct() {
       </div>
     );
   }
+  // Update Product
 
   return (
     <div>
@@ -469,14 +486,14 @@ function AddProduct() {
                   htmlFor="productName"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Name
+                  Title
                 </label>
                 <input
                   type="text"
                   id="productName"
                   name="name"
                   className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter name"
+                  placeholder="Enter Title"
                   value={selectedProduct.name}
                   onChange={handleInputChange}
                 />
@@ -494,7 +511,6 @@ function AddProduct() {
                   name="imageUrl"
                   className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                   placeholder="Enter image URL"
-                  
                   onChange={handlepic}
                 />
               </div>
@@ -531,7 +547,6 @@ function AddProduct() {
                   onChange={handleInputChange}
                 />
               </div>
-              
 
               <div className="mb-4">
                 <label
@@ -576,6 +591,8 @@ function AddProduct() {
         </div>
       </div>
 
+      {/* // Create Product */}
+
       <div
         id="crud-modals"
         className={`${
@@ -617,14 +634,14 @@ function AddProduct() {
                   htmlFor="productName"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Name
+                  Title
                 </label>
                 <input
                   type="text"
                   id="productName"
                   name="name"
                   className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter name"
+                  placeholder="Enter Title"
                   value={createProduct.name}
                   onChange={handleCreatechanges}
                 />
@@ -744,7 +761,7 @@ function AddProduct() {
         className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50"
         onClick={openModel}
       >
-        create product
+        Create Product
       </button>
       <TableComponent
         Heading={heading}
