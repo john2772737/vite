@@ -86,7 +86,7 @@ const CartCustomer = () => {
         <div className="hidden md:flex justify-between items-center bg-gray-100 p-4 rounded-lg">
 
           <div className="flex gap-6 items-center w-2/5">
-            <p className="font-semibold text-gray-700">Product Name</p>
+            <p className="font-semibold text-gray-700">Product Name / Seller</p>
           </div>
           <div className="text-center w-1/5">
             <p className="font-semibold text-gray-700">Unit Price</p>
