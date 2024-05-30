@@ -12,6 +12,8 @@ const CartCustomer = () => {
 
   const [subtotal, setSubtotal] = useState(0);
   const [selectedCount, setSelectedCount] = useState(0);
+  const [selectAll, setSelectAll] = useState(false);
+
 
   useEffect(() => {
     fetchData();
@@ -52,6 +54,17 @@ const CartCustomer = () => {
     );
     setCart(updatedCart);
   };
+
+  const toggleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    const updatedCart = cart.map((item) => ({
+      ...item,
+      checked: newSelectAll,
+    }));
+    setCart(updatedCart);
+    setSelectAll(newSelectAll);
+  };
+
 // Function to calculate subtotal and count of selected items
   useEffect(() => {
     const selectedItems = cart.filter((item) => item.checked);
@@ -69,7 +82,6 @@ const CartCustomer = () => {
 
       {/* My Cart */}
       <div className="w-full flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg">
-        <p className="text-2xl font-bold text-blue-700">My Cart</p>
         {/* Header Labels */}
         <div className="hidden md:flex justify-between items-center bg-gray-100 p-4 rounded-lg">
 
@@ -201,17 +213,26 @@ const CartCustomer = () => {
       </div>
 
       {/* Sticky Subtotal */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-red-600 border-t border-gray-200 shadow-lg">
-  <div className="flex justify-between items-center max-w-4xl mx-auto">
-    <p className="text-lg font-semibold text-white">
-      Subtotal ({selectedCount} selected)
-    </p>
-    <p className="text-lg font-bold text-white">₱{subtotal.toFixed(2)}</p>
-    <button className="text-lg font-semibold text-white bg-gray-800 px-4 py-2 rounded-md" onClick={handleCheckout}>Checkout</button>
-  </div>
-</div>
-
-
+      <div className="sticky bottom-0 left-0 right-0 p-4 bg-black border-t border-gray-200 shadow-lg mt-4 rounded-lg">
+        <div className="flex justify-between items-center max-w-4xl mx-auto">
+          {/* Select All Checkbox */}
+        <div>
+          <input
+            type="checkbox"
+            checked={selectAll}
+            onChange={toggleSelectAll}
+          />
+          <label className="ml-2 text-white font-semibold">Select All</label>
+        </div>
+          <p className="text-lg font-semibold text-white">
+            Subtotal ({selectedCount} selected)
+          </p>
+          <p className="text-lg font-bold text-white">${subtotal.toFixed(2)}</p>
+          <button className="text-lg font-semibold text-white bg-red-600 px-4 py-2 rounded-md" onClick={handleCheckout}>
+            Checkout
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

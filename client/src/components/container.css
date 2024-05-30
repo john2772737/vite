@@ -8,6 +8,7 @@
 }
 
 .header {
+  padding-left: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,7 +59,7 @@
   position: absolute;
   bottom: -5px; /* Adjust position below the title */
   left: 0;
-  width: 100%;
+  width: 120%;
   height: 3px; /* Height of the underline */
   background-color: #ff5555; /* Red accent color for the underline */
   border-radius: 2px; /* Rounded corners for the underline */
