@@ -13,7 +13,8 @@ const createCart = async (req, res) => {
 const listCart = async (req, res) => {
   const { id } = req.params;
   try {
-    const cart = await Cart.find({ user: id }).populate('productId'); // Assuming 'product' is the reference field in your cart item schema
+    const cart = await Cart.find({ user: id }).populate('productId');
+    
     res.status(200).json(cart);
   } catch (error) {
     res.status(500).json({ message: error.message });

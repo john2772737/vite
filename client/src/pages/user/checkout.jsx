@@ -13,13 +13,18 @@ function Checkout() {
     province: '',
     municipality: '',
     barangay: '',
-    additionalDetail: '' // New state for additional address detail
+    additionalDetail: '',
+  });
+
+  const [orders, setOrders] = useState({
+    contactNumber: '',
+    shippingProvider: '',
+    paymentMethod: 'cod'
   });
 
   const [filteredProvinces, setFilteredProvinces] = useState([]);
   const [filteredMunicipalities, setFilteredMunicipalities] = useState([]);
   const [filteredBarangays, setFilteredBarangays] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState('cod');
 
   useEffect(() => {
     // Filter provinces based on the selected region
@@ -50,16 +55,51 @@ function Checkout() {
       setFilteredBarangays([]);
     }
   }, [address.municipality, address.province]);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAddress(prevAddress => ({
-      ...prevAddress,
-      [name]: value
-    }));
+    if (['region', 'province', 'municipality', 'barangay', 'additionalDetail'].includes(name)) {
+      setAddress(prevAddress => ({
+        ...prevAddress,
+        [name]: value
+      }));
+    } else {
+      setOrders(prevOrders => ({
+        ...prevOrders,
+        [name]: value
+      }));
+    }
   };
 
+  function handleConfirmOrder() {
+
+    
+    // Validate required fields
+    if (!orders.contactNumber || !address.region || !address.province || !address.municipality || !address.barangay || !address.additionalDetail) {
+      console.error('Please fill in all required fields');
+      return;
+    }
+
+
+  
+    // Construct order details for each selected product
+    const ordersDetails = selectedItems.map(item => {
+      return {
+        customer: item.user, // Assuming user is stored in each selected item
+        contactNumber: orders.contactNumber,
+        product: item._id, // Assuming _id is the product ID
+        totalPrice: item.totalPrice,
+        address: address,
+        paymentMethod: orders.paymentMethod,
+        shippingProvider: orders.shippingProvider,
+        status: 'pending'
+      };
+    });
+  
+    console.log('Orders confirmed:', ordersDetails);
+    // Further logic such as API call to submit the order can be added here
+  }
+  
   const calculateTotalAmount = () => {
     return selectedItems.reduce((acc, item) => acc + item.totalPrice, 0).toFixed(2);
   };
@@ -95,7 +135,7 @@ function Checkout() {
             </div>
           </div>
           <div className="max-w-4xl mx-auto w-full h-max rounded-md p-4 sticky top-0">
-            <h2 className="text-xl font-bold text-gray-800">Shipping Address</h2>
+            <h2 className="text-xl font-bold text-gray-800">Shipping Information</h2>
             <form className="mt-8">
               <div className="mt-4">
                 <label htmlFor="region" className="block text-sm font-medium text-gray-700">
@@ -167,7 +207,7 @@ function Checkout() {
                 >
                   <option value="">Select a barangay</option>
                   {filteredBarangays.map(barangay => (
-                    <option key={barangay.psgcId} value={barangay.baranggayId}>
+                    <option key={barangay.psgcId} value={barangay.barangayId}>
                       {barangay.name}
                     </option>
                   ))}
@@ -187,37 +227,71 @@ function Checkout() {
                   onChange={handleChange}
                 />
               </div>
+              {/* Contact Number */}
               <div className="mt-4">
-              <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700">
-                Payment Method
-              </label>
-              <select
-                id="paymentMethod"
-                name="paymentMethod"
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md"
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              >
-                <option value="cod">Cash on Delivery (COD)</option>
-                {/* Add other payment methods if needed */}
-              </select>
-            </div>
+                <label htmlFor="contactNumber" className="block text-sm font-medium text-gray-700">
+                  Contact Number
+                </label>
+                <input
+                  type="text"
+                  id="contactNumber"
+                  name="contactNumber"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md"
+                  value={orders.contactNumber}
+                  onChange={handleChange}
+                />
+              </div>
+              {/* Shipping Provider */}
               <div className="mt-4">
-              <button
-                type="button"
-                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md"
-                onClick={'handleConfirmOrder'}
-              >
-                Confirm Order
-              </button>
-            </div>
+                <label htmlFor="shippingProvider" className="block text-sm font-medium text-gray-700">
+                  Shipping Provider
+                </label>
+                <select
+                  id="shippingProvider"
+                  name="shippingProvider"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md"
+                  value={orders.shippingProvider}
+                  onChange={handleChange}
+                >
+                  <option value="">Select a shipping provider</option>
+                  <option value="booklot_express">Booklot Express</option>
+                  <option value="jmt">JMT</option>
+                  <option value="lalaact">LalaAct</option>
+                </select>
+              </div>
+              {/* Payment Method */}
+              <div className="mt-4">
+                <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700">
+                  Payment Method
+                </label>
+                <select
+                  id="paymentMethod"
+                  name="paymentMethod"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md"
+                  value={orders.paymentMethod}
+                  onChange={handleChange}
+                >
+                  <option value="cod">Cash on Delivery (COD)</option>
+                  {/* Add other payment methods if needed */}
+                </select>
+              </div>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md"
+                  onClick={handleConfirmOrder}
+                >
+                  Confirm Order
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
   );
+
+  
 }
 
 export default Checkout;
-

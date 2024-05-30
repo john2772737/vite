@@ -7,6 +7,7 @@ const userRoute= require('./router/user.route');
 const productRoute= require('./router/product.router') 
 const voucherRoute= require('./router/voucher.router')
 const cartRoute= require('./router/cart.router')
+const ordersRoute= require('./router/order.router')
 
 
 
@@ -22,7 +23,7 @@ app.use("/user",userRoute);
 app.use('/product',productRoute);
 app.use('/voucher',voucherRoute);
 app.use('/cart',cartRoute)
-
+app.use('/orders',ordersRoute)
 const PORT = 4000;
 mongooese
   .connect(
