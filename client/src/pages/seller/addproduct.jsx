@@ -157,17 +157,15 @@ function AddProduct() {
   });
 
   const categories = [
-    "Fiction",
-    "Non-fiction",
-    "Science Fiction",
     "Fantasy",
-    "Mystery",
-    "Thriller",
+    "Horror",
     "Romance",
-    "Biography",
-    "History",
-    "Comics",
+    "Comedy",
+    "Business",
+    "Children's",
+    "Educational",
   ];
+  
   const handleDelete = async (id) => {
     const response = await axios.delete(
       `http://localhost:4000/product/deleteProduct/${id}`
