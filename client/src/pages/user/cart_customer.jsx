@@ -33,7 +33,7 @@ const CartCustomer = () => {
   };
 
   const removeItem = (itemId) => {
-    // Your remove item logic
+    ''
   };
 
   const toggleCheckbox = (itemId) => {
