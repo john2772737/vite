@@ -17,7 +17,7 @@ const Banner = () => {
               <h1 className="mt-16 mb-4 text-3xl font-bold tracking-tight md:text-4xl xl:text-5xl font-bodoni-ferrara text-black">
                 From Cart to Couch, <span>Your Book Awaits!</span>
               </h1>
-              <p className="mt-2 text-base font-medium text-gray-800 font-bodoni-ferrara">
+              <p className="mt-2 text-base py-4 font-medium text-gray-800 font-bodoni-ferrara">
                 Welcome to BookLot! Discover endless stories, adventures, and treasures in our virtual bookstore. Find your next favorite read with ease and embark on a journey through the pages of imagination. Let the adventure begin!
               </p>
               <button 
@@ -29,9 +29,6 @@ const Banner = () => {
               >
                 Shop Now
               </button>
-            </div>
-            <div className="mb-4 lg:mb-0 lg:mt-8">
-              <img src={banner_img} alt="" className="h-70 lg:h-90 w-auto" />
             </div>
           </div>
         </div>

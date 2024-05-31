@@ -130,40 +130,41 @@ const ProductDetailsComponent = ({ id ,currentUser}) => {
           </div>
         </div>
       </div>
-      <div className="mt-10 bg-gray-50 dark:bg-gray-800 w-full flex justify-between items-center px-4 py-6 md:p-6 xl:p-8 flex-row">
-        <div className="flex flex-col justify-start items-start flex-shrink-0 mr-6">
-          <h3 className="text-xl dark:text-white font-semibold leading-5 text-gray-800 mb-0">Seller</h3>
-          <div className="flex justify-center w-full md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
-            <img src="https://i.ibb.co/5TSg7f6/Rectangle-18.png" alt="avatar" />
-            <div className="flex justify-start items-start flex-col space-y-2">
-              <p className="text-base dark:text-white font-semibold leading-4 text-left text-gray-800">David Kent</p>
-              <p className="text-sm dark:text-gray-300 leading-5 text-gray-600">10 Previous Orders</p>
-            </div>
-          </div>
-          <div className="flex justify-center text-gray-800 dark:text-white md:justify-start items-center space-x-4 py-4 border-b border-gray-200 w-full">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M3 7L12 13L21 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <p className="cursor-pointer text-sm leading-5 ">david89@gmail.com</p>
+      <div className="bg-gray-50 mt-5 dark:bg-gray-800 w-full flex flex-col md:flex-row justify-between items-center px-4 py-6 md:p-6 lg:p-8 xl:p-8">
+      <div className="w-full md:w-1/2 flex flex-col justify-start items-start md:items-center md:justify-start mb-6 md:mb-0">
+        <h3 className="text-xl dark:text-white font-semibold leading-5 text-gray-800">Seller</h3>
+        <div className="flex justify-center items-center space-x-4 py-8 border-b border-gray-200">
+          <img src="https://i.ibb.co/5TSg7f6/Rectangle-18.png" alt="avatar" className="w-16 h-16 rounded-full" />
+          <div className="flex flex-col space-y-2">
+            <p className="text-base dark:text-white font-semibold leading-4 text-left text-gray-800">David Kent</p>
+            <p className="text-sm dark:text-gray-300 leading-5 text-gray-600">Active</p>
           </div>
         </div>
-        <div className="flex justify-between items-stretch w-full flex-row mt-6 md:mt-0">
-          <div className="flex justify-center md:justify-start xl:flex-row flex-row md:space-x-6 lg:space-x-8 xl:space-x-6 space-y-4 xl:space-y-0 md:space-y-0 md:flex-row items-center md:items-start">
-            <div className="flex justify-center md:justify-start items-center md:items-start flex-col space-y-4 xl:mt-0">
-              <p className="text-base dark:text-white font-semibold leading-4 text-center md:text-left text-gray-800">Address</p>
-              <p className="w-48 lg:w-full dark:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">180 North King Street, Northhampton MA 1060</p>
-            </div>
-            <div className="flex justify-center md:justify-start items-center md:items-start flex-col space-y-4">
-              <p className="text-base dark:text-white font-semibold leading-4 text-center md:text-left text-gray-800">Products</p>
-              <p className="w-48 lg:w-full dark:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">1,060 Stocks</p>
-            </div>
-          </div>
-          <div className="flex w-full justify-center items-center md:justify-start md:items-start">
-            <button className="mt-6 md:mt-0 dark:border-white dark:hover:bg-gray-900 dark:bg-transparent dark:text-white py-5 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-96 2xl:w-full text-base font-medium leading-4 text-gray-800">Visit Store</button>
-          </div>
+
+        <div className="flex justify-center text-gray-800 dark:text-white items-center space-x-4 py-4 border-b border-gray-200 w-full">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3 7L12 13L21 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <p className="cursor-pointer text-sm leading-5 ">david89@gmail.com</p>
         </div>
       </div>
+      <div className="w-full md:w-1/2 flex flex-col justify-start items-center md:items-start">
+        <div className="flex flex-col space-y-6 md:space-y-12 w-full md:max-w-lg">
+          <div className="flex justify-center md:justify-start items-center md:items-start flex-col space-y-4">
+            <p className="text-base dark:text-white font-semibold leading-4 text-center md:text-left text-gray-800">Address</p>
+            <p className="w-full dark:text-gray-300 text-center md:text-left text-sm leading-5 text-gray-600">180 North King Street, Northhampton MA 1060</p>
+          </div>
+          <div className="flex justify-center md:justify-start items-center md:items-start flex-col space-y-4">
+            <p className="text-base dark:text-white font-semibold leading-4 text-center md:text-left text-gray-800">Stock</p>
+            <p className="w-full dark:text-gray-300 text-center md:text-left text-sm leading-5 text-gray-600">1,060 stocks</p>
+          </div>
+        </div>
+        <div className="flex justify-center w-full mt-6 md:mt-0">
+          <button className="dark:border-white dark:hover:bg-gray-900 dark:bg-transparent dark:text-white py-5 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-full md:max-w-lg text-base font-medium leading-4 text-gray-800">Edit Details</button>
+        </div>
+      </div>
+    </div>
 
       <div className="mt-12">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">Comments</h3>
