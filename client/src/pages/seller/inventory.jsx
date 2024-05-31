@@ -70,6 +70,11 @@ function Inventory() {
 
  
  const handleUpdate = async () => {
+  
+  if (!itemCount){
+    toast.error("Enter a number.")
+    return
+  }
 
   if (!/^\d+$/.test(itemCount) || parseInt(itemCount) <= 0) {
     // Display toast message for invalid positive number
@@ -204,14 +209,14 @@ const handleItemChange = (e) => {
             htmlFor="productName"
             className="block text-sm font-medium text-gray-700"
           >
-            Name
+            Title
           </label>
           <input
             type="text"
             id="productName"
             name="productName"
             className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            placeholder="Enter name"
+            placeholder="Enter Title"
             value={selectedProduct.name}
             disabled
           />

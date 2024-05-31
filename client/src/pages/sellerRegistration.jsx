@@ -10,6 +10,8 @@ import {
 } from "firebase/auth";
 import "react-phone-input-2/lib/style.css";
 import Input, { isValidPhoneNumber } from "react-phone-number-input/input";
+import Select from 'react-select';
+
 import "../css/sellerRegistration.css";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -35,205 +37,204 @@ import { imageDb } from "../utils/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useFirebase } from "../utils/context";
 
+const validCities = [
+  "MANILA",
+  "QUEZON",
+  "CEBU",
+  "DAVAO",
+  "ZAMBOANGA",
+  "CANDABA",
+  "GUAGUA",
+  "ABUCAY",
+  "BAGAC",
+  "DINALUPIHAN",
+  "HERMOSA",
+  "LIMAY",
+  "MARIVELES",
+  "ORANI",
+  "ORION",
+  "PILAR",
+  "SAMAL",
+  "ANGELES",
+  "APALIT",
+  "ARAYAT",
+  "BACOLOR",
+  "FLORIDABLANCA",
+  "GUAGUA",
+  "MABALACAT",
+  "MACABEBE",
+  "MAGALANG",
+  "MASANTOL",
+  "MEXICO",
+  "MINALIN",
+  "PORAC",
+  "SAN FERNANDO",
+  "SAN LUIS",
+  "SAN SIMON",
+  "SANTA ANA",
+  "SANTA RITA",
+  "SANTO TOMAS",
+  "SASMUAN",
+  "ANAO",
+  "BAMBAN",
+  "CAMILING",
+  "CAPAS",
+  "CONCEPCION",
+  "GERONA",
+  "LA PAZ",
+  "MAYANTOC",
+  "MONCADA",
+  "PANIQUI",
+  "PURA",
+  "RAMOS",
+  "SAN CLEMENTE",
+  "SAN MANUEL",
+  "SANTA IGNACIA",
+  "TARLAC CITY",
+  "VICTORIA",
+  "ALAMINOS",
+  "ALCALA",
+  "ANDA",
+  "ASINGAN",
+  "BALUNGAO",
+  "BANI",
+  "BASISTA",
+  "BAYAMBANG",
+  "BINALONAN",
+  "BINMALEY",
+  "BOLINAO",
+  "BUGALLON",
+  "BURGOS",
+  "CALASIAO",
+  "DAGUPAN",
+  "DASOL",
+  "INFANTA",
+  "LABRADOR",
+  "LUBAO",
+  "LINGAYEN",
+  "MABINI",
+  "MALASIQUI",
+  "MANAOAG",
+  "MANGALDAN",
+  "MANGATAREM",
+  "MAPANDAN",
+  "NATIVIDAD",
+  "POZORRUBIO",
+  "ROSALES",
+  "SAN CARLOS",
+  "SAN FABIAN",
+  "SAN JACINTO",
+  "SAN MANUEL",
+  "SAN NICOLAS",
+  "SAN QUINTIN",
+  "SANTA BARBARA",
+  "SANTA MARIA",
+  "SANTO TOMAS",
+  "SISON",
+  "SUAL",
+  "TAYUG",
+  "UMINGAN",
+  "URBIZTONDO",
+  "VILLASIS",
+  "LAOAC",
+  "LUPAO",
+  "NAMPICUAN",
+  "QUEZON",
+  "RIZAL",
+  "SAN LEONARDO",
+  "SANTO DOMINGO",
+  "TALAVERA",
+  "CABANATUAN",
+  "GAPAN",
+  "PALAYAN",
+];
+const validCitiesSorted = validCities.sort((a, b) => a.localeCompare(b));
+
+const validProvinces = [
+  "ABRA",
+  "AGUSAN DEL NORTE",
+  "AGUSAN DEL SUR",
+  "AKLAN",
+  "ALBAY",
+  "ANTIQUE",
+  "APAYAO",
+  "AURORA",
+  "BASILAN",
+  "BATAAN",
+  "BATANES",
+  "BATANGAS",
+  "BENGUET",
+  "BILIRAN",
+  "BOHOL",
+  "BUKIDNON",
+  "BULACAN",
+  "CAGAYAN",
+  "CAMARINES NORTE",
+  "CAMARINES SUR",
+  "CAMIGUIN",
+  "CAPIZ",
+  "CATANDUANES",
+  "CAVITE",
+  "CEBU",
+  "COMPOSTELA VALLEY",
+  "COTABATO",
+  "DAVAO DEL NORTE",
+  "DAVAO DEL SUR",
+  "DAVAO OCCIDENTAL",
+  "DAVAO ORIENTAL",
+  "DINAGAT ISLANDS",
+  "EASTERN SAMAR",
+  "GUIMARAS",
+  "IFUGAO",
+  "ILOCOS NORTE",
+  "ILOCOS SUR",
+  "ILOILO",
+  "ISABELA",
+  "KALINGA",
+  "LA UNION",
+  "LAGUNA",
+  "LANAO DEL NORTE",
+  "LANAO DEL SUR",
+  "LEYTE",
+  "MAGUINDANAO",
+  "MARINDUQUE",
+  "MASBATE",
+  "MISAMIS OCCIDENTAL",
+  "MISAMIS ORIENTAL",
+  "MOUNTAIN PROVINCE",
+  "NEGROS OCCIDENTAL",
+  "NEGROS ORIENTAL",
+  "NORTHERN SAMAR",
+  "NUEVA ECIJA",
+  "NUEVA VIZCAYA",
+  "OCCIDENTAL MINDORO",
+  "ORIENTAL MINDORO",
+  "PALAWAN",
+  "PAMPANGA",
+  "PANGASINAN",
+  "QUEZON",
+  "QUIRINO",
+  "RIZAL",
+  "ROMBLON",
+  "SAMAR",
+  "SARANGANI",
+  "SIQUIJOR",
+  "SORSOGON",
+  "SOUTH COTABATO",
+  "SOUTHERN LEYTE",
+  "SULTAN KUDARAT",
+  "SULU",
+  "SURIGAO DEL NORTE",
+  "SURIGAO DEL SUR",
+  "TARLAC",
+  "TAWI-TAWI",
+  "ZAMBALES",
+  "ZAMBOANGA DEL NORTE",
+  "ZAMBOANGA DEL SUR",
+  "ZAMBOANGA SIBUGAY",
+];
 
 const PhoneVerification = () => {
-  
-
-  const validCities = [
-    "MANILA",
-    "QUEZON",
-    "CEBU",
-    "DAVAO",
-    "ZAMBOANGA",
-    "CANDABA",
-    "GUAGUA",
-    "ABUCAY",
-    "BAGAC",
-    "DINALUPIHAN",
-    "HERMOSA",
-    "LIMAY",
-    "MARIVELES",
-    "ORANI",
-    "ORION",
-    "PILAR",
-    "SAMAL",
-    "ANGELES",
-    "APALIT",
-    "ARAYAT",
-    "BACOLOR",
-    "CANDABA",
-    "FLORIDABLANCA",
-    "GUAGUA",
-    "MABALACAT",
-    "MACABEBE",
-    "MAGALANG",
-    "MASANTOL",
-    "MEXICO",
-    "MINALIN",
-    "PORAC",
-    "SAN FERNANDO",
-    "SAN LUIS",
-    "SAN SIMON",
-    "SANTA ANA",
-    "SANTA RITA",
-    "SANTO TOMAS",
-    "SASMUAN",
-    "ANAO",
-    "BAMBAN",
-    "CAMILING",
-    "CAPAS",
-    "CONCEPCION",
-    "GERONA",
-    "LA PAZ",
-    "MAYANTOC",
-    "MONCADA",
-    "PANIQUI",
-    "PURA",
-    "RAMOS",
-    "SAN CLEMENTE",
-    "SAN MANUEL",
-    "SANTA IGNACIA",
-    "TARLAC CITY",
-    "VICTORIA",
-    "ALAMINOS",
-    "ALCALA",
-    "ANDA",
-    "ASINGAN",
-    "BALUNGAO",
-    "BANI",
-    "BASISTA",
-    "BAYAMBANG",
-    "BINALONAN",
-    "BINMALEY",
-    "BOLINAO",
-    "BUGALLON",
-    "BURGOS",
-    "CALASIAO",
-    "DAGUPAN",
-    "DASOL",
-    "INFANTA",
-    "LABRADOR",
-    "LINGAYEN",
-    "MABINI",
-    "MALASIQUI",
-    "MANAOAG",
-    "MANGALDAN",
-    "MANGATAREM",
-    "MAPANDAN",
-    "NATIVIDAD",
-    "POZORRUBIO",
-    "ROSALES",
-    "SAN CARLOS",
-    "SAN FABIAN",
-    "SAN JACINTO",
-    "SAN MANUEL",
-    "SAN NICOLAS",
-    "SAN QUINTIN",
-    "SANTA BARBARA",
-    "SANTA MARIA",
-    "SANTO TOMAS",
-    "SISON",
-    "SUAL",
-    "TAYUG",
-    "UMINGAN",
-    "URBIZTONDO",
-    "VILLASIS",
-    "LAOAC",
-    "LUPAO",
-    "NAMPICUAN",
-    "QUEZON",
-    "RIZAL",
-    "SAN LEONARDO",
-    "SANTO DOMINGO",
-    "TALAVERA",
-    "CABANATUAN",
-    "GAPAN",
-    "PALAYAN",
-  ];
-  
-  const validStates = [
-    "ABRA",
-    "AGUSAN DEL NORTE",
-    "AGUSAN DEL SUR",
-    "AKLAN",
-    "ALBAY",
-    "ANTIQUE",
-    "APAYAO",
-    "AURORA",
-    "BASILAN",
-    "BATAAN",
-    "BATANES",
-    "BATANGAS",
-    "BENGUET",
-    "BILIRAN",
-    "BOHOL",
-    "BUKIDNON",
-    "BULACAN",
-    "CAGAYAN",
-    "CAMARINES NORTE",
-    "CAMARINES SUR",
-    "CAMIGUIN",
-    "CAPIZ",
-    "CATANDUANES",
-    "CAVITE",
-    "CEBU",
-    "COMPOSTELA VALLEY",
-    "COTABATO",
-    "DAVAO DEL NORTE",
-    "DAVAO DEL SUR",
-    "DAVAO OCCIDENTAL",
-    "DAVAO ORIENTAL",
-    "DINAGAT ISLANDS",
-    "EASTERN SAMAR",
-    "GUIMARAS",
-    "IFUGAO",
-    "ILOCOS NORTE",
-    "ILOCOS SUR",
-    "ILOILO",
-    "ISABELA",
-    "KALINGA",
-    "LA UNION",
-    "LAGUNA",
-    "LANAO DEL NORTE",
-    "LANAO DEL SUR",
-    "LEYTE",
-    "MAGUINDANAO",
-    "MARINDUQUE",
-    "MASBATE",
-    "MISAMIS OCCIDENTAL",
-    "MISAMIS ORIENTAL",
-    "MOUNTAIN PROVINCE",
-    "NEGROS OCCIDENTAL",
-    "NEGROS ORIENTAL",
-    "NORTHERN SAMAR",
-    "NUEVA ECIJA",
-    "NUEVA VIZCAYA",
-    "OCCIDENTAL MINDORO",
-    "ORIENTAL MINDORO",
-    "PALAWAN",
-    "PAMPANGA",
-    "PANGASINAN",
-    "QUEZON",
-    "QUIRINO",
-    "RIZAL",
-    "ROMBLON",
-    "SAMAR",
-    "SARANGANI",
-    "SIQUIJOR",
-    "SORSOGON",
-    "SOUTH COTABATO",
-    "SOUTHERN LEYTE",
-    "SULTAN KUDARAT",
-    "SULU",
-    "SURIGAO DEL NORTE",
-    "SURIGAO DEL SUR",
-    "TARLAC",
-    "TAWI-TAWI",
-    "ZAMBALES",
-    "ZAMBOANGA DEL NORTE",
-    "ZAMBOANGA DEL SUR",
-    "ZAMBOANGA SIBUGAY",
-  ];
   const [step, setStep] = useState("phone"); // 'phone' or 'verification'
   const [phoneNumber, setPhoneNumber] = useState("+63");
   const [verificationCode, setVerificationCode] = useState("");
@@ -261,6 +262,14 @@ const PhoneVerification = () => {
 
     checkApproval();
   }, [currentUser, navigate, phoneNumber]);
+  
+  const handleCitySelect = (selectedOption) => {
+    setData({ ...Data, city: selectedOption.value });
+  };
+
+  const handleProvinceSelect = (selectedOption) => {
+    setData({ ...Data, state: selectedOption.value });
+  };
 
   const [Data, setData] = useState({
     firebaseuid: "",
@@ -268,7 +277,7 @@ const PhoneVerification = () => {
     lastname: "",
     address: "",
     city: "",
-    state: "",
+    province: "",
     zip: "",
     shopname: "",
     password: "",
@@ -279,11 +288,9 @@ const PhoneVerification = () => {
     idPicture: "",
   });
 
-  
-
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!isValidPhoneNumber(phoneNumber)) {
       toast.error("Invalid phone number");
       return;
@@ -295,7 +302,7 @@ const PhoneVerification = () => {
         recaptchaContainer.id = "recaptcha-container";
         document.body.appendChild(recaptchaContainer);
       }
-      
+
       if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new RecaptchaVerifier(
           auth,
@@ -315,8 +322,6 @@ const PhoneVerification = () => {
       );
 
       window.confirmationResult = confirmationResult;
-
-      
 
       setStep("verification");
     } catch (error) {
@@ -387,13 +392,13 @@ const PhoneVerification = () => {
 
       if (seller.approved === "unapproved") {
         signOut(auth);
-        toast.error("your photo was not approved.")
+        toast.error("your photo was not approved.");
 
         setStep("unapproved");
         return;
       }
-    
-      setStep('phone')
+
+      setStep("phone");
     } catch (error) {
       console.error("Error confirming verification code:", error);
 
@@ -424,7 +429,9 @@ const PhoneVerification = () => {
 
     const nameRegex = /^[A-Z][a-zA-Z\s]*$/;
     if (!nameRegex.test(Data.firstname) || !nameRegex.test(Data.lastname)) {
-      toast.error("Firstname and Lastname must contain only letters and start with a capital letter.");
+      toast.error(
+        "Firstname and Lastname must contain only letters and start with a capital letter."
+      );
       return;
     }
 
@@ -439,7 +446,7 @@ const PhoneVerification = () => {
 
     const capitalizedState = Data.state.toUpperCase();
     if (
-      !validStates.includes(capitalizedState) ||
+      !validProvinces.includes(capitalizedState) ||
       /\d/.test(capitalizedState)
     ) {
       toast.error(
@@ -480,7 +487,9 @@ const PhoneVerification = () => {
     // Validate password to include at least one letter and one number
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordRegex.test(Data.password)) {
-      toast.error("Password must contain at least one letter and one number.");
+      toast.error(
+        "Password must contain at least one letter and one number. Password must be at least 8 characters long."
+      );
       return;
     }
 
@@ -489,10 +498,6 @@ const PhoneVerification = () => {
       return;
     }
 
-    if (Data.password.length < 8) {
-      toast.error("Password must be at least 8 characters long.");
-      return;
-    }
     setStep("Photo");
   };
 
@@ -518,28 +523,35 @@ const PhoneVerification = () => {
     try {
       const profilePictureFile = picture; // Assuming 'picture' is defined in your state
       const idPictureFile = idp; // Assuming 'idp' is defined in your state
-  
+
       if (!profilePictureFile || !idPictureFile) {
         toast.error("Both profile picture and ID picture are required.");
         return; // Exit the function if files are missing
       }
-  
-      const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
+
+      const profilePictureRef = ref(
+        imageDb,
+        "profiles/" + profilePictureFile.name
+      );
       const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-  
+
       // Use toast.promise to handle the upload process
       const [profilePictureURL, idPictureURL] = await toast.promise(
         Promise.all([
-          uploadBytes(profilePictureRef, profilePictureFile).then(() => getDownloadURL(profilePictureRef)),
-          uploadBytes(idPictureRef, idPictureFile).then(() => getDownloadURL(idPictureRef))
+          uploadBytes(profilePictureRef, profilePictureFile).then(() =>
+            getDownloadURL(profilePictureRef)
+          ),
+          uploadBytes(idPictureRef, idPictureFile).then(() =>
+            getDownloadURL(idPictureRef)
+          ),
         ]),
         {
-          loading: "Uploading pictures...",
-          success: "Pictures uploaded successfully!",
-          error: "Failed to upload pictures"
+          loading: "Saving...",
+          success: "User data saved successfully!",
+          error: "Failed to save user data. Please try again later.",
         }
       );
-  
+
       const address = `${Data.city}, ${Data.state}, ${Data.zip}`;
       const updatedData = {
         ...Data, // Include existing data
@@ -549,24 +561,18 @@ const PhoneVerification = () => {
         submit: "true", // Set the 'submit' field to true
       };
 
-  
-      // Use toast.promise for the axios request
-      await toast.promise(
-        axios.put(`http://localhost:4000/seller/updateSeller/${uid}`, updatedData),
-        {
-          loading: "Saving user data...",
-          success: "User data saved successfully!",
-          error: "Failed to save user data. Please try again later."
-        }
+      // Perform the axios call without toast.promise
+      await axios.put(
+        `http://localhost:4000/seller/updateSeller/${uid}`,
+        updatedData
       );
-  
+
       setStep("phone");
     } catch (error) {
       console.error("Error:", error.message);
       toast.error("Failed to save user data. Please try again later.");
     }
   };
-  
 
   const handleFormChanges = (event) => {
     const { name, value } = event.target;
@@ -604,56 +610,53 @@ const PhoneVerification = () => {
       // Assuming 'picture' and 'idp' are set in your data state
       const profilePictureFile = picture;
       const idPictureFile = idp;
-  
+
       if (!profilePictureFile || !idPictureFile) {
         toast.error("Both profile picture and ID picture are required");
         return; // Exit the function if files are missing
       }
-  
-      const profilePictureRef = ref(imageDb, "profiles/" + profilePictureFile.name);
+
+      const profilePictureRef = ref(
+        imageDb,
+        "profiles/" + profilePictureFile.name
+      );
       const idPictureRef = ref(imageDb, "profiles/" + idPictureFile.name);
-  
+
       // Use toast.promise to handle the upload process
       const [profilePictureURL, idPictureURL] = await toast.promise(
         Promise.all([
-          uploadBytes(profilePictureRef, profilePictureFile).then(() => getDownloadURL(profilePictureRef)),
-          uploadBytes(idPictureRef, idPictureFile).then(() => getDownloadURL(idPictureRef))
+          uploadBytes(profilePictureRef, profilePictureFile).then(() =>
+            getDownloadURL(profilePictureRef)
+          ),
+          uploadBytes(idPictureRef, idPictureFile).then(() =>
+            getDownloadURL(idPictureRef)
+          ),
         ]),
         {
-          loading: "Uploading pictures...",
-          success: "Pictures uploaded successfully!",
-          error: "Failed to upload pictures"
+          loading: "Saving...",
+          success: "Data saved successfully!",
+          error: "Failed to save user data. Please try again later.",
         }
       );
-  
+
       const updatedData = {
         approved: "false",
         picture: profilePictureURL,
         idPicture: idPictureURL,
       };
-  
-      // Use toast.promise for the axios call as well
-      await toast.promise(
-        axios.put(
-          `http://localhost:4000/seller/updateSeller/${uid}`,
-          updatedData
-        ),
-        {
-          loading: "Saving data...",
-          success: "Data saved successfully, please wait for approval",
-          error: "Failed to save user data. Please try again later."
-        }
+
+      // Perform the axios call without toast.promise
+      await axios.put(
+        `http://localhost:4000/seller/updateSeller/${uid}`,
+        updatedData
       );
-  
+
       setStep("phone");
     } catch (error) {
       console.error("Error:", error.message);
-      // Additional error handling if needed
       toast.error("Failed to save user data. Please try again later.");
     }
   };
-
-
 
   return (
     <div>
@@ -708,7 +711,7 @@ const PhoneVerification = () => {
                       />
                     </MDBCardText>
                   </MDBRow>
-                
+
                   <div className="d-flex justify-content-center">
                     <button
                       type="submit"
@@ -852,26 +855,24 @@ const PhoneVerification = () => {
                         </MDBCol>
                       </MDBRow>
 
-                      <MDBInput
-                        wrapperClass="mb-4"
-                        label="City"
-                        size="lg"
-                        id="city"
-                        type="text"
-                        value={Data.city}
-                        onChange={handleFormChanges}
-                        name="city"
+                      <Select
+                        options={validCitiesSorted.map((city) => ({
+                          value: city,
+                          label: city,
+                        }))}
+                        onChange={handleCitySelect}
+                        className="mb-4"
+                        placeholder="Choose your city"
                       />
 
-                      <MDBInput
-                        wrapperClass="mb-4"
-                        label="State / Province"
-                        size="lg"
-                        id="state"
-                        type="text"
-                        value={Data.state}
-                        onChange={handleFormChanges}
-                        name="state"
+                      <Select
+                        options={validProvinces.map((province) => ({
+                          value: province,
+                          label: province,
+                        }))}
+                        onChange={handleProvinceSelect}
+                        className="mb-4"
+                        placeholder="Choose your province"
                       />
 
                       <MDBInput
@@ -1013,7 +1014,11 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
-                          <MDBCardText>We accept any type of ID but it must contain a Picture of yourself, Full Name, Address, and Birthday.</MDBCardText>
+                          <MDBCardText>
+                            We accept any type of ID but it must contain a
+                            Picture of yourself, Full Name, Address, and
+                            Birthday.
+                          </MDBCardText>
                           <MDBInput
                             wrapperClass="mb-4"
                             size="lg"
@@ -1097,7 +1102,7 @@ const PhoneVerification = () => {
                   <div className="button-container">
                     <button
                       className="ok-button mt-4"
-                      onClick={() => setStep("phone") }
+                      onClick={() => setStep("phone")}
                     >
                       OK
                     </button>
@@ -1160,7 +1165,11 @@ const PhoneVerification = () => {
                           />
 
                           <MDBCardText>Upload your Valid ID here: </MDBCardText>
-                          <MDBCardText>We accept any type of ID but it must contain a Picture of yourself, Full Name, Address, and Birthday.</MDBCardText>
+                          <MDBCardText>
+                            We accept any type of ID but it must contain a
+                            Picture of yourself, Full Name, Address, and
+                            Birthday.
+                          </MDBCardText>
 
                           <MDBInput
                             wrapperClass="mb-4"

@@ -110,13 +110,45 @@ function AddProduct() {
 
   const handleUpdate = async () => {
     try {
+      if (
+        !createProduct.name ||
+        !createProduct.description ||
+        !createProduct.category ||
+        !createProduct.totalItem ||
+        !createProduct.price
+      ) {
+        toast.error("Please fill out all fields.");
+        return;
+      }
+  
+      // Utility function to check if all words in a string are capitalized
+      const isCapitalized = (str) => {
+        return str
+          .split(" ")
+          .every((word) => word[0] === word[0].toUpperCase());
+      };
+      if (!isCapitalized(createProduct.name)) {
+        toast.error(
+          "Please capitalize the first letter of each word in the Title."
+        );
+        return;
+      }
+      
       let url = selectedProduct.imageUrl;
       if (idp) {
         const profilePictureRef = ref(imageDb, "profiles/" + idp.name);
-        await uploadBytes(profilePictureRef, idp);
-        url = await getDownloadURL(profilePictureRef);
+        const uploadPromise = uploadBytes(profilePictureRef, idp)
+          .then(() => getDownloadURL(profilePictureRef))
+          .catch((error) => {
+            throw new Error("Error uploading image: " + error.message);
+          });
+        url = await toast.promise(uploadPromise, {
+          loading: "Uploading image...",
+          success: "Image uploaded successfully",
+          error: "Error uploading image",
+        });
       }
-
+  
       const updateProduct = {
         name: selectedProduct.name,
         imageUrl: url,
@@ -124,12 +156,12 @@ function AddProduct() {
         price: selectedProduct.price,
         category: selectedProduct.category,
       };
-
+  
       await axios.put(
         `http://localhost:4000/product/updateProduct/${selectedProduct._id}`,
         updateProduct
       );
-
+  
       closeModal();
       fetchData();
     } catch (error) {
@@ -227,7 +259,7 @@ function AddProduct() {
       };
 
       const response = await axios.post(
-        `http://localhost:4000/product/createProduct`,
+        'http://localhost:4000/product/createProduct',
         updateCreateProduct
       );
 
@@ -240,6 +272,7 @@ function AddProduct() {
       console.log("Error creating product:", error);
     }
   };
+
 
   if (data.length === 0) {
     // if no product
