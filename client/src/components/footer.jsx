@@ -1,78 +1,77 @@
 import React from 'react';
-import Logo from "./images/booklot_logo.png";
+import Logo from "./images/b_logo.png";
 
 const Footer = () => {
   return (
     <div>
-      <footer className="px-20 divide-y bg-black dark:bg-gray-100 dark:text-gray-800 font-bodoni-ferrara">
+      <footer className="px-20 divide-y bg-neutral-50 dark:bg-gray-100 dark:text-gray-800 font-bodoni-ferrara">
         <div className="container flex flex-col justify-between py-10 mx-auto space-y-8 lg:flex-row lg:space-y-0">
           <div className="lg:w-1/3">
             <a rel="noopener noreferrer" href="#" className="flex justify-center space-x-3 lg:justify-start">
               <div className="flex items-center justify-center w-12 h-12 rounded-full dark:bg-violet-600">
-                <img src={Logo} viewBox="0 0 32 32" fill="currentColor" className="flex-shrink-0 w-100 h-100 dark:text-gray-50">
-                </img>
+                <img src={Logo} viewBox="0 0 32 32" fill="currentColor" className="flex-shrink-0 w-100 h-100 dark:text-gray-50" alt="Logo" />
               </div>
-              <span className="self-center text-2xl font-semibold text-white">Booklot</span>
+              <span className="self-center text-2xl font-semibold text-black">Booklot</span>
             </a>
           </div>
           <div className="grid grid-cols-2 text-sm gap-x-20 gap-y-8 lg:w-3/3 sm:grid-cols-3">
             <div className="space-y-3">
-              <h3 className="tracking-wide uppercase text-white dark:text-gray-900" style={{ fontWeight: 900, fontSize: 16}}>CUSTOMER SERVICE</h3>
+              <h3 className="tracking-wide uppercase text-black dark:text-gray-900" style={{ fontWeight: 900, fontSize: 16}}>CUSTOMER SERVICE</h3>
               <ul className="space-y-1">
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">HELP CENTRE</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">HELP CENTRE</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">PAYMENT</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">PAYMENT</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">METHODS</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">METHODS</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">ORDER TRACKING</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">ORDER TRACKING</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">FREE SHIPPING</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">FREE SHIPPING</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">RETURN & REFUND</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">RETURN & REFUND</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">REPORT</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">REPORT</a>
                 </li>
               </ul>
             </div>
             <div className="space-y-3">
-              <h3 className="tracking-wide uppercase text-white dark:text-gray-900" style={{ fontWeight: 900, fontSize: 16}}>PAYMENT</h3>
+              <h3 className="tracking-wide uppercase text-black dark:text-gray-900" style={{ fontWeight: 900, fontSize: 16}}>PAYMENT</h3>
               <ul className="space-y-1">
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">CASH ON DELIVERY</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">CASH ON DELIVERY</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">PAYPAL</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">PAYPAL</a>
                 </li>
               </ul>
             </div>
             <div className="space-y-3">
-              <h3 className="uppercase text-white dark:text-gray-900" style={{ fontWeight: 900, fontSize: 16}}>CONTACT US</h3>
+              <h3 className="uppercase text-black dark:text-gray-900" style={{ fontWeight: 900, fontSize: 16}}>CONTACT US</h3>
               <ul className="space-y-1">
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white dark:text-gray-600">Gmail</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black dark:text-gray-600">Gmail</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">Facebook</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">Facebook</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">Instagram</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">Instagram</a>
                 </li>
                 <li>
-                  <a rel="noopener noreferrer" href="#" className="text-white">Twitter</a>
+                  <a rel="noopener noreferrer" href="#" className="text-black">Twitter</a>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <div className="py-3 text-sm text-center text-white dark:text-gray-600" style={{ fontWeight: 900, fontSize: 16}}>Follow Us
+        <div className="py-3 text-sm text-center text-black dark:text-gray-600" style={{ fontWeight: 900, fontSize: 16}}>Follow Us
               <div className="flex justify-start space-x-3 py-2 justify-content-center">
                 <a rel="noopener noreferrer" href="#" title="Facebook" className="flex items-center p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32" className="w-5 h-5 fill-current">

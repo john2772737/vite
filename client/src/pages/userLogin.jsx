@@ -388,65 +388,66 @@ const [formData, setFormData] = useState(initialFormData);
   return (
     <div>
       {step === "login" && (
-        <div
-      className="py-4 md:py-8 dark:bg-gray-800"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-          Sign In
-        </h2>
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <div>
-              {isClicked && login.email === "" && <span className="text-red-500">Email is required.</span>}
-            </div>
-            <input
-              type="text"
-              placeholder="Email"
-              name="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              onChange={handleLoginChanges}
-            />
-            <div>
-              {isClicked && login.password === "" && <span className="text-red-500">Password is required.</span>}
-              {incorrectPassword && <span className="text-red-500">Incorrect password.</span>}
-            </div>
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              onChange={handleLoginChanges}
-            />
-            <div>
-              <Link to="/forgotPassword" className="text-teal-600 hover:underline">Forgot Password?</Link>
-            </div>
-            <button
-              onClick={handleLogin}
-              className="text-white bg-teal-600 py-1.5 px-4 rounded font-bold w-full"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={userRegistration}
-              className="text-white bg-gray-500 py-1.5 px-4 rounded font-bold w-full"
-            >
-              Sign Up
-            </button>
-            <div>
-              <p>or sign in with:</p>
+  <div
+    className="py-4 md:py-8 dark:bg-gray-800 bg-opacity-70"
+    style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+  >
+    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+      <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        Sign In
+      </h2>
+      <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <div>
+            {isClicked && login.email === "" && <span className="text-red-500">Email is required.</span>}
+          </div>
+          <input
+            type="text"
+            placeholder="Email"
+            name="email"
+            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onChange={handleLoginChanges}
+          />
+          <div>
+            {isClicked && login.password === "" && <span className="text-red-500">Password is required.</span>}
+            {incorrectPassword && <span className="text-red-500">Incorrect password.</span>}
+          </div>
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onChange={handleLoginChanges}
+          />
+          <div>
+            <Link to="/forgotPassword" className="text-teal-600 hover:underline">Forgot Password?</Link>
+          </div>
+          <button
+            onClick={handleLogin}
+            className="text-white bg-teal-600 py-1.5 px-4 rounded font-bold w-full"
+          >
+            Sign In
+          </button>
+          <button
+            onClick={userRegistration}
+            className="text-white bg-gray-500 py-1.5 px-4 rounded font-bold w-full"
+          >
+            Sign Up
+          </button>
+          <div className="flex flex-col justify-center items-center">
+            <p className="text-gray-600">or sign in with:</p>
+            <div className="flex space-x-2">
               <button
                 onClick={signInWithFacebook}
-                className="text-white bg-blue-600 py-1.5 px-4 rounded font-bold mr-2"
+                className="text-white bg-blue-600 py-1.5 px-4 rounded font-bold"
               >
                 <i className="fab fa-facebook-f"></i>
               </button>
@@ -461,7 +462,9 @@ const [formData, setFormData] = useState(initialFormData);
         </div>
       </div>
     </div>
-      )}
+  </div>
+)}
+
 
       {step === "signup" && (
         <div>
