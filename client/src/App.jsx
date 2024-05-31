@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from 'react-router-dom';
+
 import UserLogin from "./pages/userLogin";
 import Users from "./pages/user";
 import Cart from "./pages/user/cart_customer";
@@ -49,7 +50,8 @@ import Checkout from "./pages/user/checkout";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<FirebaseProvideruser><UserLogin /></FirebaseProvideruser>} />
+           <Route path="/" element={<Navigate to="/user" replace />} />
+
       <Route path="/userLogin" element={<FirebaseProvideruser><UserLogin /></FirebaseProvideruser>} /> {/* Corrected route path */}
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       
