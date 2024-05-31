@@ -41,7 +41,7 @@ const navbar = () => {
                   {menu === "sellerRegister" ? <hr className="hr-red" /> : <></>}
               </li>
               <li class="hover:text-red-500" onClick={() => { setMenu("purchase") }}>
-                  <Link style={{ textDecoration: 'none', color: 'inherit' }} to='/user/purchase'>MY PURCHASE</Link>
+                  <Link style={{ textDecoration: 'none', color: 'inherit' }} to='/user/purchase/to_pay'>MY PURCHASE</Link>
                   {menu === "purchase" ? <hr className="hr-red" /> : <></>}
               </li>
 
